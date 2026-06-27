@@ -260,3 +260,89 @@ function changeimageoption(id){
       alert("Error adding image");
     });
 }
+
+// Convert date to local ISO format for datetime-local input
+const toLocalISOString = (date) => {
+  const tzoffset = date.getTimezoneOffset() * 60000;
+  return (new Date(date.getTime() - tzoffset)).toISOString().slice(0, 16);
+};
+
+// Fetch current timing from DB and set input values
+const loadExamTimings = () => {
+  fetch('/time/timing')
+    .then(res => res.json())
+    .then(data => {
+      if (data.SDate && data.EDate) {
+        document.getElementById('startTimeInput').value = toLocalISOString(new Date(data.SDate));
+        document.getElementById('endTimeInput').value = toLocalISOString(new Date(data.EDate));
+      }
+    })
+    .catch(err => console.error("Error loading exam timings:", err));
+};
+
+// Bind timing form submission
+document.getElementById('timingConfigForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const startTime = document.getElementById('startTimeInput').value;
+  const endTime = document.getElementById('endTimeInput').value;
+
+  fetch('/time/settiming', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'auth_token': `${localStorage.getItem('admintoken')}`
+    },
+    body: JSON.stringify({ startTime, endTime })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 0) {
+        const msg = document.getElementById('timingSuccessMsg');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 3000);
+      } else {
+        alert("Error saving timings: " + (data.message || "Unauthorized"));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Network error saving timings");
+    });
+});
+
+// Run load on init
+loadExamTimings();
+
+// Bind Excel form submission
+document.getElementById('excelUploadForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  
+  fetch(e.target.action, {
+    method: 'POST',
+    headers: {
+      'auth_token': `${localStorage.getItem('admintoken')}`
+    },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 0) {
+        const msg = document.getElementById('excelSuccessMsg');
+        msg.innerText = `Successfully imported ${data.count} questions!`;
+        msg.style.display = 'block';
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 5000);
+        // Refresh the list of questions currently displayed
+        getquiz();
+      } else {
+        alert("Error uploading Excel: " + (data.message || "Unknown error"));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Network error uploading Excel file");
+    });
+});

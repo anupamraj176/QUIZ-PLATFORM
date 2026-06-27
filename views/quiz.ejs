@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/css/quiz.css">
+    <link rel="stylesheet" href="/katex/katex.min.css">
+    <script src="/katex/katex.min.js"></script>
+    <script src="/katex/contrib/auto-render.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="/mathjax/tex-mml-chtml.js"></script>
+    <title>QUIZ</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="detail" id="Detail">
+        </div>
+        <div class="timer">
+            Time left to finish
+            <%- include ('./timer.ejs') %> 
+            <!-- <a href="/instruction">
+                <button type="button">Instruction</button>
+            </a> -->
+        </div>
+    </div>
+    <div class="main">
+        <div class="quiz" id="quizdisplay">
+            
+        </div>
+        <div class="question">
+            <h1>Navigate to any question</h1>
+            <div class="questionShow" id="questionshow">
+                
+            </div>
+            <!-- <div>
+                <button type="button" onclick="logout()">Finish</button>
+            </div> -->
+            <div>
+
+                <div class="showinfo">
+                    <div class="circlequiz" style="background-color: purple;"></div>
+                    <p>Mark as review</p>
+                </div>
+                
+                <div class="showinfo">
+                    <div class="circlequiz" style="background-color: red;"></div>
+                    <p>Not answered</p>
+                </div>
+                
+                <div class="showinfo">
+                    <div class="circlequiz" style="background-color: green;"></div>
+                    <p>Answered</p>
+                </div>
+                
+                <div class="showinfo">
+                    <div class="circlequiz" style="background-color: gray;"></div>
+                    <p>Not Visited</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src="../public/js/quiz.js"></script>
+</body>
+
+</html>

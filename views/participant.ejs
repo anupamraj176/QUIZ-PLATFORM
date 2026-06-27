@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin : participant data</title>
+    <link rel="stylesheet" href="../public/css/participant.css">
+</head>
+<body>
+    <div style="text-align: center;">
+        <div style="width: fit-content; margin: auto; margin-top: 10px;">
+            <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" style="text-align: center;" width="150px" height="150px" alt="" srcset="">
+        </div>
+        <h1 style="text-align: center;">Indian Institute of Information Technology Bhagalpur</h1>
+        <button onclick="generateResult()" style="text-align: center; margin: 20px; padding: 10px 20px; cursor: pointer;">Result</button>
+    </div>
+    <div style="width: 80%; margin: 10px auto; ">
+        <button style="margin: 10px;" onclick="changestream('<%- CSEvalue %>')"><%- CSEvalue %></button>
+        <button style="margin: 10px;" onclick="changestream('<%- ECEvalue %>')"><%- ECEvalue %></button>
+        <button style="margin: 10px;" onclick="changestream('<%- MEAvalue %>')"><%- MEAvalue %></button>
+        <button style="margin: 10px;" onclick="changestream('<%- Mathvalue %>')"><%- Mathvalue %></button>
+        <!-- <button style="margin: 10px;" onclick="changestream('Technical Officer (NT-5)')">Technical Officer (NT-5)</button>
+        <button style="margin: 10px;" onclick="changestream('Assistant Librarian (NT-6)')">Assistant Librarian (NT-6)</button> -->
+    </div>
+    <div id="participantsDatadesign">
+        <table>
+            <!-- <tr>
+                <th>S.No.</th>
+                <th>Application No.</th>
+                <th>Name</th>
+                <th>Category of Post</th>
+                <th>Post Applied for</th>
+                <th>Marks Obtained</th>
+            </tr>
+            <tr>
+                <td>S.No.</td>
+                <td>Application No.</td>
+                <td>Name</td>
+                <td>Category of Post</td>
+                <td>Post Applied for</td>
+                <td>Marks Obtained</td>
+            </tr> -->
+        </table>
+    </div>
+    <script>
+        let CSEvalue = `<%- CSEvalue %>`
+        let ECEvalue = `<%- ECEvalue %>`
+        let MEAvalue = `<%- MEAvalue %>`
+        let Mathvalue = `<%- Mathvalue %>`
+    </script>
+    <script src="../public/js/participant.js"></script>
+</body>
+</html>

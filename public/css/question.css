@@ -1,0 +1,109 @@
+.QuestionForm{
+    width: 97%;
+    margin: auto;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: space-around;
+}
+
+.formfill{
+    width: 40%;
+}
+
+#question_txt{
+    /* width: 40%; */
+    display: flex;
+    flex-direction: column;
+}
+
+#question_txt input, #question_txt select{
+    padding: 3px;
+    margin:5px 10px 5px;
+}
+
+#question_txt label{
+    padding: 0px;
+    margin:0px 10px;
+}
+
+/* display */
+
+.display{
+    width: 55%;
+    border-left: 2px solid black;
+    height: 80vh;
+    overflow: auto;
+}
+
+.question{
+    margin: auto;
+    width: fit-content;
+}
+
+.quiz{
+    width: 95%;
+}
+
+.mcq{
+    width: 80%;
+    margin: auto;
+    border-bottom: 2px solid black;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.mcq h1 span{
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    font-weight: 700;
+}
+
+.mcq h1{
+    padding: 0;
+    margin: 0;
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.mcq img{
+    width: 100%;
+}
+
+.mcq ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 20px;
+    padding-left: 5px;
+}
+
+.mcq ul li{
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    padding:10px 15px;
+    /* cursor: pointer; */
+}
+
+.answer{
+    font-size: 20px;
+}
+
+.delete{
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.answerDelete{
+    display: flex;
+    justify-content: space-between;
+}
+
+.hideupdate{
+    display: none;
+}
+
+input[type='text']{
+    width: 90%;
+}

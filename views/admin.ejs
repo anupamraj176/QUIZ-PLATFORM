@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        .loginform {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        #loginsubmit{
+            border: 2px solid black;
+            padding: 20px;
+        }
+        .inputdiv{
+            margin: 10px;
+        }
+
+        .inputdiv input{
+            width: 96%;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loginform">
+        <div id="warning" style="color: red;"></div>
+        <form action="/admin/adminlogin" id="loginsubmit" method="post">
+            <h3 style="text-align: center;">Admin Login</h3>
+            <div class="inputdiv">
+                <label for="applicationNo">Admin Id: </label>
+                <input id="applicationNo" type="applicationNo" name="applicationNo">
+            </div>
+            <div class="inputdiv">
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div class="inputdiv" style="text-align: center;">
+            <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+    <script>
+        if (localStorage.getItem('token')) {
+            window.location.href = '/quiz'
+            
+        }
+        document.getElementById('loginsubmit').addEventListener('submit', (e) => {
+            // console.log()
+            e.preventDefault();
+            fetch(event.target.action, {
+                method: "POST",
+                body: new URLSearchParams(new FormData(event.target)),
+            })
+                .then((res) => res.json())
+                .then((body) => {
+                    // console.log(body);
+                    if (body.status === 0) {
+                        localStorage.setItem('admintoken', `${body.authtoken}`)
+                        window.location.href = '/addquiz'
+                    }else if (body.status === 2){
+                        document.getElementById('warning').innerHTML="Already submitted"
+                    } 
+                    else {
+                        document.getElementById('warning').innerHTML="Invalid Credentials"
+                    }
+                })
+                .catch((error) => {
+                    document.getElementById('warning').innerHTML="Invalid Credentials"
+                });
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+    <style>
+        body {
+            font-family: Verdana;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            padding: 10px;
+        }
+
+        .about {
+            width: fit-content;
+            margin: auto;
+            text-align: center;
+        }
+
+        .about h3 {
+            font-family: Verdana;
+            margin: 0;
+            font-weight: normal;
+            font-size: 20px;
+        }
+
+        .about h4 {
+            font-family: Verdana;
+            margin: 0;
+            font-weight: normal;
+            font-size: 20px;
+        }
+
+        .loginform {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh; */
+            flex-direction: column;
+        }
+
+        #loginsubmit {
+            border: 2px solid black;
+            padding: 20px;
+            width: 60%;
+        }
+
+        .inputdiv {
+            margin: 10px;
+        }
+
+        .inputdiv input,
+        .inputdiv select {
+            width: 96%;
+            font-size: 16px;
+            margin: 10px 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">
+        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="" srcset=""
+            width="100%" height="100% ">
+    </div>
+    <div class="about">
+        <h3>IIIT Bhagalpur</h3>
+        <!-- <h4>Entrance Exam</h4> -->
+    </div>
+
+    <div class="loginform">
+        <div id="warning" style="color: red;"></div>
+        <form action="/user/adddata" id="loginsubmit" method="post">
+            <h2 style="text-align: center;">Fill your details</h2>
+            <div class="inputdiv">
+                <label for="name">Name: </label>
+                <input id="text" type="name" name="name" required>
+            </div>
+            <div class="inputdiv">
+                <label for="program">Category of Post</label>
+                <select name="program" id="program" required>
+                    <option value="">--select--</option>
+                    <option value="MTech">MTech</option>
+                    <option value="PhD">PhD</option>
+                </select>
+            </div>
+            <div class="inputdiv">
+                <label for="stream">Post applied for</label>
+                <select name="stream" id="stream" required>
+                    <option value="">--select--</option>
+                    <!-- <option value="Assistant Registrar (NT-3)">Assistant Registrar (NT-3)</option>
+                    <option value="Technical Officer (NT-5)">Technical Officer (NT-5)</option>
+                    <option value="Assistant Librarian (NT-6)">Assistant Librarian (NT-6)</option>
+                    <option value="Math">Math</option> -->
+                </select>
+            </div>
+            <div class="inputdiv" style="text-align: center;">
+                <input type="submit" value="Next">
+            </div>
+        </form>
+    </div>
+    <script>
+        let CSEvalue = `<%- CSEvalue %>`
+        let ECEvalue = `<%- ECEvalue %>`
+        let MEAvalue = `<%- MEAvalue %>`
+        let Mathvalue = `<%- Mathvalue %>`
+
+        if (localStorage.getItem('token')) {
+        } else {
+            window.location.href = '/'
+        }
+
+        document.getElementById("program").addEventListener("change", (e) => {
+            // console.log(e.target.value)
+            if (e.target.value === 'PhD') {
+                // console.log("GET")
+
+                document.getElementById('stream').innerHTML = `
+                    <option value="">--select--</option>
+                    <option value="${CSEvalue}">${CSEvalue}</option>
+                    <option value="${ECEvalue}">${ECEvalue}</option>
+                    <option value="${MEAvalue}">${MEAvalue}</option>
+                    <option value="${Mathvalue}">${Mathvalue}</option>
+                `
+
+            } else if (e.target.value === 'MTech') {
+                document.getElementById('stream').innerHTML = `
+                <option value="">--select--</option>
+                    <option value="${CSEvalue}">${CSEvalue}</option>
+                    <option value="${ECEvalue}">${ECEvalue}</option>
+                    <option value="${MEAvalue}">${MEAvalue}</option>
+                    <option value="${Mathvalue}">${Mathvalue}</option>
+                `
+            }
+        })
+
+        function fetchUser() {
+            fetch(`/user/access`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'auth_token': `${localStorage.getItem('token')}`
+                }
+            })
+                .then((res) => res.json())
+                .then((body) => {
+                    // console.log(body);
+                    if (body.status === 0) {
+                        if (body.data.stream.length !== 0) {
+                            window.location.href = '/instruction'
+                        }
+                    } else {
+                        localStorage.removeItem('token')
+                        window.location.href = '/'
+                    }
+                })
+                .catch((error) => {
+                    localStorage.removeItem('token')
+                    window.location.href = '/'
+                });
+        }
+
+        fetchUser();
+        document.getElementById('loginsubmit').addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch(event.target.action, {
+                method: "POST",
+                headers: {
+                    'auth_token': `${localStorage.getItem('token')}`
+                },
+                body: new URLSearchParams(new FormData(event.target)),
+            })
+                .then((res) => res.json())
+                .then((body) => {
+                    console.log(body);
+                    if (body.status === 0) {
+                        window.location.href = '/instruction'
+                    } else {
+                        document.getElementById('warning').innerHTML = "Invalid Credentials"
+                    }
+                })
+                .catch((error) => {
+                    document.getElementById('warning').innerHTML = "Invalid Credentials"
+                });
+        })
+    </script>
+</body>
+
+</html>

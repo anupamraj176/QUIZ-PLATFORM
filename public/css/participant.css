@@ -1,0 +1,16 @@
+#participantsDatadesign{
+    width: 90%;
+    margin: auto;
+    min-width: 300px;
+    overflow: auto;
+}
+
+#participantsDatadesign table{
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+#participantsDatadesign th,#participantsDatadesign td{
+    border-collapse: collapse;
+    border: 2px solid black;
+    padding: 5px 10px;
+}

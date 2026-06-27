@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/css/question.css">
+    <link rel="stylesheet" href="/katex/katex.min.css">
+    <script src="/katex/katex.min.js"></script>
+    <script src="/katex/contrib/auto-render.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="/mathjax/tex-mml-chtml.js"></script>
+    <title>Question Upload</title>
+</head>
+
+<body>
+    <div class="header" style="display: flex; justify-content: space-between;">
+        <div class="heading">
+            <h1>Question Panel</h1>
+        </div>
+        <div style="margin: 20px; background-color: rgb(214, 212, 212); padding: 10px 20px;">
+            <a href="#" onclick="localStorage.removeItem('admintoken'); window.location.reload()">logout</a>
+        </div>
+        <div style="margin: 20px; background-color: rgb(214, 212, 212); padding: 10px 20px;">
+            <a href="/participants">Participants</a>
+        </div>
+    </div>
+    <div class="QuestionForm">
+        <div class="formfill">
+            <form action="/question/addquestion" id="question_txt" method="post" encType='multipart/form-data'>
+                <label for="stream">Stream</label>
+                <select name="stream" id="stream" required>
+                    <option value="">--select--</option>
+                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                </select>
+                <label for="ques">Question</label>
+                <input type="text" name="ques" placeholder="Enter Question" id="ques">
+                <label for="image">Upload Image</label>
+                <input type="file" name="img" id="image">
+                <label for="option1">A</label>
+                <input type="text" name="option1" placeholder="Enter Option 1" id="option1" required>
+                <label for="option2">B</label>
+                <input type="text" name="option2" placeholder="Enter Option 2" id="option2" required>
+                <label for="option3">C</label>
+                <input type="text" name="option3" placeholder="Enter Option 3" id="option3" required>
+                <label for="option4">D</label>
+                <input type="text" name="option4" placeholder="Enter Option 4" id="option4" required>
+                <!-- <input type="text" name="answer" placeholder="Enter Answer" id="answer"> -->
+                <label for="answer">Answer</label>
+                <select name="answer" id="answer" required>
+                    <option value="">--select--</option>
+                    <option value="option1">A</option>
+                    <option value="option2">B</option>
+                    <option value="option3">C</option>
+                    <option value="option4">D</option>
+                </select>
+                <input type="submit" value="Add Question" id="add_question">
+            </form>
+        </div>
+        <div class="display">
+            <div class="question">
+                <label for="stream">Stream</label>
+                <select name="stream" id="stream" onchange="selectStream(this.value)" required>
+                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                </select>
+                <div class="questionShow" id="questionshow">
+                </div>
+            </div>
+            <div class="quiz" id="quizdisplay">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        let CSEvalue = `<%- CSEvalue %>`
+        let ECEvalue = `<%- ECEvalue %>`
+        let MEAvalue = `<%- MEAvalue %>`
+        let Mathvalue = `<%- Mathvalue %>`
+    </script>
+    <script src="../public/js/question.js"></script>
+</body>

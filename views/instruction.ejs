@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruction</title>
+    <link rel="stylesheet" href="../public/css/instruction.css">
+</head>
+
+<body>
+    <div class="logo">
+        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="" srcset=""
+            width="100%" height="100% ">
+    </div>
+    <div class="about">
+        <h3>Indian Institute of Information Technology Bhagalpur</h3>
+        <!-- <h4>Entrance Exam</h4> -->
+    </div>
+    <div class="inst">
+        <div class="timer" style="text-align: center;">
+            Time Remaining
+            <%- include ('./timer2.ejs') %>
+        </div>
+        <h1>Instruction</h1>
+        <ol id="teachingandNonteaching">
+            <!-- <li>
+                All the questions are of Objective Type and only one answer is correct.
+            </li>
+            <li>
+                Question No.1 to No.30 will be of general aptitude based.
+            </li>
+            <li>
+                Question No.31 to No.70 will be of Departmental Core Subject based.
+            </li>
+            <li>
+                Duration of the Admission Test is 90 minutes (From 11:00 AM to 12:30 PM).
+            </li>
+            <li>
+                If you have done login before 11:00 AM, then you will not be able to start the test.
+                At 11:00 AM you will be able to start the test by clicking the "next" button.
+            </li>
+            <li>
+                Except Scientific non programmable calculators, you are not allowed to carry electronic gadget at the
+                exam hall.
+            </li>
+            <li>
+                For calculation you will be provided blank pages. You have to bring your own pen/pencil.
+            </li>
+            <li>
+                You are required to comply with the directions given by the Invigilators.
+            </li>
+            <li>
+                If you are experiencing any technical problem, you must immediately contact the Invigilator.
+            </li>
+            <li>
+                You are not permitted to leave the exam hall before 12:00 noon.
+            </li> -->
+        </ol>
+        <!-- <ol id="teachingandNonteaching">
+
+        </ol> -->
+        <a href="/quiz">
+            <button type="button" id="nextbutton">Next</button>
+        </a>
+    </div>
+    <script src="../public/js/timer2.js"> </script>
+    <script>
+        if (localStorage.getItem('token')) {
+        } else {
+            window.location.href = '/'
+        }
+
+        function fetchUser() {
+            fetch(`/user/access`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'auth_token': `${localStorage.getItem('token')}`
+                }
+            })
+                .then((res) => res.json())
+                .then((body) => {
+                    // console.log(body);
+                    if (body.status === 0) {
+                        if (body.data.stream.length === 0) {
+                            window.location.href = '/data'
+                        }
+                        // console.log(document.getElementById('teachingandNonteaching').innerHTML)
+                        console.log(body.data.program)
+                        let html =document.getElementById('teachingandNonteaching').innerHTML
+                        if(body.data.program==='Teaching'){
+                            html +=`
+                            <li><p align="justify" style="margin:1px;">Candidates should carry with them the Identity Card to the Examination Centre for establishing their identity, failing which they will not be allowed to enter the Examination Hall.</p></li>
+                                 
+                            <li><p align="justify" style="margin:1px;">There will be 100 objective type questions. Question No.-01 to 30 will be general aptitude and Question No.-31 to 100 will be Departmental Core Subjects.</p></li>           
+                            <li><p align="justify" style="margin:1px;">Only one question will be displayed on the Exam Window at a time.</p></li>           
+                            <li><p align="justify" style="margin:1px;">Countdown clock will start as per schedule of the examination  and the same will be displayed on the top right-hand corner of the Exam Window for the remaining time available to a candidate for the Examination.</p></li>       
+                            <li><p align="justify" style="margin:1px;">Duration of the test will be of 120 minutes (From 10:00 AM to 12:00 PM).</p></li>       
+                            <li><p align="justify" style="margin:1px;">Each question is followed by four alternative answer marked as A, B, C and D. The candidate shall choose the most appropriate answer to each question and mark the same through <b>click of mouse</b> against the appropriate answer.</p></li> 
+                            <li><p align="justify" style="margin:1px;">To attempt next question, Click on <b>next</b> button.</p></li>          
+                            <li><p align="justify" style="margin:1px;">To attempt previous question, Click on <b>previous</b> button.</p></li>          
+                            <li><p align="justify" style="margin:1px;">Candidates can make changes in their answer already chosen/marked by simply clicking then other answer option of their choice at any time before end of examination or before clicking “SUBMIT” Button.</p></li>           
+                            <li><p align="justify" style="margin:1px;"><b>After click on Submit button, a confirmation will be taken from candidate and Candidate have to click "Yes" button</b></p></li>
+                            <li><p align="justify" style="margin:1px;">In case of restarting /shut down of computer due to technical reasons, immediately report the same to the Invigilator on duty.</p></li>           
+                                
+                            <li><p align="justify" style="margin:1px;">If you have done login before 10:00 AM, you will not be able to start the test. At 10:00 AM you will be able to start the test by clicking the “NEXT” button.</p></li>                    
+                            <li><p align="justify" style="margin:1px;">Do not close the Exam Window or try to restart the system at the Examination Centre.</p></li>           
+                            <li><p align="justify" style="margin:1px;">A Rough Sheet will be provided to the candidates for carrying out rough work, calculations, etc. during the examination. Candidates are required to mention their Application No. and Name on the Rough Sheet.</p></li>           
+                            <li><p align="justify" style="margin:1px;">Rough Sheet needs to be returned to the Invigilator before leaving the Exam Hall. The candidate shall not be permitted to carry the rough sheets used/unused with them when they leave the Examination Hall.</p></li>           
+                            <li><p align="justify" style="margin:1px;">You are required to comply with the directions given by the invigilators.</p></li>          
+                            `
+                        }else{
+                            html +=`
+                            <li><p align="justify" style="margin:1px;">Candidates should carry with them the Identity Card to the Examination Centre for establishing their identity, failing which they will not be allowed to enter the Examination Hall.</p></li>           
+                            <li><p align="justify" style="margin:1px;">All the questions are objective type and only one answer is correct. There is no negative marking for wrong answer.</p></li>           
+                            <li><p align="justify" style="margin:1px;">There will be 100 objective type questions.</p></li>           
+                            <li><p align="justify" style="margin:1px;">Only one question will be displayed on the Exam Window at a time.</p></li>           
+                            <li><p align="justify" style="margin:1px;">Countdown clock will start as per schedule of the examination and the same will be displayed on the top right-hand corner of the Exam Window for the remaining time available to a candidate for the Examination</p></li>           
+                            <li><p align="justify" style="margin:1px;">Duration of the test will be of 120 minutes (From 10:00 AM to 12:00 PM).</p></li> 
+                            <li><p align="justify" style="margin:1px;">Each question is followed by four alternative answer marked as A, B, C and D. The candidate shall choose the most appropriate answer to each question and mark the same through <b>click of mouse</b> against the appropriate answer.</p></li>       
+                            <li><p align="justify" style="margin:1px;">To attempt next question, Click on <b>next</b> button.</p></li>          
+                            <li><p align="justify" style="margin:1px;">To attempt previous question, Click on <b>previous</b> button.</p></li>              
+                            <li><p align="justify" style="margin:1px;">Candidates can make changes in their answer already chosen/marked by simply clicking then other answer option of their choice at any time before end of examination or before clicking “SUBMIT” Button.</p></li>  
+                            
+                            <li><p align="justify" style="margin:1px;"><b>After click on Submit button, a confirmation will be taken from candidate and Candidate have to click "Yes" button</b></p></li>     
+                            <li><p align="justify" style="margin:1px;">In case of restarting /shut down of computer due to technical reasons, immediately report the same to the Invigilator on duty.</p></li>               
+                            <li><p align="justify" style="margin:1px;">If you have done login before 10:00 AM, you will not be able to start the test. At 10:00 AM you will be able to start the test by clicking the “NEXT” button.</p></li>                      
+                            <li><p align="justify" style="margin:1px;">Do not close the Exam Window or try to restart the system at the Examination Centre.</p></li>
+                            <li><p align="justify" style="margin:1px;">A Rough Sheet will be provided to the candidates for carrying out rough work, calculations, etc. during the examination. Candidates are required to mention their Application No. and Name on the Rough Sheet.</p></li>
+                            <li><p align="justify" style="margin:1px;">Rough Sheet needs to be returned to the Invigilator before leaving the Exam Hall. The candidate shall not be permitted to carry the rough sheets used/unused with them when they leave the Examination Hall.</p></li>
+                            <li><p align="justify" style="margin:1px;">You are required to comply with the directions given by the invigilators.</p></li>
+                            `
+                            
+                        }
+                        // console.log(html)
+                        document.getElementById('teachingandNonteaching').innerHTML = html
+                        // console.log(document.getElementById('teachingandNonteaching'))
+                    } else {
+                        localStorage.removeItem('token')
+                        window.location.href = '/'
+                    }
+                })
+                .catch((error) => {
+                    // localStorage.removeItem('token')
+                    // window.location.href = '/'
+                });
+        }
+
+        fetchUser()
+
+    </script>
+</body>
+
+</html>

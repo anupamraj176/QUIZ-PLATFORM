@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body{
+            font-family: Verdana;
+        }
+        .logo{
+            width: 200px;
+            height: 200px;
+            margin: auto;
+            padding: 30px;
+        }
+        .about{
+            width: fit-content;
+            margin: auto;
+            text-align: center;
+        }
+        .about h3{
+            font-family: Verdana ;
+            margin: 0;
+            font-weight: normal;
+            font-size: 20px;
+        }
+        
+        .about h4{
+            font-family: Verdana ;
+            margin: 0;
+            font-weight: normal;
+            font-size: 20px;
+        }
+
+        .loginform {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh; */
+            flex-direction: column;
+        }
+        
+        #loginsubmit{
+            border: 2px solid black;
+            padding: 20px;
+        }
+        .inputdiv{
+            margin: 10px;
+        }
+
+        .inputdiv input{
+            width: 96%;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">
+        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="" srcset="" width="100%" height="100% ">
+    </div>
+    <div class="about">
+        <h3>Indian Institute of Information Technology Bhagalpur</h3>
+        <h4></h4>
+    </div>
+    <div class="loginform">
+        <div id="warning" style="color: red;"></div>
+        <form action="/user/login" id="loginsubmit" method="post">
+            <div class="inputdiv">
+                <label for="applicationNo">Application No: </label>
+                <input id="applicationNo" type="applicationNo" name="applicationNo">
+            </div>
+            <div class="inputdiv">
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div class="inputdiv" style="text-align: center;">
+            <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+    <script>
+        if (localStorage.getItem('token')) {
+            window.location.href = '/data'
+            
+        }
+        document.getElementById('loginsubmit').addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch(event.target.action, {
+                method: "POST",
+                body: new URLSearchParams(new FormData(event.target)),
+            })
+                .then((res) => res.json())
+                .then((body) => {
+                    // console.log(body);
+                    if (body.status === 0) {
+                        localStorage.setItem('token', `${body.authtoken}`)
+                        window.location.href = '/data'
+                    }else if (body.status === 2){
+                        document.getElementById('warning').innerHTML="Already submitted/login"
+                    } 
+                    else {
+                        document.getElementById('warning').innerHTML="Invalid Credentials"
+                    }
+                })
+                .catch((error) => {
+                    document.getElementById('warning').innerHTML="Invalid Credentials"
+                });
+        })
+    </script>
+</body>
+
+</html>

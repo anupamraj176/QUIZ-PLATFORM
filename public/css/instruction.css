@@ -1,0 +1,58 @@
+body{
+    font-family: Verdana;
+}
+.logo{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    padding: 10px;
+}
+.about{
+    width: fit-content;
+    margin: auto;
+    text-align: center;
+}
+.about h3{
+    font-family: Verdana ;
+    margin: 0;
+    font-weight: normal;
+    font-size: 20px;
+}
+
+.about h4{
+    font-family: Verdana ;
+    margin: 0;
+    font-weight: normal;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.inst{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* height: 90vh; */
+}
+
+.inst ol{
+    width: 70%;
+}
+
+.inst ol li{
+    font-size: 20px;
+    padding-bottom: 6px;
+}
+
+.inst a{
+    cursor: pointer;
+}
+
+.inst a button{
+    padding: 8px 20px;
+    border: none;
+    background: gray;
+    font-size: 20px;
+    cursor: pointer;
+}

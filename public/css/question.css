@@ -1,109 +1,374 @@
-.QuestionForm{
-    width: 97%;
-    margin: auto;
-    display: flex;
-    /* flex-direction: column; */
-    justify-content: space-around;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-.formfill{
-    width: 40%;
-}
-
-#question_txt{
-    /* width: 40%; */
-    display: flex;
-    flex-direction: column;
-}
-
-#question_txt input, #question_txt select{
-    padding: 3px;
-    margin:5px 10px 5px;
-}
-
-#question_txt label{
-    padding: 0px;
-    margin:0px 10px;
-}
-
-/* display */
-
-.display{
-    width: 55%;
-    border-left: 2px solid black;
-    height: 80vh;
-    overflow: auto;
-}
-
-.question{
-    margin: auto;
-    width: fit-content;
-}
-
-.quiz{
-    width: 95%;
-}
-
-.mcq{
-    width: 80%;
-    margin: auto;
-    border-bottom: 2px solid black;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-}
-
-.mcq h1 span{
-    font-size: 20px;
-    padding: 0;
+/* ===== Reset & Base ===== */
+* {
     margin: 0;
-    font-weight: 700;
-}
-
-.mcq h1{
     padding: 0;
-    margin: 0;
-    font-size: 22px;
-    font-weight: normal;
+    box-sizing: border-box;
 }
 
-.mcq img{
+html, body {
+    height: 100vh;
+    overflow: hidden; /* Keep page-level scrolling locked */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: #111111;
+}
+
+/* ===== Header ===== */
+.header {
+    background: #ffffff;
+    border-bottom: 1px solid #eaeaea;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
     width: 100%;
 }
 
-.mcq ul{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    padding-top: 20px;
-    padding-left: 5px;
-}
-
-.mcq ul li{
+.header .heading h1 {
     font-size: 16px;
-    margin: 0;
-    padding: 0;
-    padding:10px 15px;
-    /* cursor: pointer; */
+    font-weight: 600;
+    color: #111111;
+    letter-spacing: -0.2px;
 }
 
-.answer{
-    font-size: 20px;
-}
-
-.delete{
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.answerDelete{
+.header-actions {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
 }
 
-.hideupdate{
+.header-actions a {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border: 1px solid #eaeaea;
+}
+
+.btn-nav {
+    color: #333333;
+    background: #ffffff;
+}
+
+.btn-nav:hover {
+    background: #fafafa;
+    border-color: #bbbbbb;
+}
+
+.btn-logout {
+    color: #d32f2f;
+    background: #ffffff;
+    border-color: #ffcccc;
+}
+
+.btn-logout:hover {
+    background: #ffebee;
+}
+
+/* ===== Main Dashboard Layout ===== */
+.dashboard-container {
+    display: flex;
+    height: calc(100vh - 56px);
+    width: 100%;
+}
+
+/* ===== Left Sidebar ===== */
+.sidebar {
+    width: 440px; /* Expanded for more horizontal breathing room */
+    flex-shrink: 0;
+    border-right: 1px solid #eaeaea;
+    background: #fafafa;
+    overflow-y: auto;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+/* ===== Sidebar Sections ===== */
+.sidebar-section {
+    width: 100%;
+}
+
+.sidebar-section-header {
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.sidebar-section-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111111;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-section-header p {
+    font-size: 12px;
+    color: #666666;
+    margin-top: 3px;
+    line-height: 1.4;
+}
+
+/* ===== Form Controls ===== */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #444444;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px; /* Increased padding */
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 13px; /* Larger font size */
+    font-family: 'Inter', sans-serif;
+    color: #111111;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-control:focus {
+    border-color: #111111;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px; /* Increased button size */
+    border: 1px solid #111111;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.btn-primary {
+    background: #111111;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #333333;
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #111111;
+    border: 1px solid #bbbbbb;
+}
+
+.btn-secondary:hover {
+    background: #fafafa;
+    border-color: #111111;
+}
+
+/* ===== Success Alerts ===== */
+.success-msg {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #f4fbf7;
+    border: 1px solid #c7ebd4;
+    border-radius: 6px;
+    color: #1b5e20;
+    font-size: 12px;
+    font-weight: 500;
     display: none;
 }
 
-input[type='text']{
-    width: 90%;
+/* ===== Right Main Area ===== */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    background: #ffffff;
+}
+
+.main-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+.stream-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.stream-filter label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111111;
+}
+
+.stream-filter select {
+    width: 240px;
+    padding: 8px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.stream-filter select:focus {
+    border-color: #111111;
+}
+
+/* ===== MCQ Question List ===== */
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mcq {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+.mcq:hover {
+    border-color: #bbbbbb;
+}
+
+.mcq h1 {
+    font-size: 15px; /* Larger question statement */
+    font-weight: 500;
+    color: #111111;
+    line-height: 1.6;
+}
+
+.mcq h1 span {
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.mcq img {
+    max-width: 100%;
+    margin-top: 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+}
+
+.mcq ul {
+    list-style: none;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mcq ul li {
+    font-size: 13px; /* More readable options text */
+    color: #333333;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: #fafafa;
+}
+
+.answer {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1b5e20;
+    background: #e8f5e9;
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.answerDelete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.delete {
+    font-size: 12px;
+    cursor: pointer;
+    color: #d32f2f;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: all 0.15s;
+}
+
+.delete:hover {
+    background: #ffebee;
+}
+
+.hideupdate {
+    display: none;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1000px) {
+    .dashboard-container {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eaeaea;
+        height: auto;
+        overflow-y: visible;
+    }
+
+    .main-content {
+        height: auto;
+        overflow-y: visible;
+    }
 }

@@ -17,116 +17,163 @@
         };
     </script>
     <script id="MathJax-script" async src="/mathjax/tex-mml-chtml.js"></script>
-    <title>Question Upload</title>
+    <title>Admin Panel</title>
 </head>
 
 <body>
-    <div class="header" style="display: flex; justify-content: space-between;">
+    <!-- ===== Top Header ===== -->
+    <div class="header">
         <div class="heading">
-            <h1>Question Panel</h1>
+            <h1>Admin Panel &mdash; Exam Portal</h1>
         </div>
-        <div style="margin: 20px; background-color: rgb(214, 212, 212); padding: 10px 20px;">
-            <a href="#" onclick="localStorage.removeItem('admintoken'); window.location.reload()">logout</a>
+        <div class="header-actions">
+            <a href="/participants" class="btn-nav">Participants</a>
+            <a href="#" class="btn-logout" onclick="localStorage.removeItem('admintoken'); window.location.reload()">Logout</a>
         </div>
-        <div style="margin: 20px; background-color: rgb(214, 212, 212); padding: 10px 20px;">
-            <a href="/participants">Participants</a>
-        </div>
-    </div>
-    
-    <div class="TimingConfigCard" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; color: #333;">Configure Exam Timings (JEE Mode)</h3>
-        <form id="timingConfigForm" style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
-            <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label for="startTimeInput" style="font-weight: bold; font-size: 14px;">Start Date & Time:</label>
-                <input type="datetime-local" id="startTimeInput" name="startTime" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label for="endTimeInput" style="font-weight: bold; font-size: 14px;">End Date & Time:</label>
-                <input type="datetime-local" id="endTimeInput" name="endTime" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-            </div>
-            <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background-color 0.2s;">
-                Save Timing
-            </button>
-        </form>
-        <div id="timingSuccessMsg" style="margin-top: 10px; color: green; font-weight: bold; display: none;">Timing saved successfully!</div>
     </div>
 
-    <div class="ExcelUploadCard" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; color: #333;">Bulk Upload Questions (Excel / CSV)</h3>
-        <form id="excelUploadForm" action="/question/uploadexcel" method="post" enctype="multipart/form-data" style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
-            <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label for="excelStream" style="font-weight: bold; font-size: 14px;">Select Stream:</label>
-                <select name="stream" id="excelStream" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-                    <option value="">--select--</option>
-                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
-                </select>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label for="excelFile" style="font-weight: bold; font-size: 14px;">Excel or CSV File:</label>
-                <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" required style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; background: white;">
-            </div>
-            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background-color 0.2s;">
-                Upload Excel
-            </button>
-        </form>
-        <div id="excelSuccessMsg" style="margin-top: 10px; color: green; font-weight: bold; display: none;"></div>
-    </div>
-
-    <div class="QuestionForm">
-        <div class="formfill">
-            <form action="/question/addquestion" id="question_txt" method="post" encType='multipart/form-data'>
-                <label for="stream">Stream</label>
-                <select name="stream" id="stream" required>
-                    <option value="">--select--</option>
-                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
-                </select>
-                <label for="ques">Question</label>
-                <input type="text" name="ques" placeholder="Enter Question" id="ques">
-                <label for="image">Upload Image</label>
-                <input type="file" name="img" id="image">
-                <label for="option1">A</label>
-                <input type="text" name="option1" placeholder="Enter Option 1" id="option1" required>
-                <label for="option2">B</label>
-                <input type="text" name="option2" placeholder="Enter Option 2" id="option2" required>
-                <label for="option3">C</label>
-                <input type="text" name="option3" placeholder="Enter Option 3" id="option3" required>
-                <label for="option4">D</label>
-                <input type="text" name="option4" placeholder="Enter Option 4" id="option4" required>
-                <!-- <input type="text" name="answer" placeholder="Enter Answer" id="answer"> -->
-                <label for="answer">Answer</label>
-                <select name="answer" id="answer" required>
-                    <option value="">--select--</option>
-                    <option value="option1">A</option>
-                    <option value="option2">B</option>
-                    <option value="option3">C</option>
-                    <option value="option4">D</option>
-                </select>
-                <input type="submit" value="Add Question" id="add_question">
-            </form>
-        </div>
-        <div class="display">
-            <div class="question">
-                <label for="stream">Stream</label>
-                <select name="stream" id="stream" onchange="selectStream(this.value)" required>
-                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
-                </select>
-                <div class="questionShow" id="questionshow">
+    <!-- ===== Main Scrollable Dashboard Layout ===== -->
+    <div class="dashboard-container">
+        
+        <!-- Left Sidebar: Controls -->
+        <div class="sidebar">
+            
+            <!-- Timing Form -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <h3>Exam Schedule</h3>
+                    <p>Set timing for Online Examination</p>
                 </div>
+                <form id="timingConfigForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startTimeInput">Start Time</label>
+                            <input type="datetime-local" id="startTimeInput" name="startTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endTimeInput">End Time</label>
+                            <input type="datetime-local" id="endTimeInput" name="endTime" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Timing</button>
+                </form>
+                <div id="timingSuccessMsg" class="success-msg">Timing saved successfully.</div>
             </div>
-            <div class="quiz" id="quizdisplay">
 
+            <!-- Excel Upload Form -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <h3>Bulk Import</h3>
+                    <p>Upload questions from Excel or CSV sheet</p>
+                </div>
+                <form id="excelUploadForm" action="/question/uploadexcel" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="excelStream">Stream</label>
+                        <select name="stream" id="excelStream" class="form-control" required>
+                            <option value="">-- select --</option>
+                            <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                            <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                            <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                            <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="excelFile">File (.xlsx, .xls, .csv)</label>
+                        <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Upload Spreadsheet</button>
+                </form>
+                <div id="excelSuccessMsg" class="success-msg"></div>
+            </div>
+
+            <!-- Manual Add Form -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <h3>Add Question</h3>
+                    <p>Manually insert a single question</p>
+                </div>
+                <form action="/question/addquestion" id="question_txt" method="post" encType='multipart/form-data'>
+                    <div class="form-group">
+                        <label for="stream">Stream</label>
+                        <select name="stream" id="stream" class="form-control" required>
+                            <option value="">-- select --</option>
+                            <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                            <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                            <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                            <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ques">Question Text</label>
+                        <input type="text" name="ques" placeholder="Question statement" id="ques" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Image (optional)</label>
+                        <input type="file" name="img" id="image" class="form-control">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="option1">Option A</label>
+                            <input type="text" name="option1" placeholder="Option A" id="option1" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="option2">Option B</label>
+                            <input type="text" name="option2" placeholder="Option B" id="option2" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="option3">Option C</label>
+                            <input type="text" name="option3" placeholder="Option C" id="option3" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="option4">Option D</label>
+                            <input type="text" name="option4" placeholder="Option D" id="option4" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="answer">Answer Key</label>
+                        <select name="answer" id="answer" class="form-control" required>
+                            <option value="">-- select --</option>
+                            <option value="option1">A</option>
+                            <option value="option2">B</option>
+                            <option value="option3">C</option>
+                            <option value="option4">D</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="add_question" class="btn btn-primary">Add Question</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Right Pane: Questions List -->
+        <div class="main-content">
+            <div class="stream-filter">
+                <label for="browseStream">Questions</label>
+                <select id="browseStream" onchange="selectStream(this.value)" required>
+                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                </select>
+            </div>
+            
+            <div class="questionShow" id="questionshow" style="display:none;"></div>
+            
+            <div class="quiz-list" id="quizdisplay">
+                <!-- Loaded quiz questions will be populated here -->
             </div>
         </div>
+
     </div>
+
     <script>
         let CSEvalue = `<%- CSEvalue %>`
         let ECEvalue = `<%- ECEvalue %>`
@@ -135,3 +182,5 @@
     </script>
     <script src="../public/js/question.js"></script>
 </body>
+
+</html>

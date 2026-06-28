@@ -21,7 +21,7 @@ function fetchUser() {
         .then((res) => res.json())
         .then((body) => {
             if (body.status === 0) {
-                if (body.data.stream.length === 0) {
+                if (!body.data.stream || body.data.stream.length === 0) {
                     window.location.href = '/data'
                 }
                 var html = `
@@ -215,19 +215,30 @@ function next(i, sz, quesid) {
 }
 
 
+// helper to set grid states cleanly
+const setGridState = (key, state) => {
+    const el = document.getElementById(`optionchoose_${key}`);
+    if (el) {
+        el.style.background = ''; // Clear inline styles
+        el.className = 'short';   // Reset
+        if (state) {
+            el.classList.add(`state-${state}`);
+        }
+    }
+}
+
 // clear answer
 async function clearvalue(idx, len, id) {
-    // console.log(id)
-    // console.log(mp)
     mp.delete(id)
-    // console.log(mp.has(id))
-    // console.log(mp)
-    // ${data[i].id}_option${j}
 
-    for (let index = 0; index < 4; index++) {
-        document.getElementById(`${id}_option${index}`).style.backgroundColor = `white`
+    for (let index = 0; index < 5; index++) {
+        const optionEl = document.getElementById(`${id}_option${index}`);
+        if (optionEl) {
+            optionEl.classList.remove('selectedOption');
+            optionEl.style.backgroundColor = '';
+        }
     }
-    document.getElementById(`optionchoose_${id}`).style.background = `red`;
+    setGridState(id, 'visited');
     middleAnswer();
 }
 
@@ -235,35 +246,24 @@ async function clearvalue(idx, len, id) {
 
 function setAnswer(id, i, answer) {
     tempanswer = answer;
-    // console.log(i)
-    // console.log(answer)
     if (answer === undefined) {
         return;
     }
-    // if (localStorage.getItem('Useranswer')) {
-    //     // console.log(`here`);
-    //     var value = localStorage.getItem('Useranswer');
-    //     value = JSON.parse(value);
-    //     // console.log(value)
-    //     mp = value;
-    // }
-    // mp[id] = {
-    //     answer: answer,
-    //     i: i
-    // }
     mp.set(id, {
         answer: answer,
         i: i
     })
-    // var store = JSON.stringify(mp);
-    // localStorage.setItem('Useranswer', store);
-    for (let index = 0; index < 4; index++) {
-        var value = document.getElementById(`${id}_option${index}`);
-        value.style.background = 'white';
+    for (let index = 0; index < 5; index++) {
+        const optionEl = document.getElementById(`${id}_option${index}`);
+        if (optionEl) {
+            optionEl.classList.remove('selectedOption');
+            optionEl.style.background = '';
+        }
     }
-    var value = document.getElementById(`${id}_option${i}`);
-    value.style.background = 'rgb(64, 145, 215)';
-    // console.log(mp);
+    const selectedEl = document.getElementById(`${id}_option${i}`);
+    if (selectedEl) {
+        selectedEl.classList.add('selectedOption');
+    }
     middleAnswer();
 }
 
@@ -294,8 +294,7 @@ const middleAnswer = () => {
         .then((res) => {
             // console.log(res);
             for (const i in arr) {
-                // console.log(arr[i]);
-                document.getElementById(`optionchoose_${arr[i].key}`).style.background = `green`;
+                setGridState(arr[i].key, 'answered');
             }
             startmarkasReview();
         })
@@ -333,15 +332,11 @@ const startmarkasReview = () => {
         .then((res) => {
             // console.log(res);
             for (const i in arr) {
-                // console.log(arr[i]);
-                document.getElementById(`optionchoose_${arr[i].key}`).style.background = `purple`;
+                setGridState(arr[i].key, 'review');
                 document.getElementById(`markReview_${arr[i].key}`).innerHTML = `
                 <button type="submit" onclick="markasunReview('${arr[i].key}')"> Mark as Unreview </button>
                 `;
             }
-            // for(const i in mp){
-            //     document.getElementById(`optionchoose_${i}`).style.background=`green`;
-            // }
         })
         .catch()
     // console.log(arr);
@@ -353,6 +348,7 @@ const markasunReview = (key) => {
     document.getElementById(`markReview_${key}`).innerHTML = `
                 <button type="submit" onclick="markasReview('${key}')"> Mark as Review </button>
                 `;
+    setGridState(key, 'visited');
     visitedQuestion();
     startmarkasReview();
 
@@ -381,15 +377,11 @@ const visitedQuestion = () => {
         .then((res) => {
             // console.log(res);
             for (const i in arr) {
-                // console.log(arr[i]);
-                document.getElementById(`optionchoose_${arr[i].key}`).style.background = `red`;
+                setGridState(arr[i].key, 'visited');
             }
             for (const i of mp.keys()) {
-                document.getElementById(`optionchoose_${i}`).style.background = `green`;
+                setGridState(i, 'answered');
             }
-            // markreveiw.forEach(function(key){
-            //     document.getElementById(`optionchoose_${key}`).style.background=`purple`;
-            // })
             startmarkasReview();
 
         })

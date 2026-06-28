@@ -1,29 +1,29 @@
 var timer;
 var checkvalue = false;
 
-
-
 var compareDate = new Date('July 16, 2022, 12:30:00');
 var startDate = new Date('July 16, 2022, 11:00:00');
 var presentDate;
-// compareDate.setDate(compareDate.getDate() + 1); //just for this demo today + 7 days
 
 const getDate =()=>{
     fetch('/time/timing')
     .then((res)=>res.json())
     .then((res)=>{
-      // console.log(res.SDate);
         compareDate = new Date(res.EDate);
         startDate = new Date(res.SDate);
         presentDate = new Date(res.presentDate);
+
+        if (presentDate < startDate) {
+            window.location.href = '/instruction';
+        }
     })
-    .catch()
+    .catch((err) => console.error("Error fetching timings:", err));
 }
 getDate()
 
 timer = setInterval(function() {
     getDate();
-  timeBetweenDates(compareDate,presentDate);
+    timeBetweenDates(compareDate,presentDate);
 }, 1000);
 
 function timeBetweenDates(toDate,present) {

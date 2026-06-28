@@ -15,50 +15,187 @@
         };
     </script>
     <script id="MathJax-script" async src="/mathjax/tex-mml-chtml.js"></script>
-    <title>Participant Submission</title>
+    <title>Submission Confirmed</title>
     <style>
-        body{
-            font-size: 20px;
-            width: 60%;
-            margin: auto;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1{
-            font-size: 18px;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #111111;
+            padding: 40px 24px;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        ul{
-            text-decoration: none;
-            list-style: none;
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
         }
-        li{
+
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        .about {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .about h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111111;
+            line-height: 1.5;
+        }
+
+        .success-banner {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 28px;
+        }
+
+        .success-banner h3 {
             font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
-        .mcq img{
-            width: 100%;
+
+        .success-banner p {
+            font-size: 13px;
         }
-        .answerDelete{
-            background-color: rgb(219, 215, 215);
-            padding: 10px;
+
+        .userDetailshow {
+            background-color: #fafafa;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 28px;
         }
-        .mcq{
-            border-bottom: 2px solid black;
+
+        .userDetailshow h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .userDetailshow .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .userDetailshow p {
+            font-size: 13px;
+            color: #444444;
+            line-height: 1.5;
+        }
+
+        .userDetailshow p strong {
+            color: #111111;
+        }
+
+        .mcq {
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: #ffffff;
+        }
+
+        .mcq h1 {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #111111;
+            margin-bottom: 12px;
+        }
+
+        .mcq h1 span {
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .mcq img {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
+        }
+
+        .mcq ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .mcq ul li {
+            font-size: 13px;
+            color: #555555;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #fafafa;
+            border: 1px solid #eaeaea;
+        }
+
+        .answerDelete {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a3b5d;
+            background: #f0f4f8;
+            padding: 10px 16px;
+            border-radius: 4px;
+            margin-top: 12px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <div style="width: fit-content; margin: auto; margin-top: 10px;">
-        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" style="text-align: center;" width="150px" height="150px" alt="" srcset="">
+    <div class="logo">
+        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur">
     </div>
-    <h1 style="text-align: center;">Indian Institute of Information Technology Bhagalpur</h1>
-    <div class="userDetailshow" id="userDetail" style="background-color:rgb(219, 215, 215) ; padding: 10px;">
-        
+    <div class="about">
+        <h2>Indian Institute of Information Technology Bhagalpur</h2>
     </div>
-    <div class="questionShow" id="questionshow">
-        
+
+    <div class="success-banner">
+        <h3>Submission Confirmed</h3>
+        <p>Your responses have been successfully submitted and saved.</p>
     </div>
+
+    <div style="display: flex; justify-content: center; margin-bottom: 28px;">
+        <button id="downloadExcelBtn" style="padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid #111111; border-radius: 4px; background-color: #111111; color: #ffffff; transition: background 0.15s;">Download Excel Response</button>
+    </div>
+
+    <div class="userDetailshow" id="userDetail">
+        <!-- Will be populated by JS -->
+    </div>
+
+    <div class="questionShow" id="questionshow" style="display:none;">
+        <!-- Loaded answers summary -->
+    </div>
+
     <div class="quiz" id="quizdisplay">
-        
+        <!-- Loaded questions and answers list -->
     </div>
-    <h1 style="text-align: center; margin-top: 20px;">Indian Institute of Information Technology Bhagalpur</h1>
+    
     <script src="../public/js/UserSubmitForm.js"></script>
 </body>
 </html>

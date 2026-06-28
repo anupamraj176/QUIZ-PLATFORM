@@ -35,10 +35,13 @@ const getuser = () => {
                 userVisited = data.data.visited
 
                 document.getElementById('userDetail').innerHTML = `
-                    <p>Application No.: ${data.data.applicationNo}</p>
-                    <p>Name : ${data.data.name}</p>
-                    <p>Program : ${data.data.program}</p>
-                    <p>Department : ${data.data.stream}</p>
+                    <h2>Candidate Information</h2>
+                    <div class="info-grid">
+                        <p><strong>Application No:</strong> ${data.data.applicationNo}</p>
+                        <p><strong>Name:</strong> ${data.data.name}</p>
+                        <p><strong>Category:</strong> ${data.data.program}</p>
+                        <p><strong>Stream:</strong> ${data.data.stream}</p>
+                    </div>
                 `
                 // console.log(userAnswer)
                 getquiz();
@@ -146,10 +149,10 @@ function userAnswerShow() {
     // ${data[i].id}_useranswer
     // console.log(userVisited)
     userAnswer.forEach((e) => {
-        // console.log(e)
-        document.getElementById(`${e.key}_useranswer`).innerHTML = `<p>Your Answer: ${String.fromCharCode(Number(e.option) + 65)}. ${e.value}</p>`
-        document.getElementById(`${e.key}_Visited`).innerHTML = `Answered`
-        document.getElementById(`${e.key}_Visited`).style.color = `green`
+        document.getElementById(`${e.key}_useranswer`).innerHTML = `Your Answer: ${String.fromCharCode(Number(e.option) + 65)}. ${e.value}`
+        const visitedEl = document.getElementById(`${e.key}_Visited`);
+        visitedEl.innerHTML = `Answered`
+        visitedEl.style.color = `#2e7d32`
     })
 
     // userVisited.forEach((e)=>{
@@ -157,3 +160,42 @@ function userAnswerShow() {
     // })
 
 }
+
+// Bind candidate response excel download
+document.getElementById('downloadExcelBtn').addEventListener('click', () => {
+    const downloadBtn = document.getElementById('downloadExcelBtn');
+    const originalText = downloadBtn.innerHTML;
+    downloadBtn.innerHTML = "Generating...";
+    downloadBtn.disabled = true;
+
+    fetch(`/admin/result/downloadResponse/${userID}`, {
+        method: 'GET',
+        headers: {
+            'auth_token': `${localStorage.getItem('admintoken')}`
+        }
+    })
+    .then(res => {
+        if (res.status === 200) {
+            return res.blob();
+        } else {
+            throw new Error("Unauthorized or user data not found");
+        }
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `response_${userID}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+    })
+    .catch(err => {
+        alert("Error exporting response sheet: " + err.message);
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+    });
+});

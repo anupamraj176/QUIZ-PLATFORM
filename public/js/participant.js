@@ -54,15 +54,18 @@ function displayparticpants(data){
 
 
     let html = `<table>
-                <tr>
-                    <th>S.No.</th>
-                    <th>Application No.</th>
-                    <th>Name</th>
-                    <th>Program</th>
-                    <th>Department</th>
-                    <th>Marks Obtained</th>
-                    <th>Submission</th>
-                </tr>`;
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Application No.</th>
+                        <th>Name</th>
+                        <th>Program</th>
+                        <th>Department</th>
+                        <th>Marks Obtained</th>
+                        <th>Submission</th>
+                    </tr>
+                </thead>
+                <tbody>`;
     for (let index = 0; index < data.length; index++) {
 
         html += `
@@ -73,12 +76,12 @@ function displayparticpants(data){
                     <td>${data[index].program}</td>
                     <td>${data[index].stream}</td>
                     <td>${data[index].marks}</td>
-                    <td><button onclick='window.location.href="/submitform?user=${data[index]._id}"'>show</button></td>
+                    <td><a href="/submitform?user=${data[index]._id}">View Response</a></td>
                 </tr>
         `
     }
 
-    html += `</table>`
+    html += `</tbody></table>`
 
     document.getElementById('participantsDatadesign').innerHTML = html
 }

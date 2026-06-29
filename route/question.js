@@ -14,7 +14,7 @@ const jwtaccess = require("../middleware/jwtverification");
 const {CSEvalue, ECEvalue, MEAvalue, Mathvalue} = require('../config/config')
 // const value = require('../config/config')
 
-router.post("/addquestion", jwtaccess, upload.single('img'), (req, res) => {
+router.post("/addquestion", jwtaccess, upload.single('img'), async (req, res) => {
   const id = req.userid;
   // console.log(id);
   if (id !== process.env.ADMINNO) {
@@ -37,50 +37,21 @@ router.post("/addquestion", jwtaccess, upload.single('img'), (req, res) => {
   }
   if (req.file !== undefined) {
     data['img'] = {
-      data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-      contentType: 'image/png'
+      data: fs.readFileSync(path.join(__dirname, 'uploads', req.file.filename)),
+      contentType: req.file.mimetype
     }
-    fs.unlinkSync(path.join(__dirname + "/uploads/" + req.file.filename));
+    fs.unlinkSync(path.join(__dirname, 'uploads', req.file.filename));
   }
 
   try {
-    // console.log(stream);
-    if (stream === CSEvalue) {
-      CSE.create(data)
-        .then(() => {
-          res.json({ status: 0 });
-        })
-        .catch(() => {
-          res.json({ status: -1 });
-        });
-    } else if (stream === MEAvalue) {
-      MEA.create(data)
-        .then(() => {
-          res.json({ status: 0 });
-        })
-        .catch(() => {
-          res.json({ status: -1 });
-        });
-    } else if (stream === ECEvalue) {
-      ECE.create(data)
-        .then(() => {
-          res.json({ status: 0 });
-        })
-        .catch(() => {
-          res.json({ status: -1 });
-        });
-    } else if (stream === Mathvalue) {
-      Math.create(data)
-        .then(() => {
-          res.json({ status: 0 });
-        })
-        .catch(() => {
-          res.json({ status: -1 });
-        });
-    } else {
-      res.json({ status: -1 });
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1 });
     }
+    await model.create(data);
+    res.json({ status: 0 });
   } catch (err) {
+    console.error("Error adding question manually:", err);
     res.json({ status: -1 });
   }
 });
@@ -95,10 +66,10 @@ router.post("/updatequestionImage", jwtaccess, upload.single('img'), async (req,
   var data = {}
   if (req.file !== undefined) {
     data['img'] = {
-      data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-      contentType: 'image/png'
+      data: fs.readFileSync(path.join(__dirname, 'uploads', req.file.filename)),
+      contentType: req.file.mimetype
     }
-    fs.unlinkSync(path.join(__dirname + "/uploads/" + req.file.filename));
+    fs.unlinkSync(path.join(__dirname, 'uploads', req.file.filename));
   }
 
   try {

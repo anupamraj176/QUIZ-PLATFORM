@@ -3,6 +3,7 @@ const xlsx = require("xlsx");
 const multer = require("multer");
 const excelUpload = multer({ storage: multer.memoryStorage() });
 const { getQuestionModel } = require("../model/questionHelper");
+const User = require("../model/user");
 const path = require("path");
 const fs = require("fs");
 const upload = require("../middleware/imgUpd");

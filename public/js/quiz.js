@@ -69,7 +69,8 @@ const getquiz = (stream) => {
     fetch(`/question/sendquestion`, {
         method: 'POST',
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'auth_token': `${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
             'stream': `${stream}`

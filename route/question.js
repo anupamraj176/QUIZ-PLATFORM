@@ -25,6 +25,7 @@ router.post("/addquestion", jwtaccess, upload.single('img'), (req, res) => {
     return res.json({ status: -1 });
   }
   var stream = req.body.stream;
+  var program = req.body.program || "MTech";
   var arr = new Array();
   arr.push(req.body.option1);
   arr.push(req.body.option2);
@@ -35,6 +36,7 @@ router.post("/addquestion", jwtaccess, upload.single('img'), (req, res) => {
     ques: req.body.ques,
     choice: arr,
     answer: answer,
+    program: program
   }
   if (req.file !== undefined) {
     data['img'] = {
@@ -186,9 +188,10 @@ router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
       return res.json({ status: -1 });
     }
     var stream = req.body.stream;
+    var program = req.body.program || "MTech";
     var data = new Array();
     if (stream === CSEvalue) {
-      var ques = await CSE.find({});
+      var ques = await CSE.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -200,7 +203,7 @@ router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
 
       }
     } else if (stream === MEAvalue) {
-      var ques = await MEA.find({});
+      var ques = await MEA.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -212,7 +215,7 @@ router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
 
       }
     } else if (stream === ECEvalue) {
-      var ques = await ECE.find({});
+      var ques = await ECE.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -223,7 +226,7 @@ router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
         });
       }
     } else if (stream === Mathvalue) {
-      var ques = await Math.find({});
+      var ques = await Math.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -274,12 +277,19 @@ router.post("/deleteAdminquetion", jwtaccess, async (req, res) => {
 
 
 
-router.post("/sendquestion", async (req, res) => {
+router.post("/sendquestion", jwtaccess, async (req, res) => {
   try {
-    var stream = req.body.stream;
+    const user = await User.findById(req.userid);
+    if (!user) {
+      return res.json({ status: -1, message: "User not found" });
+    }
+
+    var stream = user.stream;
+    var program = user.program || "MTech";
     var data = new Array();
+
     if (stream === CSEvalue) {
-      var ques = await CSE.find({});
+      var ques = await CSE.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -290,7 +300,7 @@ router.post("/sendquestion", async (req, res) => {
 
       }
     } else if (stream === MEAvalue) {
-      var ques = await MEA.find({});
+      var ques = await MEA.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -301,7 +311,7 @@ router.post("/sendquestion", async (req, res) => {
 
       }
     } else if (stream === ECEvalue) {
-      var ques = await ECE.find({});
+      var ques = await ECE.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -311,7 +321,7 @@ router.post("/sendquestion", async (req, res) => {
         });
       }
     } else if (stream === Mathvalue) {
-      var ques = await Math.find({});
+      var ques = await Math.find({ program: program });
       for (i in ques) {
         data.push({
           question: ques[i].ques,
@@ -325,6 +335,7 @@ router.post("/sendquestion", async (req, res) => {
 
     res.json({ status: 0, data });
   } catch (error) {
+    console.error("Error sending candidate questions:", error);
     res.json({ status: -1 });
   }
 });
@@ -337,6 +348,7 @@ router.post("/uploadexcel", jwtaccess, excelUpload.single('excelFile'), async (r
     }
 
     const stream = req.body.stream;
+    const program = req.body.program || "MTech";
     if (!req.file) {
       return res.json({ status: -2, message: "No file uploaded" });
     }
@@ -395,6 +407,7 @@ router.post("/uploadexcel", jwtaccess, excelUpload.single('excelFile'), async (r
         ques: questionText,
         choice: choices,
         answer: correctAnswerText,
+        program: program,
         img: { data: Buffer.alloc(0), contentType: '' } // default empty image
       });
     }

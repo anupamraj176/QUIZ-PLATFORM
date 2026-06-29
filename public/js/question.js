@@ -1,5 +1,6 @@
 
 var stream = 'Computer Science Engineering';
+var program = 'MTech';
 if (localStorage.getItem('admintoken')) {
 } else {
   window.location.href = '/admin'
@@ -8,6 +9,11 @@ if (localStorage.getItem('admintoken')) {
 
 const selectStream = (value) => {
   stream = value;
+  getquiz();
+}
+
+const selectProgram = (value) => {
+  program = value;
   getquiz();
 }
 
@@ -47,7 +53,8 @@ const getquiz = () => {
       'auth_token': `${localStorage.getItem('admintoken')}`
     },
     body: JSON.stringify({
-      'stream': `${stream}`
+      'stream': `${stream}`,
+      'program': `${program}`
     })
   })
     .then((res) => res.json())

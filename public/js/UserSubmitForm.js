@@ -5,6 +5,7 @@ const userID = urlParams.get('user')
 
 let userAnswer;
 let userVisited;
+var program = 'MTech';
 
 var stream = 'Assistant Professor (Level-10) in CSE Department';
 if (localStorage.getItem('admintoken')) {
@@ -31,6 +32,7 @@ const getuser = () => {
                 // console.log(data);
                 // alert("Question added successfully");
                 stream = data.data.stream
+                program = data.data.program || 'MTech'
                 userAnswer = data.data.answer
                 userVisited = data.data.visited
 
@@ -68,7 +70,8 @@ const getquiz = () => {
             'auth_token': `${localStorage.getItem('admintoken')}`
         },
         body: JSON.stringify({
-            'stream': `${stream}`
+            'stream': `${stream}`,
+            'program': `${program}`
         })
     })
         .then((res) => res.json())

@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
   },
   choice: [{ type: String }],
   answer: { type: String },
+  program: { type: String, default: "MTech" }
 });
 
 module.exports = mongoose.model("cse", schema);

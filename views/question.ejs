@@ -78,6 +78,13 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="excelProgram">Program</label>
+                        <select name="program" id="excelProgram" class="form-control" required>
+                            <option value="MTech">MTech</option>
+                            <option value="PhD">PhD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="excelFile">File (.xlsx, .xls, .csv)</label>
                         <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" class="form-control" required>
                     </div>
@@ -117,6 +124,13 @@
                             <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
                             <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
                             <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="manualProgram">Program</label>
+                        <select name="program" id="manualProgram" class="form-control" required>
+                            <option value="MTech">MTech</option>
+                            <option value="PhD">PhD</option>
                         </select>
                     </div>
 
@@ -172,13 +186,19 @@
         <!-- Right Pane: Questions List -->
         <div class="main-content">
             <div class="stream-filter">
-                <label for="browseStream">Questions</label>
-                <select id="browseStream" onchange="selectStream(this.value)" required>
-                    <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                    <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                    <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                    <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
-                </select>
+                <label for="browseStream">Filter Questions</label>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <select id="browseStream" onchange="selectStream(this.value)" required>
+                        <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
+                        <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
+                        <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
+                        <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                    </select>
+                    <select id="browseProgram" onchange="selectProgram(this.value)" required style="width: 120px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; font-family: 'Inter', sans-serif;">
+                        <option value="MTech">MTech</option>
+                        <option value="PhD">PhD</option>
+                    </select>
+                </div>
             </div>
             
             <div class="questionShow" id="questionshow" style="display:none;"></div>

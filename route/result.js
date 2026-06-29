@@ -9,56 +9,95 @@ const jwtaccess = require('../middleware/jwtverification');
 const router = express.Router();
 const {CSEvalue, ECEvalue, MEAvalue, Mathvalue} = require('../config/config')
 
-router.get('/Generateresult', async (req, res) => {
-
+router.get('/Generateresult', jwtaccess, async (req, res) => {
     try {
+        const adminId = req.userid;
+        if (!adminId || !process.env.ADMINNO || adminId.toString().trim() !== process.env.ADMINNO.toString().trim()) {
+            return res.status(403).json({ status: -1, message: "Unauthorized" });
+        }
+
         let user = await User.find({});
-        // console.log(user)
         for (i in user) {
             if(user[i].answer==undefined){
                 continue;
             }
             var marks = 0;
-            // console.log(user[i].stream)
             if (user[i].stream === CSEvalue) {
                 for (var j = 0; j < user[i].answer.length; j++) {
                     var q = await CSE.findById(user[i].answer[j].key);
-                    if (user[i].answer[j].value === q.answer) {
-                        marks++;
+                    if (q && user[i].answer[j].value === q.answer) {
+                        marks += 2;
                     }
                 }
             }else if (user[i].stream === ECEvalue) {
-                // console.log('ECE');
-                // console.log(user[i]._id);
                 for (var j = 0; j < user[i].answer.length; j++) {
-                    // console.log(user[i].answer[j].key);
                     var q = await ECE.findById(user[i].answer[j].key);
-                    if (user[i].answer[j].value === q.answer) {
-                        marks++;
+                    if (q && user[i].answer[j].value === q.answer) {
+                        marks += 2;
                     }
                 }
             }else if (user[i].stream == MEAvalue) {
-                // console.log("HERE")
                 for (var j = 0; j < user[i].answer.length; j++) {
                     var q = await MEA.findById(user[i].answer[j].key);
-                    if (user[i].answer[j].value === q.answer) {
-                        marks++;
+                    if (q && user[i].answer[j].value === q.answer) {
+                        marks += 2;
                     }
                 }
             }else if (user[i].stream === Mathvalue) {
                 for (var j = 0; j < user[i].answer.length; j++) {
                     var q = await Math.findById(user[i].answer[j].key);
-                    if (user[i].answer[j].value === q.answer) {
-                        marks++;
+                    if (q && user[i].answer[j].value === q.answer) {
+                        marks += 2;
                     }
                 }
             }
-            // console.log(marks)
             await User.findByIdAndUpdate( user[i]._id, { marks: marks });
         }
-        res.json({status:0});
+
+        // Fetch fresh users sorted by marks obtained descending
+        let freshUsers = await User.find({});
+        freshUsers.sort((a, b) => (b.marks || 0) - (a.marks || 0));
+
+        let rows = [];
+        rows.push(["INDIAN INSTITUTE OF INFORMATION TECHNOLOGY BHAGALPUR"]);
+        rows.push(["CANDIDATE EXAM RESULTS SUMMARY"]);
+        rows.push([]);
+        rows.push(["S.No.", "Application No.", "Candidate Name", "Category", "Post Applied For (Stream)", "Marks Obtained", "Status"]);
+
+        freshUsers.forEach((u, index) => {
+            rows.push([
+                index + 1,
+                u.applicationNo || "",
+                u.name || "",
+                u.program || "",
+                u.stream || "",
+                u.marks !== undefined ? u.marks : 0,
+                u.attempted ? "Submitted" : "Not Submitted"
+            ]);
+        });
+
+        const worksheet = xlsx.utils.aoa_to_sheet(rows);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, "Results Summary");
+
+        worksheet["!cols"] = [
+            { wch: 8 },   // S.No.
+            { wch: 20 },  // Application No.
+            { wch: 25 },  // Candidate Name
+            { wch: 15 },  // Category
+            { wch: 35 },  // Stream
+            { wch: 18 },  // Marks Obtained
+            { wch: 15 }   // Status
+        ];
+
+        const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', 'attachment; filename="Exam_Results_Summary.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
     } catch (err) {
-        res.json({status:-1});
+        console.error("Error generating bulk results:", err);
+        res.status(500).json({status:-1, error: err.message});
     }
 })
 

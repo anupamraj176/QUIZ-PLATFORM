@@ -41,6 +41,7 @@ const getuser = () => {
                         <p><strong>Name:</strong> ${data.data.name}</p>
                         <p><strong>Category:</strong> ${data.data.program}</p>
                         <p><strong>Stream:</strong> ${data.data.stream}</p>
+                        <p><strong>Marks Obtained:</strong> ${data.data.marks !== undefined ? data.data.marks : 0}</p>
                     </div>
                 `
                 // console.log(userAnswer)

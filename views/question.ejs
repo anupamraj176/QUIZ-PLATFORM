@@ -63,7 +63,7 @@
             <!-- Excel Upload Form -->
             <div class="sidebar-section">
                 <div class="sidebar-section-header">
-                    <h3>Bulk Import</h3>
+                    <h3>Bulk Import Questions</h3>
                     <p>Upload questions from Excel or CSV sheet</p>
                 </div>
                 <form id="excelUploadForm" action="/question/uploadexcel" method="post" enctype="multipart/form-data">
@@ -81,9 +81,25 @@
                         <label for="excelFile">File (.xlsx, .xls, .csv)</label>
                         <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Upload Spreadsheet</button>
+                    <button type="submit" class="btn btn-secondary">Upload Questions</button>
                 </form>
                 <div id="excelSuccessMsg" class="success-msg"></div>
+            </div>
+
+            <!-- Candidates Excel Upload Form -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <h3>Bulk Import Candidates</h3>
+                    <p>Upload candidate logins from Excel sheet</p>
+                </div>
+                <form id="candidatesUploadForm" action="/user/uploadCandidates" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="candidatesFile">File (.xlsx, .xls, .csv)</label>
+                        <input type="file" id="candidatesFile" name="candidatesFile" accept=".xlsx, .xls, .csv" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Upload Candidates</button>
+                </form>
+                <div id="candidatesSuccessMsg" class="success-msg"></div>
             </div>
 
             <!-- Manual Add Form -->

@@ -162,7 +162,11 @@
                 .then((body) => {
                     if (body.status === 0) {
                         localStorage.setItem('token', `${body.authtoken}`)
-                        window.location.href = '/data'
+                        if (body.stream && body.stream.length > 0) {
+                            window.location.href = '/instruction'
+                        } else {
+                            window.location.href = '/data'
+                        }
                     } else if (body.status === 2){
                         warningDiv.innerHTML = "Already submitted / logged in";
                         warningDiv.style.display = 'block';

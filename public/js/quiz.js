@@ -438,7 +438,7 @@ const submitAnswer = () => {
         .then((res) => {
             console.log(res);
             if (res.status === 0) {
-                alert('Successfully submitted')
+                alert('Exam successfully submitted! Your Score: ' + res.marks + ' marks.')
                 logout();
             }
         })
@@ -481,7 +481,7 @@ const submitAnswer2 = () => {
         .then((res) => {
             console.log(res);
             if (res.status === 0) {
-                alert('Successfully submitted')
+                alert('Exam successfully submitted! Your Score: ' + res.marks + ' marks.')
                 logout();
             }
         })

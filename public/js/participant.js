@@ -88,20 +88,41 @@ function displayparticpants(data){
 
 
 function generateResult(){
-    fetch('/admin/result/Generateresult')
-    .then((res)=>res.json())
-    .then((res)=>{
-        // console.log(res)
-        if(res.status==0){
+    const btn = document.querySelector('.btn-result-action');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "Generating...";
+    btn.disabled = true;
 
-            alert('Result Created')
-            getParticipantsDetail();
-        }else{
-
-            alert('Unable to generate')
+    fetch('/admin/result/Generateresult', {
+        method: 'GET',
+        headers: {
+            'auth_token': `${localStorage.getItem('admintoken')}`
         }
     })
-    .catch((err)=>{
-        alert('Unable to generate')
+    .then((res) => {
+        if (res.status === 200) {
+            return res.blob();
+        } else {
+            throw new Error("Unauthorized or server calculation failed");
+        }
     })
+    .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Exam_Results_Summary.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Results calculated and summary Excel downloaded successfully!');
+        getParticipantsDetail();
+    })
+    .catch((err) => {
+        alert('Unable to generate results: ' + err.message);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 }

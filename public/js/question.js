@@ -346,3 +346,36 @@ document.getElementById('excelUploadForm').addEventListener('submit', (e) => {
       alert("Network error uploading Excel file");
     });
 });
+
+// Bind Candidates Excel form submission
+document.getElementById('candidatesUploadForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const msg = document.getElementById('candidatesSuccessMsg');
+  msg.style.display = 'none';
+
+  fetch(e.target.action, {
+    method: 'POST',
+    headers: {
+      'auth_token': `${localStorage.getItem('admintoken')}`
+    },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 0) {
+        msg.innerText = data.message;
+        msg.style.display = 'block';
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 6000);
+      } else {
+        alert("Error importing candidates: " + (data.message || "Unknown error"));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Network error importing candidates file");
+    });
+});

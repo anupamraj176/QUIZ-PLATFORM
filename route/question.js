@@ -2,11 +2,7 @@ const express = require("express");
 const xlsx = require("xlsx");
 const multer = require("multer");
 const excelUpload = multer({ storage: multer.memoryStorage() });
-const CSE = require("../model/CSE");
-const ECE = require("../model/ECE");
-const Math = require("../model/Math");
-const MEA = require("../model/MEA");
-// const question = require("../model/question");
+const { getQuestionModel } = require("../model/questionHelper");
 const path = require("path");
 const fs = require("fs");
 const upload = require("../middleware/imgUpd");
@@ -90,12 +86,11 @@ router.post("/addquestion", jwtaccess, upload.single('img'), (req, res) => {
 
 router.post("/updatequestionImage", jwtaccess, upload.single('img'), async (req, res) => {
   const id = req.userid;
-  // console.log(id);
   if (id !== process.env.ADMINNO) {
-    // console.log(id);
     return res.json({ status: -1 });
   }
   var stream = req.headers.stream;
+  var program = req.headers.program || "MTech";
   var data = {}
   if (req.file !== undefined) {
     data['img'] = {
@@ -106,36 +101,25 @@ router.post("/updatequestionImage", jwtaccess, upload.single('img'), async (req,
   }
 
   try {
-    // console.log(stream);
-    if (stream === CSEvalue) {
-      await CSE.findByIdAndUpdate({ _id: req.headers.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === MEAvalue) {
-      await MEA.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === ECEvalue) {
-      await ECE.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === Mathvalue) {
-      await Math.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else {
-      res.json({ status: -1 });
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1 });
     }
-    // res.json({ status: 0 });
+    await model.findByIdAndUpdate({ _id: req.headers.id || req.body.id }, data);
+    res.json({ status: 0 });
   } catch (err) {
+    console.error("Error updating question image:", err);
     res.json({ status: -2 });
   }
 });
 
 router.post("/updatequestion", jwtaccess, async (req, res) => {
   const id = req.userid;
-  // console.log(id);
   if (id !== process.env.ADMINNO) {
-    // console.log(id);
     return res.json({ status: -1 });
   }
   var stream = req.body.stream;
+  var program = req.body.program || "MTech";
   var arr = new Array();
   arr.push(req.body.option1);
   arr.push(req.body.option2);
@@ -147,33 +131,16 @@ router.post("/updatequestion", jwtaccess, async (req, res) => {
     choice: arr,
     answer: answer
   }
-  // if (req.file !== undefined) {
-  //   data['img'] = {
-  //     data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-  //     contentType: 'image/png'
-  //   }
-  //   fs.unlinkSync(path.join(__dirname + "/uploads/" + req.file.filename));
-  // }
 
   try {
-    console.log(stream);
-    if (stream === CSEvalue) {
-      // console.log(data);
-      await CSE.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === MEAvalue) {
-      await MEA.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === ECEvalue) {
-      await ECE.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else if (stream === Mathvalue) {
-      await Math.findByIdAndUpdate({ _id: req.body.id }, data)
-      res.json({ status: 0 });
-    } else {
-      res.json({ status: -1 });
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1 });
     }
+    await model.findByIdAndUpdate({ _id: req.body.id }, data);
+    res.json({ status: 0 });
   } catch (err) {
+    console.error("Error updating question text:", err);
     res.json({ status: -1 });
   }
 });
@@ -182,65 +149,29 @@ router.post("/updatequestion", jwtaccess, async (req, res) => {
 router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
   try {
     const id = req.userid;
-    // console.log(id);
     if (id !== process.env.ADMINNO) {
-      // console.log(id);
       return res.json({ status: -1 });
     }
     var stream = req.body.stream;
     var program = req.body.program || "MTech";
-    var data = new Array();
-    if (stream === CSEvalue) {
-      var ques = await CSE.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img,
-          answer: ques[i].answer
-        });
 
-      }
-    } else if (stream === MEAvalue) {
-      var ques = await MEA.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img,
-          answer: ques[i].answer
-        });
-
-      }
-    } else if (stream === ECEvalue) {
-      var ques = await ECE.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img,
-          answer: ques[i].answer
-        });
-      }
-    } else if (stream === Mathvalue) {
-      var ques = await Math.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img,
-          answer: ques[i].answer
-        });
-
-      }
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1 });
     }
+
+    const ques = await model.find({});
+    const data = ques.map(q => ({
+      question: q.ques,
+      choice: q.choice,
+      id: q._id,
+      image: q.img,
+      answer: q.answer
+    }));
 
     res.json({ status: 0, data });
   } catch (error) {
+    console.error("Error fetching admin questions:", error);
     res.json({ status: -1 });
   }
 });
@@ -248,29 +179,19 @@ router.post("/sendAdminquestion", jwtaccess, async (req, res) => {
 router.post("/deleteAdminquetion", jwtaccess, async (req, res) => {
   try {
     const id = req.userid;
-    // console.log(id);
     if (id !== process.env.ADMINNO) {
-      // console.log(id);
       return res.json({ status: -1 });
     }
     var stream = req.body.stream;
-    var data = new Array();
-    if (stream === CSEvalue) {
-      // var ques = await CSE.find({});
-      await CSE.findByIdAndDelete(req.body.id)
-    } else if (stream === MEAvalue) {
-      // var ques = await MEA.find({});
-      await MEA.findByIdAndDelete(req.body.id)
-    } else if (stream === ECEvalue) {
-      // var ques = await ECE.find({});
-      await ECE.findByIdAndDelete(req.body.id)
-    } else if (stream === Mathvalue) {
-      // var ques = await Math.find({});
-      await Math.findByIdAndDelete(req.body.id)
+    var program = req.body.program || "MTech";
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1 });
     }
-
+    await model.findByIdAndDelete(req.body.id);
     res.json({ status: 0 });
   } catch (error) {
+    console.error("Error deleting question:", error);
     res.json({ status: -1 });
   }
 });
@@ -286,52 +207,18 @@ router.post("/sendquestion", jwtaccess, async (req, res) => {
 
     var stream = user.stream;
     var program = user.program || "MTech";
-    var data = new Array();
-
-    if (stream === CSEvalue) {
-      var ques = await CSE.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img
-        });
-
-      }
-    } else if (stream === MEAvalue) {
-      var ques = await MEA.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img
-        });
-
-      }
-    } else if (stream === ECEvalue) {
-      var ques = await ECE.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img
-        });
-      }
-    } else if (stream === Mathvalue) {
-      var ques = await Math.find({ program: program });
-      for (i in ques) {
-        data.push({
-          question: ques[i].ques,
-          choice: ques[i].choice,
-          id: ques[i]._id,
-          image: ques[i].img
-        });
-
-      }
+    const model = getQuestionModel(program, stream);
+    if (!model) {
+      return res.json({ status: -1, message: "Invalid stream or program" });
     }
+
+    const ques = await model.find({});
+    const data = ques.map(q => ({
+      question: q.ques,
+      choice: q.choice,
+      id: q._id,
+      image: q.img
+    }));
 
     res.json({ status: 0, data });
   } catch (error) {
@@ -417,11 +304,7 @@ router.post("/uploadexcel", jwtaccess, excelUpload.single('excelFile'), async (r
     }
 
     // Insert questions into database
-    let collectionModel;
-    if (stream === CSEvalue) collectionModel = CSE;
-    else if (stream === ECEvalue) collectionModel = ECE;
-    else if (stream === MEAvalue) collectionModel = MEA;
-    else if (stream === Mathvalue) collectionModel = Math;
+    const collectionModel = getQuestionModel(program, stream);
 
     if (!collectionModel) {
       return res.json({ status: -4, message: "Invalid stream selected" });

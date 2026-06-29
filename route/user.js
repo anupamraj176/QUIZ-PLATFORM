@@ -4,10 +4,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config();
 const jwtaccess = require("../middleware/jwtverification");
 const User = require("../model/user");
-const CSE = require("../model/CSE");
-const ECE = require("../model/ECE");
-const Math = require("../model/Math");
-const MEA = require("../model/MEA");
+const { getQuestionModel } = require("../model/questionHelper");
 const {CSEvalue, ECEvalue, MEAvalue, Mathvalue} = require('../config/config');
 const router = express.Router();
 
@@ -161,31 +158,12 @@ router.post('/uploadAnswer', jwtaccess, async (req, res) => {
         // Calculate marks dynamically (+2 per correct answer)
         let marks = 0;
         const stream = currentUser.stream;
+        const program = currentUser.program || "MTech";
 
-        if (stream === CSEvalue) {
+        const model = getQuestionModel(program, stream);
+        if (model) {
             for (let j = 0; j < answers.length; j++) {
-                const q = await CSE.findById(answers[j].key);
-                if (q && answers[j].value === q.answer) {
-                    marks += 2;
-                }
-            }
-        } else if (stream === ECEvalue) {
-            for (let j = 0; j < answers.length; j++) {
-                const q = await ECE.findById(answers[j].key);
-                if (q && answers[j].value === q.answer) {
-                    marks += 2;
-                }
-            }
-        } else if (stream === MEAvalue) {
-            for (let j = 0; j < answers.length; j++) {
-                const q = await MEA.findById(answers[j].key);
-                if (q && answers[j].value === q.answer) {
-                    marks += 2;
-                }
-            }
-        } else if (stream === Mathvalue) {
-            for (let j = 0; j < answers.length; j++) {
-                const q = await Math.findById(answers[j].key);
+                const q = await model.findById(answers[j].key);
                 if (q && answers[j].value === q.answer) {
                     marks += 2;
                 }

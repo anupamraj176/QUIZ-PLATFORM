@@ -1,9 +1,6 @@
 const express = require('express');
 const xlsx = require('xlsx');
-const CSE = require('../model/CSE');
-const ECE = require('../model/ECE');
-const Math = require('../model/Math');
-const MEA = require('../model/MEA');
+const { getQuestionModel } = require('../model/questionHelper');
 const User = require('../model/user');
 const jwtaccess = require('../middleware/jwtverification');
 const router = express.Router();
@@ -22,30 +19,10 @@ router.get('/Generateresult', jwtaccess, async (req, res) => {
                 continue;
             }
             var marks = 0;
-            if (user[i].stream === CSEvalue) {
+            const model = getQuestionModel(user[i].program, user[i].stream);
+            if (model) {
                 for (var j = 0; j < user[i].answer.length; j++) {
-                    var q = await CSE.findById(user[i].answer[j].key);
-                    if (q && user[i].answer[j].value === q.answer) {
-                        marks += 2;
-                    }
-                }
-            }else if (user[i].stream === ECEvalue) {
-                for (var j = 0; j < user[i].answer.length; j++) {
-                    var q = await ECE.findById(user[i].answer[j].key);
-                    if (q && user[i].answer[j].value === q.answer) {
-                        marks += 2;
-                    }
-                }
-            }else if (user[i].stream == MEAvalue) {
-                for (var j = 0; j < user[i].answer.length; j++) {
-                    var q = await MEA.findById(user[i].answer[j].key);
-                    if (q && user[i].answer[j].value === q.answer) {
-                        marks += 2;
-                    }
-                }
-            }else if (user[i].stream === Mathvalue) {
-                for (var j = 0; j < user[i].answer.length; j++) {
-                    var q = await Math.findById(user[i].answer[j].key);
+                    var q = await model.findById(user[i].answer[j].key);
                     if (q && user[i].answer[j].value === q.answer) {
                         marks += 2;
                     }
@@ -116,14 +93,9 @@ router.get('/downloadResponse/:userId', jwtaccess, async (req, res) => {
         }
 
         let questions = [];
-        if (user.stream === CSEvalue) {
-            questions = await CSE.find({});
-        } else if (user.stream === ECEvalue) {
-            questions = await ECE.find({});
-        } else if (user.stream === MEAvalue) {
-            questions = await MEA.find({});
-        } else if (user.stream === Mathvalue) {
-            questions = await Math.find({});
+        const model = getQuestionModel(user.program, user.stream);
+        if (model) {
+            questions = await model.find({});
         }
 
         let answersMap = new Map();

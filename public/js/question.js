@@ -163,6 +163,7 @@ function deletethisquestion(id){
     },
     body: JSON.stringify({
       'stream': `${stream}`,
+      'program': `${program}`,
       'id' : `${id}`
     })
   })
@@ -182,29 +183,36 @@ function deletethisquestion(id){
 }
 
 function updatethisquestion(id){
-    let value = document.getElementsByClassName(`${id}_hideupdate`);
-    document.getElementById(`${id}_hideupdateoption`).style.display='none';
-    // console.log(value)
-    Array.from(value).forEach((e)=>{
-      // console.log(e)
-      e.style.display = 'block'
-    })
+  
+  var hideupdate = document.getElementsByClassName(`${id}_hideupdate`);
+  for(i in hideupdate){
+    if(hideupdate[i].style!==undefined){
+      
+      hideupdate[i].style.display = 'block';
+    }
   }
+  document.getElementById(`${id}_hideupdateoption`).style.display = 'none';
 
-  function closethisquestion(id){
-    let value = document.getElementsByClassName(`${id}_hideupdate`);
-    document.getElementById(`${id}_hideupdateoption`).style.display='block';
-    // console.log(value)
-    Array.from(value).forEach((e)=>{
-      // console.log(e)
-      e.style.display = 'none'
-    })
+}
+
+function closethisquestion(id){
+  
+  var hideupdate = document.getElementsByClassName(`${id}_hideupdate`);
+  for(i in hideupdate){
+    if(hideupdate[i].style!==undefined){
+      
+      hideupdate[i].style.display = 'none';
+    }
+  }
+  document.getElementById(`${id}_hideupdateoption`).style.display = 'block';
+
 }
 
 function updateFinalthisquestion(id){
     let data = {
       id:id,
       stream : stream,
+      program : program,
       ques : document.getElementById(`${id}_quesChange`).value,
       option1 : document.getElementById(`${id}_option${0}_changeoption`).value,
       option2 : document.getElementById(`${id}_option${1}_changeoption`).value,
@@ -246,6 +254,7 @@ function changeimageoption(id){
     headers: {
       'auth_token': `${localStorage.getItem('admintoken')}`,
       'stream' : stream,
+      'program' : program,
       'id' : id
     },
     body: new FormData(document.getElementById(`${id}_changeImage`)),

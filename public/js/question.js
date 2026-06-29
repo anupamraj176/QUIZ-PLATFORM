@@ -90,7 +90,7 @@ const displayquestion = (data) => {
 
       var img = arrayBufferToBase64(data[i]['image'].data.data);
       var imgSrc = `data:image/${data[i].image.contentType};base64,${img.toString('base64')}`;
-      html += `<img src='${imgSrc}' alt='server error'/>
+      html += `<img src='${imgSrc}' alt='server error' style='max-width: 320px; max-height: 240px; object-fit: contain; margin-top: 10px; display: block; border-radius: 4px;'/>
       <div class="${data[i].id}_hideupdate" style="display:none;">
         <form id = "${data[i].id}_changeImage" >
         <label for="image">Upload Image</label>

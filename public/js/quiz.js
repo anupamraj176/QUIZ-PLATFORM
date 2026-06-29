@@ -109,7 +109,7 @@ const displayquestion = (data) => {
             // console.log('image');
             var img = arrayBufferToBase64(data[i]['image'].data.data);
             var imgSrc = `data:image/${data[i].image.contentType};base64,${img.toString('base64')}`;
-            html += `<img src='${imgSrc}' alt='server error'/>`
+            html += `<img src='${imgSrc}' alt='server error' style='max-width: 320px; max-height: 240px; object-fit: contain; margin-top: 10px; display: block; border-radius: 4px;'/>`
         }
         html += `<h3>Choose option below</h3>`;
         for (j in data[i].choice) {

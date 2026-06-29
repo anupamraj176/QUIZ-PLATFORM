@@ -439,8 +439,8 @@ const submitAnswer = () => {
         .then((res) => {
             console.log(res);
             if (res.status === 0) {
-                alert('Exam successfully submitted! Your Score: ' + res.marks + ' marks.')
-                logout();
+                document.getElementById('successModal').style.display = 'flex';
+                setTimeout(logout, 5000);
             }
         })
         .catch(() => {
@@ -482,8 +482,8 @@ const submitAnswer2 = () => {
         .then((res) => {
             console.log(res);
             if (res.status === 0) {
-                alert('Exam successfully submitted! Your Score: ' + res.marks + ' marks.')
-                logout();
+                document.getElementById('successModal').style.display = 'flex';
+                setTimeout(logout, 5000);
             }
         })
         .catch(() => {

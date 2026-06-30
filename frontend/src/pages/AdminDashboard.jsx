@@ -441,7 +441,7 @@ function AdminDashboard() {
         {/* Left Control Panel Column */}
         {(!isMobile || activeTab === 'settings') && (
           <div
-            className="w-full lg:w-[350px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto h-full"
+            className="w-full lg:w-[350px] bg-white shrink-0 p-6 flex flex-col gap-6 overflow-y-auto h-full"
             style={{ width: isMobile ? '100%' : `${sidebarWidth}px` }}
           >
           {/* Exam Schedule */}
@@ -685,11 +685,11 @@ function AdminDashboard() {
           <div
             onMouseDown={startResizing}
             onTouchStart={startResizingTouch}
-            className="hidden lg:flex w-2.5 hover:w-2.5 bg-gray-250 hover:bg-blue-600 cursor-col-resize self-stretch transition-colors duration-150 relative select-none items-center justify-center border-l border-r border-gray-300 z-10 group"
+            className="hidden lg:flex w-[8px] cursor-col-resize self-stretch relative select-none items-center justify-center z-30 group"
             style={{ touchAction: 'none' }}
             title="Drag to resize panels"
           >
-            <div className="w-1 h-8 bg-gray-400 group-hover:bg-blue-300 rounded-full"></div>
+            <div className="w-[1.5px] h-full bg-gray-200 group-hover:bg-blue-500 transition-colors duration-150"></div>
           </div>
         )}
 

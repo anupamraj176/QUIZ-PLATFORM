@@ -78,42 +78,46 @@ function CandidateProfile() {
   };
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
-      <div className="w-full max-w-lg p-8 rounded-2xl bg-slate-900/50 border border-slate-800 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-slate-700/80">
-        <div className="flex justify-center mb-6">
-          <img className="h-16 w-auto object-contain filter drop-shadow-lg" src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" />
-        </div>
-        <div className="text-center mb-8 border-b border-slate-800/80 pb-6">
-          <h3 className="text-base font-bold leading-snug tracking-tight text-white">Indian Institute of Information Technology Bhagalpur</h3>
-          <p className="text-xs text-slate-400 mt-1 font-medium tracking-wide uppercase">Candidate Profile Form</p>
-        </div>
-
-        <div className="text-center text-sm font-semibold tracking-wider uppercase text-white mb-6">Candidate Details Form</div>
-        
+    <div className="min-h-screen bg-white text-black py-6 font-sans">
+      <div className="w-[100px] h-[100px] mx-auto p-[10px] flex items-center justify-center">
+        <img
+          src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
+          alt="IIIT Bhagalpur Logo"
+          className="max-w-full max-h-full"
+        />
+      </div>
+      <div className="w-fit mx-auto text-center mb-6">
+        <h3 className="text-[20px] font-normal">IIIT Bhagalpur</h3>
+      </div>
+      <div className="flex flex-col items-center justify-center">
         {warning && (
-          <div className="mb-5 p-3.5 bg-red-950/40 border border-red-900/60 rounded-lg text-red-400 text-sm font-medium text-center shadow-inner">
+          <div className="text-red-600 font-bold mb-3 text-[16px]">
             {warning}
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label htmlFor="name" className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Full Name</label>
+        <form
+          onSubmit={handleSubmit}
+          className="border-2 border-black p-[20px] w-full max-w-[60%] min-w-[300px]"
+        >
+          <h2 className="text-center text-[24px] font-bold mb-4">Fill your details</h2>
+          
+          <div className="m-[10px] flex flex-col">
+            <label htmlFor="name" className="text-[16px] mb-1 font-semibold">Name: </label>
             <input
               id="name"
               type="text"
-              className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150"
-              placeholder="Enter your full name"
+              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
-          <div>
-            <label htmlFor="program" className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Category of Post</label>
+
+          <div className="m-[10px] flex flex-col">
+            <label htmlFor="program" className="text-[16px] mb-1 font-semibold">Category of Post: </label>
             <select
               id="program"
-              className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150"
+              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black bg-white"
               value={program}
               onChange={(e) => {
                 setProgram(e.target.value);
@@ -121,35 +125,41 @@ function CandidateProfile() {
               }}
               required
             >
-              <option value="" className="bg-slate-900 text-slate-450">-- select category --</option>
-              <option value="MTech" className="bg-slate-900 text-slate-100">MTech</option>
-              <option value="PhD" className="bg-slate-900 text-slate-100">PhD</option>
+              <option value="">--select--</option>
+              <option value="MTech">MTech</option>
+              <option value="PhD">PhD</option>
             </select>
           </div>
-          <div>
-            <label htmlFor="stream" className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Post applied for</label>
+
+          <div className="m-[10px] flex flex-col">
+            <label htmlFor="stream" className="text-[16px] mb-1 font-semibold">Post applied for: </label>
             <select
               id="stream"
-              className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150"
+              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black bg-white"
               value={stream}
               onChange={(e) => setStream(e.target.value)}
               required
               disabled={!program}
             >
-              <option value="" className="bg-slate-900 text-slate-400">-- select program/stream --</option>
+              <option value="">--select--</option>
               {program && config && (
                 <>
-                  <option value={config.CSEvalue} className="bg-slate-900 text-slate-100">{config.CSEvalue}</option>
-                  <option value={config.ECEvalue} className="bg-slate-900 text-slate-100">{config.ECEvalue}</option>
-                  <option value={config.MEAvalue} className="bg-slate-900 text-slate-100">{config.MEAvalue}</option>
-                  <option value={config.Mathvalue} className="bg-slate-900 text-slate-100">{config.Mathvalue}</option>
+                  <option value={config.CSEvalue}>{config.CSEvalue}</option>
+                  <option value={config.ECEvalue}>{config.ECEvalue}</option>
+                  <option value={config.MEAvalue}>{config.MEAvalue}</option>
+                  <option value={config.Mathvalue}>{config.Mathvalue}</option>
                 </>
               )}
             </select>
           </div>
-          <button type="submit" className="w-full py-3 bg-white text-slate-950 hover:bg-slate-100 active:scale-[0.98] rounded-lg text-sm font-semibold tracking-wide cursor-pointer transition-all duration-150 shadow-lg shadow-black/20 mt-6">
-            Continue to Exam
-          </button>
+
+          <div className="m-[10px] text-center mt-6">
+            <input
+              type="submit"
+              value="Next"
+              className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px]"
+            />
+          </div>
         </form>
       </div>
     </div>

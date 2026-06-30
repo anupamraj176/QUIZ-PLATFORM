@@ -33,6 +33,18 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
 });
 
-app.listen(process.env.PORT, process.env.IP , () => {
-  console.log("server start at " + process.env.PORT);
+const port = process.env.PORT || 3000;
+const host = process.env.IP || "0.0.0.0";
+const displayHost = host === "0.0.0.0" ? "localhost" : host;
+
+app.listen(port, host, () => {
+  console.log(`\n=============================================================`);
+  console.log(`  EXAM PORTAL SERVER STARTUP`);
+  console.log(`=============================================================`);
+  console.log(`  [SERVER] Running on Port:   ${port}`);
+  console.log(`  [SERVER] Backend Base URL:  http://${displayHost}:${port}`);
+  console.log(`  [SERVER] Static Frontend:   http://${displayHost}:${port}`);
+  console.log(`  [POSTMAN] Test APIs at:    http://${displayHost}:${port}/`);
+  console.log(`             e.g., POST http://${displayHost}:${port}/user/login`);
+  console.log(`=============================================================\n`);
 });

@@ -6,11 +6,11 @@ const url = process.env.DB_URL;
 
 const connect = async()=>{
     try {
-        console.log("Try to database connected");
+        console.log("[DATABASE] Connecting to MongoDB database...");
         await mongoose.connect(url);
-        console.log("database connected");
+        console.log("[DATABASE] MongoDB connected successfully.");
     } catch (error) {
-        console.log("error "+error);
+        console.log("[DATABASE] Connection error: "+error);
     }
 
 }

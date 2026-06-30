@@ -228,40 +228,48 @@ function QuizPortal() {
   const choiceMap = answers.get(currentQues.id);
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-200 min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900 selection:bg-slate-800 selection:text-white">
+    <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="bg-slate-900/80 border-b border-slate-800/80 py-4 px-6 flex flex-col sm:flex-row items-center justify-between sticky top-0 z-50 backdrop-blur-md gap-4">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-slate-300 font-medium">
-          <p><span className="text-slate-500 mr-1">Application No:</span> <span className="text-white font-semibold">{candidate.applicationNo}</span></p>
-          <p><span className="text-slate-500 mr-1">Name:</span> <span className="text-white font-semibold">{candidate.name}</span></p>
-          <p><span className="text-slate-500 mr-1">Category:</span> <span className="text-white font-semibold">{candidate.program}</span></p>
-          <p><span className="text-slate-500 mr-1">Stream:</span> <span className="text-white font-semibold">{candidate.stream}</span></p>
+      <div className="w-[95%] mx-auto mt-[15px] mb-[50px] pb-[3px] border-b-[3px] border-black flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div className="detail">
+          <h1 className="text-[27px] font-bold m-0 p-0">Name: {candidate.name}</h1>
+          <div className="flex flex-wrap text-[20px] font-normal mt-1 text-gray-800">
+            <h4 className="mr-[15px]">Application No: {candidate.applicationNo},</h4>
+            <h4 className="mr-[15px]">Program: {candidate.program},</h4>
+            <h4>Department: {candidate.stream}</h4>
+          </div>
         </div>
-        <div className="timer bg-slate-950/60 border border-slate-800/80 rounded-xl px-5 py-2.5 flex items-center gap-3 text-center backdrop-blur-sm">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Time Remaining:</span>
-          <span className="text-white font-bold tracking-wider font-mono text-sm">{timeLeft}</span>
+        <div className="timer text-right text-[18px] text-gray-500">
+          Time left to finish
+          <div id="timer" className="inline-block">
+            <span className="text-[22px] text-black font-bold ml-3 font-mono">{timeLeft}</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 flex-grow">
+      {/* Main Layout */}
+      <div className="main flex flex-col lg:flex-row w-[95%] mx-auto gap-8">
         {/* Left MCQ Panel */}
-        <div className="lg:col-span-8 bg-slate-900/30 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl backdrop-blur-xl flex flex-col min-h-[500px]" ref={mathRef}>
-          <div className="mcq space-y-4 flex-grow">
-            <h1 className="text-base md:text-lg font-bold text-white leading-relaxed">
-              <span className="text-slate-400 mr-1">{activeIndex + 1}.</span> {currentQues.question}
+        <div className="quiz w-full lg:w-[70%] mb-10" ref={mathRef}>
+          <div className="mcq w-[90%] md:w-[80%] mx-auto">
+            <h1 className="text-[24px] font-normal leading-snug mb-2">
+              <span className="font-bold text-[22px] mr-1">{activeIndex + 1}.</span>
+              {currentQues.question}
             </h1>
-            
+
             {currentQues.image && currentQues.image.contentType && (
-              <img
-                src={`data:image/${currentQues.image.contentType};base64,${arrayBufferToBase64(currentQues.image.data.data)}`}
-                alt="question attachment"
-                className="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"
-              />
+              <div className="my-3">
+                <img
+                  src={`data:image/${currentQues.image.contentType};base64,${arrayBufferToBase64(currentQues.image.data.data)}`}
+                  alt="question attachment"
+                  className="max-w-full max-h-80 object-contain border border-gray-400"
+                />
+              </div>
             )}
 
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-5 mb-2">Select your answer:</h3>
-            <ul className="mcq-options-list space-y-3 mt-4 mb-6">
+            <h3 className="border-t-2 border-black mt-[15px] pt-2 text-[18px] font-normal">Choose option below</h3>
+            
+            <ul className="list-none m-0 p-0 pt-[10px] pl-[5px] space-y-1">
               {currentQues.choice.map((choiceText, cIdx) => {
                 const letter = String.fromCharCode(65 + cIdx);
                 const isSelected = choiceMap && choiceMap.option === cIdx;
@@ -270,116 +278,121 @@ function QuizPortal() {
                     key={cIdx}
                     id={`${currentQues.id}_option${cIdx}`}
                     onClick={() => setChoice(currentQues.id, cIdx, choiceText)}
-                    className={isSelected ? 'selectedOption' : ''}
+                    className={`text-[20px] p-[10px] pl-[15px] border-b border-gray-100 cursor-pointer select-none transition duration-150 ${
+                      isSelected
+                        ? "bg-[#4091d7] text-white hover:bg-[#4091d7]"
+                        : "bg-white text-black hover:bg-[#90bc85]"
+                    }`}
                   >
-                    <span className="w-6 h-6 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-400 mr-2 shrink-0">
-                      {letter}
-                    </span>
-                    <span className="flex-grow">{choiceText}</span>
+                    <span>{letter}. </span>
+                    {choiceText}
                   </li>
                 );
               })}
             </ul>
-          </div>
 
-          {/* Action Bar */}
-          <div className="flex justify-between items-center border-t border-slate-800 mt-6 pt-5">
-            <p
-              className="text-xs text-slate-400 hover:text-slate-300 underline cursor-pointer transition-colors"
+            <span
+              className="clearvalues text-[16px] underline cursor-pointer text-blue-600 inline-block mt-4 select-none"
               onClick={() => clearChoice(currentQues.id)}
             >
-              Clear Choice
-            </p>
-            <div className="flex items-center gap-3">
+              Clear all
+            </span>
+
+            {/* Navigation Buttons */}
+            <div className="differentquestion mt-[30px] flex justify-between items-center">
               <button
                 type="button"
-                className={`px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150 ${
-                  activeIndex > 0
-                    ? 'bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-100 hover:text-white active:scale-95'
-                    : 'bg-slate-950 border border-slate-900/50 text-slate-600 cursor-not-allowed'
-                }`}
+                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium disabled:opacity-50 disabled:cursor-not-allowed select-none"
                 onClick={() => activeIndex > 0 && selectQuestion(activeIndex - 1)}
                 disabled={activeIndex === 0}
               >
                 Previous
               </button>
-              
+
               <button
                 type="button"
-                className="px-5 py-2.5 bg-purple-600/10 border border-purple-900/30 hover:bg-purple-650/20 active:scale-95 text-purple-400 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150 shadow-inner"
+                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium select-none"
                 onClick={() => toggleMarkReview(currentQues.id)}
               >
-                {markedReview.has(currentQues.id) ? 'Unmark Review' : 'Mark for Review'}
+                {markedReview.has(currentQues.id) ? "Mark as Unreview" : "Mark as Review"}
               </button>
 
-              {activeIndex < questions.length - 1 ? (
+              <button
+                type="button"
+                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium disabled:opacity-50 disabled:cursor-not-allowed select-none"
+                onClick={() => activeIndex < questions.length - 1 && selectQuestion(activeIndex + 1)}
+                disabled={activeIndex === questions.length - 1}
+              >
+                Next
+              </button>
+            </div>
+
+            {/* Submit Button on the last question */}
+            {activeIndex === questions.length - 1 && (
+              <div className="submitbutton text-center mt-6">
                 <button
                   type="button"
-                  className="px-5 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 active:scale-95 text-slate-100 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150"
-                  onClick={() => selectQuestion(activeIndex + 1)}
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="px-8 py-2.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white rounded-lg text-xs font-bold tracking-wider cursor-pointer shadow-lg shadow-green-950/25 transition duration-150"
+                  className="px-[30px] py-[10px] bg-blue-600 hover:bg-blue-700 text-white border border-black cursor-pointer font-bold text-[16px] select-none"
                   onClick={() => submitExam()}
                 >
-                  Submit Exam
+                  Submit
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Right Sidebar Nav */}
-        <div className="lg:col-span-4 bg-slate-900/30 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl flex flex-col h-fit gap-6">
-          <div>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Questions Navigation</h2>
-            <div className="grid grid-cols-5 gap-3 max-h-[250px] overflow-y-auto pr-1">
-              {questions.map((q, idx) => {
-                let cellState = '';
-                if (markedReview.has(q.id)) {
-                  cellState = 'state-review';
-                } else if (answers.has(q.id)) {
-                  cellState = 'state-answered';
-                } else if (visited.has(q.id)) {
-                  cellState = 'state-visited';
-                }
-                return (
-                  <div
-                    key={idx}
-                    onClick={() => selectQuestion(idx)}
-                    className={`short ${cellState} ${activeIndex === idx ? 'ring-2 ring-white/50' : ''}`}
-                  >
-                    {idx + 1}
-                  </div>
-                );
-              })}
-            </div>
+        <div className="question w-full lg:w-[30%]">
+          <h1 className="text-[20px] font-normal ml-[10px] mb-3">Navigate to any question</h1>
+          
+          <div className="questionShow flex flex-wrap border-2 border-black p-[10px] rounded-[5px] min-h-[120px] bg-white">
+            {questions.map((q, idx) => {
+              let cellColor = "bg-gray-500"; // unvisited
+              if (markedReview.has(q.id)) {
+                cellColor = "bg-purple-600";
+              } else if (answers.has(q.id)) {
+                cellColor = "bg-green-600";
+              } else if (visited.has(q.id)) {
+                cellColor = "bg-red-600";
+              }
+
+              const isActive = activeIndex === idx;
+
+              return (
+                <div
+                  key={idx}
+                  onClick={() => selectQuestion(idx)}
+                  className={`w-[25px] h-[25px] rounded-full text-[16px] font-semibold m-[5px] text-white flex items-center justify-center cursor-pointer hover:bg-black hover:text-white select-none ${cellColor} ${
+                    isActive ? "ring-2 ring-black ring-offset-2 scale-110" : ""
+                  }`}
+                >
+                  {idx + 1}
+                </div>
+              );
+            })}
           </div>
 
           {/* Status Legend */}
-          <div className="border-t border-slate-800 pt-5 space-y-3">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status Legend</h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-              <div className="flex items-center gap-2.5">
-                <div className="w-3.5 h-3.5 rounded bg-purple-600 shadow-md shadow-purple-900/10"></div>
-                <span className="text-slate-350 font-medium">Marked for Review</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-3.5 h-3.5 rounded bg-red-650 shadow-md shadow-red-950/10"></div>
-                <span className="text-slate-350 font-medium">Not Answered</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-3.5 h-3.5 rounded bg-green-650 shadow-md shadow-green-950/10"></div>
-                <span className="text-slate-350 font-medium">Answered</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-3.5 h-3.5 rounded bg-slate-900 border border-slate-800"></div>
-                <span className="text-slate-350 font-medium">Not Visited</span>
-              </div>
+          <div className="mt-8 pl-[10px]">
+            <div className="showinfo flex items-center justify-start text-[16px] my-1">
+              <div className="w-[30px] h-[30px] bg-purple-600 border border-black rounded-full m-[5px]"></div>
+              <p className="ml-2 select-none">Mark as review</p>
+            </div>
+            
+            <div className="showinfo flex items-center justify-start text-[16px] my-1">
+              <div className="w-[30px] h-[30px] bg-red-600 border border-black rounded-full m-[5px]"></div>
+              <p className="ml-2 select-none">Not answered</p>
+            </div>
+            
+            <div className="showinfo flex items-center justify-start text-[16px] my-1">
+              <div className="w-[30px] h-[30px] bg-green-600 border border-black rounded-full m-[5px]"></div>
+              <p className="ml-2 select-none">Answered</p>
+            </div>
+            
+            <div className="showinfo flex items-center justify-start text-[16px] my-1">
+              <div className="w-[30px] h-[30px] bg-gray-500 border border-black rounded-full m-[5px]"></div>
+              <p className="ml-2 select-none">Not Visited</p>
             </div>
           </div>
         </div>
@@ -387,16 +400,16 @@ function QuizPortal() {
 
       {/* Success Modal */}
       {successModal && (
-        <div style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: 100 + '%', height: 100 + '%', background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)', zIndex: 10000, justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ background: '#0f172a', border: '1px solid #1e293b', width: '90%', maxWidth: '450px', padding: '40px 30px', borderRadius: '16px', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)', fontFamily: 'Inter, sans-serif' }}>
-            <div style={{ width: '72px', height: '72px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <div style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000, justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ background: '#ffffff', border: '2px solid black', width: '90%', maxWidth: '450px', padding: '40px 30px', textAlign: 'center', fontFamily: 'Verdana, sans-serif' }} className="text-black">
+            <div style={{ width: '72px', height: '72px', background: 'lightgreen', border: '1px solid black', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#ffffff', marginBottom: '12px' }}>Exam Submitted!</h2>
-            <p style={{ fontSize: '14px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '28px' }}>Your responses have been successfully recorded. Thank you for taking the examination.</p>
-            <button onClick={logout} style={{ background: '#ffffff', color: '#0f172a', border: 'none', padding: '12px 30px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', width: '100%', outline: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px' }}>Exam Submitted!</h2>
+            <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '28px' }}>Your responses have been successfully recorded. Thank you for taking the examination.</p>
+            <button onClick={logout} style={{ background: 'lightgray', color: 'black', border: '1.5px solid black', padding: '12px 30px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', width: '100%', outline: 'none' }}>
               Close and Exit
             </button>
           </div>

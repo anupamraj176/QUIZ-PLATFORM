@@ -264,45 +264,73 @@ function AdminDashboard() {
   if (!config) return <div className="text-center p-12 text-slate-400">Loading Console...</div>;
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-200 min-h-screen p-6 md:p-12 max-w-7xl mx-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
+    <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
-        <div className="flex items-center gap-4">
-          <img src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" className="h-16 w-auto object-contain" />
-          <div>
-            <h3 className="text-base md:text-lg font-bold text-white leading-tight">Indian Institute of Information Technology Bhagalpur</h3>
-            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Admin Question Management Panel</p>
-          </div>
+      <div className="header flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
+        <div className="heading">
+          <h1 className="text-[28px] font-bold">Question Panel</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/participants')}
-            className="px-4 py-2 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-xs font-semibold rounded-lg tracking-wide shadow-md transition cursor-pointer"
-          >
-            Participants List
-          </button>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-650/10 hover:bg-red-650/20 text-red-400 border border-red-900/30 text-xs font-semibold rounded-lg tracking-wide shadow-md transition cursor-pointer"
-          >
-            Sign Out
-          </button>
+        <div className="flex gap-4">
+          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
+            <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>logout</a>
+          </div>
+          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
+            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/participants'); }}>Participants</a>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Control Column */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Filters Card */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Stream / Class Filters</h2>
-            <div className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Stream</label>
+      {/* Configure Exam Timings Card */}
+      <div className="max-w-[800px] mx-auto my-[20px] p-[20px] bg-[#f9f9f9] border border-[#e0e0e0] rounded-[8px] shadow-sm">
+        <h3 className="mt-0 text-[16px] font-bold text-gray-800 mb-4">Configure Exam Timings (JEE Mode)</h3>
+        <form onSubmit={handleSetTimers} className="flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="startTimeInput" className="font-bold text-[14px]">Start Date & Time:</label>
+            <input
+              type="datetime-local"
+              id="startTimeInput"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+              className="p-[8px] border border-gray-400 rounded bg-white text-black text-[14px]"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="endTimeInput" className="font-bold text-[14px]">End Date & Time:</label>
+            <input
+              type="datetime-local"
+              id="endTimeInput"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              required
+              className="p-[8px] border border-gray-400 rounded bg-white text-black text-[14px]"
+            />
+          </div>
+          <button
+            type="submit"
+            className="p-[10px] px-[20px] bg-blue-600 hover:bg-blue-700 text-white font-bold border border-black cursor-pointer rounded"
+          >
+            Save Timing
+          </button>
+        </form>
+        {timeMessage && (
+          <div className="mt-3 text-green-600 font-bold text-[14px]">{timeMessage}</div>
+        )}
+      </div>
+
+      {/* Main Workspace Layout */}
+      <div className="QuestionForm flex flex-col lg:flex-row w-[97%] mx-auto gap-8 justify-around mt-6">
+        {/* Left Form Fill Panel */}
+        <div className="formfill w-full lg:w-[40%] flex flex-col gap-6">
+          <div className="border border-black p-[20px] bg-[#fafafa]">
+            <h2 className="text-[20px] font-bold border-b border-black pb-2 mb-4">Select Workspace Scope</h2>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Stream</label>
                 <select
                   value={stream}
                   onChange={(e) => setStream(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none"
+                  className="p-[5px] border border-gray-400 bg-white text-black text-[16px]"
                 >
                   <option value={config.CSEvalue}>{config.CSEvalue}</option>
                   <option value={config.ECEvalue}>{config.ECEvalue}</option>
@@ -310,12 +338,12 @@ function AdminDashboard() {
                   <option value={config.Mathvalue}>{config.Mathvalue}</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Program</label>
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Program</label>
                 <select
                   value={program}
                   onChange={(e) => setProgram(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none"
+                  className="p-[5px] border border-gray-400 bg-white text-black text-[16px]"
                 >
                   <option value="MTech">MTech</option>
                   <option value="PhD">PhD</option>
@@ -324,247 +352,241 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* Timers Config Card */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Exam Schedule</h2>
-            {timeMessage && (
-              <div className="mb-4 p-2.5 bg-green-950/40 border border-green-900/60 rounded-lg text-green-400 text-xs font-semibold text-center">
-                {timeMessage}
-              </div>
-            )}
-            <form onSubmit={handleSetTimers} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Start Date & Time</label>
-                <input
-                  type="datetime-local"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">End Date & Time</label>
-                <input
-                  type="datetime-local"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none"
-                  required
-                />
-              </div>
-              <button type="submit" className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-100 font-semibold rounded-lg cursor-pointer transition">
-                Update Schedule
-              </button>
-            </form>
-          </div>
+          <form
+            onSubmit={handleCreateQuestion}
+            id="question_txt"
+            className="flex flex-col gap-3 border border-black p-[20px] bg-[#fafafa]"
+            encType="multipart/form-data"
+          >
+            <h2 className="text-[20px] font-bold border-b border-black pb-2">Add New Question</h2>
+            
+            <div className="flex flex-col gap-1">
+              <label htmlFor="ques" className="font-semibold">Question</label>
+              <textarea
+                name="ques"
+                id="ques"
+                placeholder="Enter Question text (supports Latex $...$)"
+                className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px] min-h-[80px]"
+                required
+              />
+            </div>
 
-          {/* Bulk Import Card */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Bulk Excel Import</h2>
-            <form onSubmit={handleBulkUpload} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Select Excel File</label>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="image" className="font-semibold">Upload Image</label>
+              <input type="file" name="img" id="image" className="text-[14px]" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="option1" className="font-semibold">A</label>
+              <input type="text" name="option1" id="option1" placeholder="Enter Option 1" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="option2" className="font-semibold">B</label>
+              <input type="text" name="option2" id="option2" placeholder="Enter Option 2" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="option3" className="font-semibold">C</label>
+              <input type="text" name="option3" id="option3" placeholder="Enter Option 3" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="option4" className="font-semibold">D</label>
+              <input type="text" name="option4" id="option4" placeholder="Enter Option 4" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="answer" className="font-semibold">Answer</label>
+              <select name="answer" id="answer" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]">
+                <option value="">--select--</option>
+                <option value="option1">A</option>
+                <option value="option2">B</option>
+                <option value="option3">C</option>
+                <option value="option4">D</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="submit"
+                value="Add Question"
+                id="add_question"
+                className="px-[25px] py-[10px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-bold"
+              />
+            </div>
+          </form>
+
+          {/* Bulk Import Box */}
+          <div className="border border-black p-[20px] bg-[#fafafa]">
+            <h2 className="text-[20px] font-bold border-b border-black pb-2 mb-4">Bulk Excel Import</h2>
+            <form onSubmit={handleBulkUpload} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="font-bold">Select Excel File:</label>
                 <input
                   type="file"
                   name="file"
                   accept=".xlsx, .xls"
-                  className="w-full text-slate-350 cursor-pointer"
                   required
+                  className="text-[14px]"
                 />
               </div>
-              <button type="submit" className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-100 font-semibold rounded-lg cursor-pointer transition">
-                Upload Sheet
-              </button>
+              <div>
+                <input
+                  type="submit"
+                  value="Upload Sheet"
+                  className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[14px] font-bold"
+                />
+              </div>
             </form>
           </div>
         </div>
 
-        {/* Right Questions Panel Column */}
-        <div className="lg:col-span-8 space-y-6">
-          {/* Single Question Insertion Form */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Add New Question</h2>
-            <form onSubmit={handleCreateQuestion} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Question Text</label>
-                <textarea
-                  name="ques"
-                  placeholder="Type the question content here (Latex supported via $$...$$ or $...$)"
-                  className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none min-h-[60px]"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Option A</label>
-                  <input type="text" name="option1" className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none" required />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Option B</label>
-                  <input type="text" name="option2" className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none" required />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Option C</label>
-                  <input type="text" name="option3" className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none" required />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Option D</label>
-                  <input type="text" name="option4" className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none" required />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Answer Key</label>
-                  <select name="answer" className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 focus:outline-none" required>
-                    <option value="option1">A</option>
-                    <option value="option2">B</option>
-                    <option value="option3">C</option>
-                    <option value="option4">D</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-400 uppercase tracking-wide mb-1.5">Attach Image (Optional)</label>
-                  <input type="file" name="img" className="w-full text-slate-350 cursor-pointer" />
-                </div>
-              </div>
-
-              <button type="submit" className="w-full py-2.5 bg-white text-slate-950 hover:bg-slate-100 font-bold rounded-lg cursor-pointer transition shadow-md">
-                Add Question
-              </button>
-            </form>
-          </div>
-
-          {/* Questions Bank List */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Questions Bank ({questions.length})</h2>
-            </div>
+        {/* Right Questions List Panel Column */}
+        <div className="display w-full lg:w-[55%] border-l-2 border-black pl-6 min-h-[80vh] overflow-y-auto">
+          <div className="question">
+            <h2 className="text-[22px] font-bold border-b border-black pb-2 mb-4">
+              Questions Bank ({questions.length})
+            </h2>
             
-            {questions.map((q, idx) => {
-              const isEditing = editingQuestionId === q.id;
-              return (
-                <div key={q.id} className="mcq bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl space-y-4">
-                  {isEditing ? (
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Edit Question Text</label>
-                      <textarea
-                        value={editForm.question}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, question: e.target.value }))}
-                        className="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none min-h-[60px]"
-                      />
-                    </div>
-                  ) : (
-                    <h1 className="text-base font-bold text-white leading-relaxed">
-                      <span className="text-slate-400 mr-1">{idx + 1}.</span> {q.question}
-                    </h1>
-                  )}
-
-                  {q.image && q.image.contentType && (
-                    <img
-                      src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
-                      alt="attachment"
-                      className="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"
-                    />
-                  )}
-
-                  {isEditing && (
-                    <div className="flex items-center gap-3 bg-slate-950/40 border border-slate-800 p-4 rounded-xl mt-3">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Change Image:</span>
-                      <input
-                        type="file"
-                        onChange={(e) => setEditImageFile(e.target.files[0])}
-                        className="text-xs text-slate-300 flex-grow"
-                      />
-                      <button
-                        onClick={() => handleUpdateImage(q.id)}
-                        className="px-4 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-md text-xs font-semibold cursor-pointer"
-                      >
-                        Upload
-                      </button>
-                    </div>
-                  )}
-
-                  <ul className="mcq-options-list space-y-3 mt-4 mb-6">
-                    {q.choice.map((choiceText, cIdx) => {
-                      const letter = String.fromCharCode(65 + cIdx);
-                      return (
-                        <li key={cIdx} className="!cursor-default">
-                          <span className="w-6 h-6 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-400 mr-2 shrink-0">
-                            {letter}
-                          </span>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={editForm.choice[cIdx]}
-                              onChange={(e) => {
-                                const nextChoices = [...editForm.choice];
-                                nextChoices[cIdx] = e.target.value;
-                                setEditForm(prev => ({ ...prev, choice: nextChoices }));
-                              }}
-                              className="flex-grow px-3 py-1.5 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none"
-                            />
-                          ) : (
-                            <span className="flex-grow">{choiceText}</span>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-                  <div className="mt-4 p-4 bg-slate-950/60 border border-slate-900/80 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs md:text-sm font-semibold font-sans">
-                    <div className="flex items-center gap-2">
-                      <div className="text-green-400"><span className="text-slate-500 font-normal">Answer Key: </span> {q.answer}</div>
-                      {isEditing && (
-                        <select
-                          value={editForm.answer}
-                          onChange={(e) => setEditForm(prev => ({ ...prev, answer: e.target.value }))}
-                          className="px-2 py-1 bg-slate-900 border border-slate-800 rounded-md text-xs text-slate-300"
-                        >
-                          <option value="option1">A</option>
-                          <option value="option2">B</option>
-                          <option value="option3">C</option>
-                          <option value="option4">D</option>
-                        </select>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
+            {questions.length === 0 ? (
+              <p className="text-gray-500 text-[16px]">No questions found for this stream/program.</p>
+            ) : (
+              <div className="space-y-6">
+                {questions.map((q, idx) => {
+                  const isEditing = editingQuestionId === q.id;
+                  return (
+                    <div key={q.id} className="mcq border-b-2 border-black pb-4 mb-4">
                       {isEditing ? (
-                        <>
-                          <button
-                            onClick={() => saveEdit(q.id)}
-                            className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-md text-xs font-semibold transition cursor-pointer"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setEditingQuestionId(null)}
-                            className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 rounded-md text-xs font-semibold transition cursor-pointer"
-                          >
-                            Cancel
-                          </button>
-                        </>
+                        <div className="flex flex-col gap-2">
+                          <label className="font-bold">Edit Question Text:</label>
+                          <textarea
+                            value={editForm.question}
+                            onChange={(e) => setEditForm(prev => ({ ...prev, question: e.target.value }))}
+                            className="p-[5px] border border-gray-400 bg-white text-black text-[16px] min-h-[60px] w-full"
+                          />
+                        </div>
                       ) : (
-                        <button
-                          onClick={() => startEditing(q)}
-                          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-md text-xs font-semibold transition cursor-pointer"
-                        >
-                          Update
-                        </button>
+                        <h1 className="text-[18px] font-normal leading-snug">
+                          <span className="font-bold mr-1">{idx + 1}.</span> {q.question}
+                        </h1>
                       )}
-                      <button
-                        onClick={() => deleteQuestion(q.id)}
-                        className="px-3 py-1.5 bg-red-650/10 hover:bg-red-650/20 text-red-400 border border-red-900/30 rounded-md text-xs font-semibold transition cursor-pointer"
-                      >
-                        Delete
-                      </button>
+
+                      {q.image && q.image.contentType && (
+                        <div className="my-2 max-w-full">
+                          <img
+                            src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
+                            alt="attachment"
+                            className="max-w-xs max-h-48 object-contain border border-gray-450"
+                          />
+                        </div>
+                      )}
+
+                      {isEditing && (
+                        <div className="flex items-center gap-3 border border-gray-350 p-2 my-2 bg-gray-50">
+                          <span className="font-bold text-[14px]">Change Image:</span>
+                          <input
+                            type="file"
+                            onChange={(e) => setEditImageFile(e.target.files[0])}
+                            className="text-[14px] flex-grow"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateImage(q.id)}
+                            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                          >
+                            Upload
+                          </button>
+                        </div>
+                      )}
+
+                      <ul className="list-none m-0 p-0 pt-[10px] pl-[5px] space-y-1">
+                        {q.choice.map((choiceText, cIdx) => {
+                          const letter = String.fromCharCode(65 + cIdx);
+                          return (
+                            <li key={cIdx} className="text-[16px] py-1 flex items-center gap-2">
+                              <span className="font-bold">{letter}. </span>
+                              {isEditing ? (
+                                <input
+                                  type="text"
+                                  value={editForm.choice[cIdx]}
+                                  onChange={(e) => {
+                                    const nextChoices = [...editForm.choice];
+                                    nextChoices[cIdx] = e.target.value;
+                                    setEditForm(prev => ({ ...prev, choice: nextChoices }));
+                                  }}
+                                  className="flex-grow p-1 border border-gray-400 bg-white text-black text-[16px]"
+                                />
+                              ) : (
+                                <span>{choiceText}</span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+
+                      <div className="answerDelete mt-4 bg-gray-100 p-3 flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 text-[16px]">
+                          <span><b>Correct Answer:</b></span>
+                          {isEditing ? (
+                            <select
+                              value={editForm.answer}
+                              onChange={(e) => setEditForm(prev => ({ ...prev, answer: e.target.value }))}
+                              className="p-1 border border-gray-450 bg-white text-black"
+                            >
+                              <option value="option1">A</option>
+                              <option value="option2">B</option>
+                              <option value="option3">C</option>
+                              <option value="option4">D</option>
+                            </select>
+                          ) : (
+                            <span className="font-bold text-green-700">
+                              {q.answer === "option1" ? "A" : q.answer === "option2" ? "B" : q.answer === "option3" ? "C" : "D"}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex gap-2">
+                          {isEditing ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => saveEdit(q.id)}
+                                className="px-3 py-1 bg-green-200 hover:bg-green-300 border border-black text-[14px] cursor-pointer"
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEditingQuestionId(null)}
+                                className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => startEditing(q)}
+                              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                            >
+                              Update
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => deleteQuestion(q.id)}
+                            className="px-3 py-1 bg-red-200 hover:bg-red-300 border border-black text-[14px] cursor-pointer text-red-700"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

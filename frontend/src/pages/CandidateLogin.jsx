@@ -48,50 +48,61 @@ function CandidateLogin() {
   };
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
-      <div className="w-full max-w-md p-8 rounded-2xl bg-slate-900/50 border border-slate-800 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-slate-700/80">
-        <div className="flex justify-center mb-6">
-          <img className="h-20 w-auto object-contain filter drop-shadow-lg" src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" />
-        </div>
-        <div className="text-center mb-8">
-          <h3 className="text-lg font-bold leading-snug tracking-tight text-white">Indian Institute of Information Technology Bhagalpur</h3>
-          <p className="text-xs text-slate-400 mt-1 font-medium tracking-wide uppercase">Candidate Login Portal</p>
-        </div>
-        
+    <div className="min-h-screen bg-white text-black py-10 font-sans">
+      <div className="w-[200px] h-[200px] mx-auto p-[30px] flex items-center justify-center">
+        <img
+          src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
+          alt="IIIT Bhagalpur Logo"
+          className="max-w-full max-h-full"
+        />
+      </div>
+      <div className="w-fit mx-auto text-center mb-6">
+        <h3 className="text-[20px] font-normal">Indian Institute of Information Technology Bhagalpur</h3>
+        <h4></h4>
+      </div>
+      <div className="flex flex-col items-center justify-center">
         {warning && (
-          <div className="mb-5 p-3.5 bg-red-950/40 border border-red-900/60 rounded-lg text-red-400 text-sm font-medium text-center shadow-inner">
+          <div className="text-red-600 font-bold mb-3 text-[18px]">
             {warning}
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label htmlFor="applicationNo" className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Application No</label>
+        <form
+          onSubmit={handleSubmit}
+          className="border-2 border-black p-[20px] w-full max-w-[450px]"
+        >
+          <div className="m-[10px]">
+            <label htmlFor="applicationNo" className="text-[18px] block mb-1">
+              Application No:{" "}
+            </label>
             <input
               id="applicationNo"
               type="text"
-              className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150"
-              placeholder="Enter application number"
+              className="w-[96%] text-[20px] border border-gray-400 px-2 py-1 focus:outline-none focus:border-black"
               value={appNo}
               onChange={(e) => setAppNo(e.target.value)}
               required
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+          <div className="m-[10px]">
+            <label htmlFor="password" className="text-[18px] block mb-1">
+              Password:{" "}
+            </label>
             <input
               type="password"
               id="password"
-              className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150"
-              placeholder="Enter password"
+              className="w-[96%] text-[20px] border border-gray-400 px-2 py-1 focus:outline-none focus:border-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="w-full py-3 bg-white text-slate-950 hover:bg-slate-100 active:scale-[0.98] rounded-lg text-sm font-semibold tracking-wide cursor-pointer transition-all duration-150 shadow-lg shadow-black/20 mt-6">
-            Login
-          </button>
+          <div className="m-[10px] text-center mt-6">
+            <input
+              type="submit"
+              value="Login"
+              className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer font-medium text-[16px]"
+            />
+          </div>
         </form>
       </div>
     </div>

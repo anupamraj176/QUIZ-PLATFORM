@@ -133,106 +133,105 @@ function SubmitConfirmation() {
   if (!candidate || questions.length === 0) return <div className="text-center p-12 text-slate-400">Loading response sheets...</div>;
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-200 p-6 md:p-12 max-w-4xl mx-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900 min-h-screen">
-      <div className="flex flex-col items-center justify-center mb-8 border-b border-slate-800 pb-6">
-        <img className="h-16 w-auto object-contain filter drop-shadow-lg mb-4" src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" />
-        <h2 className="text-base font-bold text-white text-center">Indian Institute of Information Technology Bhagalpur</h2>
-        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Response Submission Confirmed</p>
+    <div className="min-h-screen bg-white text-black py-8 font-sans max-w-[60%] mx-auto">
+      {/* Logo and Header */}
+      <div className="w-[150px] h-[150px] mx-auto mt-4 mb-2 flex items-center justify-center">
+        <img
+          src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
+          alt="IIIT Bhagalpur Logo"
+          className="max-w-full max-h-full"
+        />
+      </div>
+      <h1 className="text-center text-[18px] font-bold mb-6">
+        Indian Institute of Information Technology Bhagalpur
+      </h1>
+
+      {/* Candidate Information Box */}
+      <div className="userDetailshow bg-[#dbd7d7] p-[10px] mb-6">
+        <h2 className="text-[18px] font-bold mb-2">Candidate Details:</h2>
+        <p className="text-[16px] my-1"><b>Name:</b> {candidate.name}</p>
+        <p className="text-[16px] my-1"><b>Application No:</b> {candidate.applicationNo}</p>
+        <p className="text-[16px] my-1"><b>Category:</b> {candidate.program}</p>
+        <p className="text-[16px] my-1"><b>Stream:</b> {candidate.stream}</p>
+        <p className="text-[16px] my-1"><b>Marks Obtained:</b> {candidate.marks !== undefined ? candidate.marks : 0}</p>
       </div>
 
-      <div className="mb-8 p-6 bg-green-950/40 border border-green-900/60 rounded-2xl text-center shadow-lg backdrop-blur-md">
-        <div className="w-12 h-12 rounded-full bg-green-600/10 border border-green-600/20 flex items-center justify-center mx-auto mb-3">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-        <h3 className="text-lg font-bold text-white mb-1">Submission Confirmed</h3>
-        <p className="text-sm text-slate-300">Your exam responses have been successfully submitted and locked in the server.</p>
-      </div>
-
-      <div className="flex justify-center mb-8 gap-4">
+      {/* Action Buttons */}
+      <div className="flex justify-center gap-4 mb-8">
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="px-6 py-3 bg-white text-slate-950 hover:bg-slate-100 active:scale-95 text-sm font-semibold rounded-lg tracking-wide shadow-lg shadow-black/20 cursor-pointer transition duration-150 disabled:opacity-50"
+          className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium disabled:opacity-50"
         >
-          {downloading ? 'Generating...' : 'Download Excel Response'}
+          {downloading ? "Generating..." : "Download Excel Response"}
         </button>
         <button
-          onClick={() => navigate('/participants')}
-          className="px-6 py-3 bg-slate-900 hover:bg-slate-850 text-white border border-slate-800 text-sm font-semibold rounded-lg tracking-wide shadow-lg cursor-pointer transition duration-150"
+          onClick={() => navigate("/participants")}
+          className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium"
         >
           Back to List
         </button>
       </div>
 
-      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 mb-8 backdrop-blur-xl shadow-xl">
-        <h2 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Candidate Information</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-350">
-          <p><strong className="text-slate-400 font-medium">Application No:</strong> <span className="text-white font-semibold ml-1">{candidate.applicationNo}</span></p>
-          <p><strong className="text-slate-400 font-medium">Name:</strong> <span className="text-white font-semibold ml-1">{candidate.name}</span></p>
-          <p><strong className="text-slate-400 font-medium">Category:</strong> <span className="text-white font-semibold ml-1">{candidate.program}</span></p>
-          <p><strong className="text-slate-400 font-medium">Stream:</strong> <span className="text-white font-semibold ml-1">{candidate.stream}</span></p>
-          <p><strong className="text-slate-400 font-medium">Marks Obtained:</strong> <span className="text-white font-bold ml-1 bg-green-500/10 px-2 py-0.5 border border-green-500/20 rounded-md">{candidate.marks !== undefined ? candidate.marks : 0}</span></p>
-        </div>
-      </div>
-
-      <div className="space-y-6">
+      {/* Questions Review List */}
+      <div className="space-y-8">
         {questions.map((q, idx) => {
           const userAns = answers.get(q.id);
           const hasAnswered = !!userAns;
           return (
-            <div key={idx} className="mcq bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl space-y-4">
-              <h1 className="text-base font-bold text-white leading-relaxed"><span className="text-slate-400 mr-1">{idx + 1}.</span> {q.question}</h1>
-              
+            <div key={idx} className="mcq border-b-2 border-black pb-6">
+              <h1 className="text-[18px] font-normal leading-snug mb-3">
+                <span className="font-bold mr-1">{idx + 1}.</span>
+                {q.question}
+              </h1>
+
               {q.image && q.image.contentType && (
-                <img
-                  src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
-                  alt="question attachment"
-                  className="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"
-                />
+                <div className="my-3 max-w-full">
+                  <img
+                    src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
+                    alt="question attachment"
+                    className="max-w-full max-h-80 object-contain border border-gray-400"
+                  />
+                </div>
               )}
 
-              <ul className="mcq-options-list space-y-3 mt-4 mb-6">
+              <ul className="list-none p-0 my-4 space-y-1">
                 {q.choice.map((choiceText, cIdx) => {
                   const letter = String.fromCharCode(65 + cIdx);
                   const isSelected = userAns && userAns.option === cIdx;
                   return (
                     <li
                       key={cIdx}
-                      className={isSelected ? 'selectedOption' : ''}
+                      className={`text-[16px] py-1 px-2 ${
+                        isSelected ? "bg-green-100 font-bold" : ""
+                      }`}
                     >
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold mr-2 shrink-0 ${
-                        isSelected
-                          ? 'bg-green-950/40 border border-green-900/60 text-green-300'
-                          : 'bg-slate-900 border border-slate-800 text-slate-500'
-                      }`}>
-                        {letter}
-                      </span>
-                      <span className="flex-grow">{choiceText}</span>
+                      <span>{letter}. </span>
+                      {choiceText}
                     </li>
                   );
                 })}
               </ul>
-              
-              <div className="mt-4 p-4 bg-slate-950/60 border border-slate-900/80 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs md:text-sm font-semibold">
-                <div className="text-green-400 flex items-center gap-1.5"><span className="text-slate-500 font-normal">Correct Option: </span> {q.answer}</div>
+
+              {/* Status Box */}
+              <div className="answerDelete bg-[#dbd7d7] p-[10px] text-[16px] space-y-1">
+                <p><b>Correct Option:</b> {q.answer}</p>
                 {hasAnswered ? (
-                  <>
-                    <p className="text-slate-350 font-medium">Your Answer: {String.fromCharCode(userAns.option + 65)}. {userAns.value}</p>
-                    <p className="text-green-400 font-bold tracking-wider uppercase text-xs">Answered</p>
-                  </>
+                  <p>
+                    <b>Candidate's Answer:</b> Option {String.fromCharCode(userAns.option + 65)} ({userAns.value})
+                  </p>
                 ) : (
-                  <>
-                    <p className="text-slate-500 font-medium">Your Answer: -</p>
-                    <p className="text-red-400 font-bold tracking-wider uppercase text-xs">Not Answered</p>
-                  </>
+                  <p className="text-red-700 font-semibold"><b>Candidate's Answer:</b> Not Answered</p>
                 )}
               </div>
             </div>
           );
         })}
       </div>
+      
+      <h1 className="text-center text-[18px] font-bold mt-12 mb-6">
+        Indian Institute of Information Technology Bhagalpur
+      </h1>
     </div>
   );
 }

@@ -89,43 +89,30 @@ function ParticipantsList() {
   if (!config) return <div className="text-center p-12 text-slate-400">Loading candidate index...</div>;
 
   return (
-    <div className="font-sans bg-slate-950 text-slate-200 min-h-screen p-6 md:p-12 max-w-7xl mx-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
+    <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
-        <div className="flex items-center gap-4">
-          <img src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" className="h-16 w-auto object-contain" />
-          <div>
-            <h3 className="text-base md:text-lg font-bold text-white leading-tight">Indian Institute of Information Technology Bhagalpur</h3>
-            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Admin Results & Candidates Manager</p>
-          </div>
+      <div className="header flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
+        <div className="heading">
+          <h1 className="text-[28px] font-bold">Participants List</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/addquiz')}
-            className="px-4 py-2 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-xs font-semibold rounded-lg tracking-wide shadow-md transition cursor-pointer"
-          >
-            Manage Questions
-          </button>
-          <button
-            onClick={() => {
-              localStorage.removeItem('admintoken');
-              navigate('/admin');
-            }}
-            className="px-4 py-2 bg-red-650/10 hover:bg-red-650/20 text-red-400 border border-red-900/30 text-xs font-semibold rounded-lg tracking-wide shadow-md transition cursor-pointer"
-          >
-            Sign Out
-          </button>
+        <div className="flex gap-4">
+          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
+            <a href="#" onClick={(e) => { e.preventDefault(); localStorage.removeItem('admintoken'); navigate('/admin'); }}>logout</a>
+          </div>
+          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
+            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/addquiz'); }}>Manage Questions</a>
+          </div>
         </div>
       </div>
 
       {/* Toolbar Area */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div>
-          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Stream</label>
+      <div className="w-[90%] mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="flex flex-col gap-1">
+          <label className="font-bold text-[14px]">Stream:</label>
           <select
             value={stream}
             onChange={(e) => setStream(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none"
+            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
           >
             <option value={config.CSEvalue}>{config.CSEvalue}</option>
             <option value={config.ECEvalue}>{config.ECEvalue}</option>
@@ -133,32 +120,32 @@ function ParticipantsList() {
             <option value={config.Mathvalue}>{config.Mathvalue}</option>
           </select>
         </div>
-        <div>
-          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Program</label>
+        <div className="flex flex-col gap-1">
+          <label className="font-bold text-[14px]">Program:</label>
           <select
             value={program}
             onChange={(e) => setProgram(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none"
+            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
           >
             <option value="MTech">MTech</option>
             <option value="PhD">PhD</option>
           </select>
         </div>
-        <div>
-          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Search Candidate</label>
+        <div className="flex flex-col gap-1">
+          <label className="font-bold text-[14px]">Search Candidate:</label>
           <input
             type="text"
             placeholder="Search by ID, name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none"
+            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
           />
         </div>
         <div className="flex items-end">
           <button
             onClick={downloadAllResults}
             disabled={downloading}
-            className="w-full py-2.5 bg-white text-slate-950 hover:bg-slate-100 font-bold rounded-xl text-xs tracking-wider cursor-pointer shadow-md transition duration-150 disabled:opacity-50"
+            className="w-full p-[10px] bg-gray-200 hover:bg-gray-300 border border-black text-[14px] font-bold cursor-pointer disabled:opacity-50"
           >
             {downloading ? 'Downloading...' : 'Export Results Excel'}
           </button>
@@ -166,56 +153,49 @@ function ParticipantsList() {
       </div>
 
       {/* Candidates Data Table */}
-      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl shadow-xl backdrop-blur-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                <th className="py-4 px-6">Sl No</th>
-                <th className="py-4 px-6">Application No</th>
-                <th className="py-4 px-6">Name</th>
-                <th className="py-4 px-6">Category</th>
-                <th className="py-4 px-6">Stream</th>
-                <th className="py-4 px-6">Score</th>
-                <th className="py-4 px-6 text-center">Sheet Review</th>
+      <div id="participantsDatadesign" className="w-[90%] mx-auto overflow-x-auto my-6">
+        <table className="border-2 border-black border-collapse w-full">
+          <thead>
+            <tr className="bg-gray-150">
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Sl No</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Application No</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Name</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Category</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Stream</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Score</th>
+              <th className="border-2 border-black p-[5px] px-[10px] text-center text-[16px] font-bold">Sheet Review</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCandidates.map((c, idx) => (
+              <tr key={c._id} className="hover:bg-gray-50">
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{idx + 1}</td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px] font-semibold">{c.applicationNo}</td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.name}</td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.program}</td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.stream}</td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-[16px] font-bold text-green-700">
+                  {c.marks !== undefined ? c.marks : 0}
+                </td>
+                <td className="border-2 border-black p-[5px] px-[10px] text-center text-[16px]">
+                  <button
+                    onClick={() => navigate(`/submitform?user=${c._id}`)}
+                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                  >
+                    View Sheet
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-xs md:text-sm font-sans">
-              {filteredCandidates.map((c, idx) => (
-                <tr
-                  key={c._id}
-                  className="hover:bg-slate-900/20 transition-colors"
-                >
-                  <td className="py-4 px-6 text-slate-400 font-medium">{idx + 1}</td>
-                  <td className="py-4 px-6 text-white font-semibold">{c.applicationNo}</td>
-                  <td className="py-4 px-6 text-slate-200">{c.name}</td>
-                  <td className="py-4 px-6 text-slate-300">{c.program}</td>
-                  <td className="py-4 px-6 text-slate-300">{c.stream}</td>
-                  <td className="py-4 px-6">
-                    <span className="bg-green-500/10 px-2.5 py-1 border border-green-500/20 text-green-400 font-bold rounded-md">
-                      {c.marks !== undefined ? c.marks : 0}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <button
-                      onClick={() => navigate(`/submitform?user=${c._id}`)}
-                      className="px-4 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold rounded-lg tracking-wide transition cursor-pointer"
-                    >
-                      View Sheet
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {filteredCandidates.length === 0 && (
-                <tr>
-                  <td colSpan="7" className="py-12 text-center text-slate-500 font-medium">
-                    No candidates found for the selected filter criteria.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            ))}
+            {filteredCandidates.length === 0 && (
+              <tr>
+                <td colSpan="7" className="border-2 border-black p-[20px] text-center text-gray-500 text-[16px]">
+                  No candidates found for the selected filter criteria.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

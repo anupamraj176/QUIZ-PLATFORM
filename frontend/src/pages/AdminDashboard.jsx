@@ -12,8 +12,15 @@ function AdminDashboard() {
   const [editImageFile, setEditImageFile] = useState(null);
   
   // Timer configs
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDay, setStartDay] = useState('');
+  const [startHour, setStartHour] = useState('12');
+  const [startMinute, setStartMinute] = useState('00');
+  const [startPeriod, setStartPeriod] = useState('AM');
+
+  const [endDay, setEndDay] = useState('');
+  const [endHour, setEndHour] = useState('12');
+  const [endMinute, setEndMinute] = useState('00');
+  const [endPeriod, setEndPeriod] = useState('AM');
   const [timeMessage, setTimeMessage] = useState('');
 
   const navigate = useNavigate();
@@ -88,15 +95,35 @@ function AdminDashboard() {
     fetch('/time/timing')
       .then((res) => res.json())
       .then((res) => {
-        // Format to datetime-local compatible string: YYYY-MM-DDTHH:MM
-        const formatDate = (dStr) => {
-          if (!dStr) return '';
+        const parseDateTime = (dStr) => {
+          if (!dStr) return { date: '', hour: '12', minute: '00', period: 'AM' };
           const d = new Date(dStr);
           const pad = (n) => String(n).padStart(2, '0');
-          return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+          
+          const dateVal = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+          
+          let hours = d.getHours();
+          const period = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          if (hours === 0) hours = 12;
+          
+          const hourVal = String(hours);
+          const minuteVal = pad(d.getMinutes());
+          
+          return { date: dateVal, hour: hourVal, minute: minuteVal, period };
         };
-        setStartDate(formatDate(res.SDate));
-        setEndDate(formatDate(res.EDate));
+
+        const startParsed = parseDateTime(res.SDate);
+        setStartDay(startParsed.date);
+        setStartHour(startParsed.hour);
+        setStartMinute(startParsed.minute);
+        setStartPeriod(startParsed.period);
+
+        const endParsed = parseDateTime(res.EDate);
+        setEndDay(endParsed.date);
+        setEndHour(endParsed.hour);
+        setEndMinute(endParsed.minute);
+        setEndPeriod(endParsed.period);
       });
 
     loadQuestions();
@@ -224,13 +251,30 @@ function AdminDashboard() {
   const handleSetTimers = (e) => {
     e.preventDefault();
     const adminToken = localStorage.getItem('admintoken');
-    fetch('/time/settime', {
+    
+    const combineDateTime = (date, hour, minute, period) => {
+      if (!date) return '';
+      let h = parseInt(hour, 10);
+      if (period === 'PM' && h !== 12) h += 12;
+      if (period === 'AM' && h === 12) h = 0;
+      
+      const [year, month, day] = date.split('-').map(Number);
+      const m = parseInt(minute, 10);
+      
+      const localDate = new Date(year, month - 1, day, h, m);
+      return localDate.toISOString();
+    };
+
+    const formattedStart = combineDateTime(startDay, startHour, startMinute, startPeriod);
+    const formattedEnd = combineDateTime(endDay, endHour, endMinute, endPeriod);
+
+    fetch('/time/settiming', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'auth_token': adminToken,
       },
-      body: JSON.stringify({ SDate: startDate, EDate: endDate }),
+      body: JSON.stringify({ startTime: formattedStart, endTime: formattedEnd }),
     })
       .then((res) => res.json())
       .then((body) => {
@@ -405,26 +449,113 @@ function AdminDashboard() {
             <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Exam Schedule</h3>
             <p className="text-xs text-gray-400 mb-3">Set timing for Online Examination</p>
             <form onSubmit={handleSetTimers} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Start Time</label>
-                  <input
-                    type="datetime-local"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    required
-                    className="w-full p-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500 bg-white text-black"
-                  />
+              <div className="space-y-4">
+                {/* Start Time Section */}
+                <div className="border border-gray-200 rounded p-3 bg-gray-50 space-y-2">
+                  <span className="text-xs font-bold text-gray-700 block">Exam Start Time</span>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Date</label>
+                      <input
+                        type="date"
+                        value={startDay}
+                        onChange={(e) => setStartDay(e.target.value)}
+                        required
+                        className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none focus:border-gray-500"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Hour</label>
+                        <select
+                          value={startHour}
+                          onChange={(e) => setStartHour(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Minute</label>
+                        <select
+                          value={startMinute}
+                          onChange={(e) => setStartMinute(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">AM/PM</label>
+                        <select
+                          value={startPeriod}
+                          onChange={(e) => setStartPeriod(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">End Time</label>
-                  <input
-                    type="datetime-local"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    required
-                    className="w-full p-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500 bg-white text-black"
-                  />
+
+                {/* End Time Section */}
+                <div className="border border-gray-200 rounded p-3 bg-gray-50 space-y-2">
+                  <span className="text-xs font-bold text-gray-700 block">Exam End Time</span>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Date</label>
+                      <input
+                        type="date"
+                        value={endDay}
+                        onChange={(e) => setEndDay(e.target.value)}
+                        required
+                        className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none focus:border-gray-500"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Hour</label>
+                        <select
+                          value={endHour}
+                          onChange={(e) => setEndHour(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">Minute</label>
+                        <select
+                          value={endMinute}
+                          onChange={(e) => setEndMinute(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">AM/PM</label>
+                        <select
+                          value={endPeriod}
+                          onChange={(e) => setEndPeriod(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <button

@@ -318,7 +318,7 @@ function QuizPortal() {
       {/* ===== MAIN BODY ===== */}
       <div className="flex flex-grow overflow-hidden">
         {/* LEFT: Question Area */}
-        <div className="flex-grow flex flex-col bg-white border-r border-gray-300">
+        <div className="flex-grow flex flex-col bg-white">
           {/* Question Header */}
           <div className="bg-[#e8e8e8] border-b border-gray-400 px-6 py-2 flex justify-between items-center">
             <span className="text-[13px] font-bold">Question No. {activeIndex + 1}</span>
@@ -428,18 +428,18 @@ function QuizPortal() {
           <div
             onMouseDown={startResizing}
             onTouchStart={startResizingTouch}
-            className="hidden lg:flex w-2.5 hover:w-2.5 bg-gray-200 hover:bg-blue-500 cursor-col-resize self-stretch transition-colors duration-150 relative select-none items-center justify-center border-l border-r border-gray-300 z-10 group"
+            className="hidden lg:flex w-[8px] cursor-col-resize self-stretch relative select-none items-center justify-center z-30 group"
             style={{ touchAction: 'none' }}
             title="Drag to resize panels"
           >
-            <div className="w-1 h-8 bg-gray-400 group-hover:bg-blue-300 rounded-full"></div>
+            <div className="w-[1.5px] h-full bg-gray-200 group-hover:bg-blue-500 transition-colors duration-150"></div>
           </div>
         )}
 
         {/* RIGHT: Question Palette */}
         {!isMobile && (
           <div
-            className="w-[280px] shrink-0 bg-white flex flex-col border-l border-gray-300"
+            className="w-[280px] shrink-0 bg-white flex flex-col"
             style={{ width: `${paletteWidth}px` }}
           >
           {/* Palette Header */}

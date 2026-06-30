@@ -91,19 +91,19 @@ function ParticipantsList() {
   return (
     <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
-        <h1 className="text-[22px] font-bold">Candidate Database</h1>
-        <div className="flex gap-3">
+      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm shrink-0">
+        <h1 className="text-2xl font-bold text-gray-800">Candidate Database</h1>
+        <div className="flex gap-4">
           <button
             onClick={downloadAllResults}
             disabled={downloading}
-            className="px-[20px] py-[8px] bg-black text-white font-bold text-[14px] cursor-pointer disabled:opacity-50 hover:bg-gray-800"
+            className="border border-gray-300 px-5 py-2 rounded bg-black hover:bg-gray-900 text-white text-base font-semibold transition cursor-pointer disabled:opacity-50"
           >
             {downloading ? 'Downloading...' : 'Download Excel Results'}
           </button>
           <button
             onClick={() => navigate('/addquiz')}
-            className="px-[20px] py-[8px] bg-white text-black font-bold text-[14px] border border-black cursor-pointer hover:bg-gray-100"
+            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
           >
             Back to Questions
           </button>

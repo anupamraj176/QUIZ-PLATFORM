@@ -102,7 +102,7 @@ function Instructions() {
     <div className="min-h-screen bg-white text-black py-4 font-sans flex flex-col items-center">
       <div className="w-[100px] h-[100px] mx-auto p-[10px] flex items-center justify-center">
         <img
-          src="/public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
+          src="/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
           alt="IIIT Bhagalpur Logo"
           className="max-w-full max-h-full"
         />

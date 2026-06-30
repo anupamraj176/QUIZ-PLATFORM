@@ -290,20 +290,20 @@ function AdminDashboard() {
   if (!config) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading Console...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
+    <div className="h-screen bg-gray-50 text-gray-900 font-sans flex flex-col overflow-hidden">
       {/* Top Header */}
-      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-        <h1 className="text-xl font-bold text-gray-800">Admin Panel — Exam Portal</h1>
+      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm shrink-0">
+        <h1 className="text-2xl font-bold text-gray-800">Admin Panel — Exam Portal</h1>
         <div className="flex gap-4">
           <button
             onClick={() => navigate('/participants')}
-            className="border border-gray-300 px-4 py-1.5 rounded bg-white text-sm hover:bg-gray-50 text-gray-700 font-medium transition cursor-pointer"
+            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-55 text-gray-700 font-semibold transition cursor-pointer"
           >
             Participants
           </button>
           <button
             onClick={handleLogout}
-            className="border border-gray-300 px-4 py-1.5 rounded bg-white text-sm hover:bg-gray-50 text-red-600 font-medium transition cursor-pointer"
+            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-55 text-red-600 font-semibold transition cursor-pointer"
           >
             Logout
           </button>
@@ -311,59 +311,59 @@ function AdminDashboard() {
       </div>
 
       {/* Workspace Containers */}
-      <div className="flex flex-col lg:flex-row flex-grow w-full items-stretch">
+      <div className="flex flex-col lg:flex-row flex-grow w-full items-stretch overflow-hidden">
         {/* Left Control Panel Column */}
-        <div className="w-full lg:w-[320px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto">
+        <div className="w-full lg:w-[350px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto h-full">
           {/* Exam Schedule */}
           <div>
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Exam Schedule</h3>
-            <p className="text-[11px] text-gray-400 mb-3">Set timing for Online Examination</p>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Exam Schedule</h3>
+            <p className="text-xs text-gray-400 mb-3">Set timing for Online Examination</p>
             <form onSubmit={handleSetTimers} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 mb-1">Start Time</label>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">Start Time</label>
                   <input
                     type="datetime-local"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     required
-                    className="w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-500 bg-white text-black"
+                    className="w-full p-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500 bg-white text-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 mb-1">End Time</label>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">End Time</label>
                   <input
                     type="datetime-local"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     required
-                    className="w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-500 bg-white text-black"
+                    className="w-full p-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-500 bg-white text-black"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-black hover:bg-gray-900 text-white rounded text-xs font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-black hover:bg-gray-900 text-white rounded text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Save Timing
               </button>
             </form>
             {timeMessage && (
-              <div className="mt-2 text-green-600 font-semibold text-xs text-center">{timeMessage}</div>
+              <div className="mt-2 text-green-600 font-semibold text-sm text-center">{timeMessage}</div>
             )}
           </div>
 
           {/* Bulk Import Questions */}
           <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Bulk Import Questions</h3>
-            <p className="text-[11px] text-gray-400 mb-3">Upload questions from Excel or CSV sheet</p>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Bulk Import Questions</h3>
+            <p className="text-xs text-gray-400 mb-3">Upload questions from Excel or CSV sheet</p>
             <form onSubmit={handleBulkUpload} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Stream</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">Stream</label>
                 <select
                   value={stream}
                   onChange={(e) => setStream(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none"
+                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none text-black"
                 >
                   <option value={config.CSEvalue}>{config.CSEvalue}</option>
                   <option value={config.ECEvalue}>{config.ECEvalue}</option>
@@ -372,29 +372,29 @@ function AdminDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Program</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">Program</label>
                 <select
                   value={program}
                   onChange={(e) => setProgram(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none"
+                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none text-black"
                 >
                   <option value="MTech">MTech</option>
                   <option value="PhD">PhD</option>
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
                 <input
                   type="file"
                   name="file"
                   accept=".xlsx, .xls, .csv"
                   required
-                  className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
+                  className="w-full text-sm text-gray-600 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Upload Questions
               </button>
@@ -403,22 +403,22 @@ function AdminDashboard() {
 
           {/* Bulk Import Candidates */}
           <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Bulk Import Candidates</h3>
-            <p className="text-[11px] text-gray-400 mb-3">Upload candidate logins from Excel sheet</p>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Bulk Import Candidates</h3>
+            <p className="text-xs text-gray-400 mb-3">Upload candidate logins from Excel sheet</p>
             <form onSubmit={handleBulkCandidatesUpload} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
                 <input
                   type="file"
                   name="candidatesFile"
                   accept=".xlsx, .xls, .csv"
                   required
-                  className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
+                  className="w-full text-sm text-gray-600 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Upload Candidates
               </button>
@@ -427,25 +427,25 @@ function AdminDashboard() {
 
           {/* Single Question Manual Insertion */}
           <div className="border-t border-gray-200 pt-6 mb-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Add Single Question</h3>
-            <p className="text-[11px] text-gray-400 mb-3">Add a single MCQ manual entry</p>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Add Single Question</h3>
+            <p className="text-xs text-gray-400 mb-3">Add a single MCQ manual entry</p>
             <form onSubmit={handleCreateQuestion} className="space-y-3">
               <div>
                 <textarea
                   name="ques"
                   placeholder="Enter Question text (supports Latex $...$)"
                   required
-                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black min-h-[60px] focus:outline-none"
+                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black min-h-[80px] focus:outline-none"
                 />
               </div>
               <div>
-                <input type="file" name="img" className="text-xs w-full cursor-pointer" />
+                <input type="file" name="img" className="text-sm w-full cursor-pointer" />
               </div>
-              <input type="text" name="option1" placeholder="Option A" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
-              <input type="text" name="option2" placeholder="Option B" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
-              <input type="text" name="option3" placeholder="Option C" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
-              <input type="text" name="option4" placeholder="Option D" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
-              <select name="answer" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none">
+              <input type="text" name="option1" placeholder="Option A" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
+              <input type="text" name="option2" placeholder="Option B" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
+              <input type="text" name="option3" placeholder="Option C" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
+              <input type="text" name="option4" placeholder="Option D" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
+              <select name="answer" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none">
                 <option value="">--select answer--</option>
                 <option value="option1">A</option>
                 <option value="option2">B</option>
@@ -454,7 +454,7 @@ function AdminDashboard() {
               </select>
               <button
                 type="submit"
-                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Add Question
               </button>
@@ -463,15 +463,15 @@ function AdminDashboard() {
         </div>
 
         {/* Right Questions List Column */}
-        <div className="flex-grow p-8 bg-white overflow-y-auto">
+        <div className="flex-grow p-8 bg-white overflow-y-auto h-full">
           {/* List Toolbar Filters */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-base font-bold text-gray-800">Filter Questions</h2>
+            <h2 className="text-xl font-bold text-gray-800">Filter Questions</h2>
             <div className="flex gap-3">
               <select
                 value={stream}
                 onChange={(e) => setStream(e.target.value)}
-                className="p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none font-medium text-gray-700"
+                className="p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none font-medium text-gray-700"
               >
                 <option value={config.CSEvalue}>{config.CSEvalue}</option>
                 <option value={config.ECEvalue}>{config.ECEvalue}</option>
@@ -481,7 +481,7 @@ function AdminDashboard() {
               <select
                 value={program}
                 onChange={(e) => setProgram(e.target.value)}
-                className="p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none font-medium text-gray-700"
+                className="p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none font-medium text-gray-700"
               >
                 <option value="MTech">MTech</option>
                 <option value="PhD">PhD</option>
@@ -491,7 +491,7 @@ function AdminDashboard() {
 
           {/* Question Cards Stack */}
           {questions.length === 0 ? (
-            <div className="text-center py-20 text-gray-400 text-sm">
+            <div className="text-center py-20 text-gray-400 text-base">
               No questions found for this stream/program.
             </div>
           ) : (
@@ -503,11 +503,11 @@ function AdminDashboard() {
                     {isEditing ? (
                       <div className="space-y-3">
                         <div>
-                          <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1">Edit Question Text</label>
+                          <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Edit Question Text</label>
                           <textarea
                             value={editForm.question}
                             onChange={(e) => setEditForm(prev => ({ ...prev, question: e.target.value }))}
-                            className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black min-h-[60px] focus:outline-none"
+                            className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black min-h-[80px] focus:outline-none"
                           />
                         </div>
 
@@ -521,24 +521,24 @@ function AdminDashboard() {
                           </div>
                         )}
 
-                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded bg-gray-50 text-xs">
+                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded bg-gray-50 text-sm">
                           <span className="font-bold text-gray-500">Change Image:</span>
                           <input
                             type="file"
                             onChange={(e) => setEditImageFile(e.target.files[0])}
-                            className="text-xs flex-grow cursor-pointer"
+                            className="text-sm flex-grow cursor-pointer"
                           />
                           <button
                             type="button"
                             onClick={() => handleUpdateImage(q.id)}
-                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-350 text-xs rounded font-medium cursor-pointer"
+                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-300 text-xs rounded font-medium cursor-pointer"
                           >
                             Upload
                           </button>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="block text-[11px] font-bold text-gray-400 uppercase">Edit Options</label>
+                          <label className="block text-xs font-bold text-gray-400 uppercase">Edit Options</label>
                           {editForm.choice.map((choiceText, cIdx) => (
                             <input
                               key={cIdx}
@@ -549,18 +549,18 @@ function AdminDashboard() {
                                 nextChoices[cIdx] = e.target.value;
                                 setEditForm(prev => ({ ...prev, choice: nextChoices }));
                               }}
-                              className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none"
+                              className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
                             />
                           ))}
                         </div>
 
                         <div className="flex justify-between items-center pt-2">
-                          <div className="flex items-center gap-2 text-xs">
+                          <div className="flex items-center gap-2 text-sm">
                             <span className="font-bold text-gray-500">Answer Key:</span>
                             <select
                               value={editForm.answer}
                               onChange={(e) => setEditForm(prev => ({ ...prev, answer: e.target.value }))}
-                              className="p-1 border border-gray-300 rounded text-xs bg-white text-black"
+                              className="p-1 border border-gray-300 rounded text-sm bg-white text-black"
                             >
                               <option value="option1">A</option>
                               <option value="option2">B</option>
@@ -572,14 +572,14 @@ function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => saveEdit(q.id)}
-                              className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold cursor-pointer transition"
+                              className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold cursor-pointer transition"
                             >
                               Save
                             </button>
                             <button
                               type="button"
                               onClick={() => setEditingQuestionId(null)}
-                              className="px-4 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded text-xs font-semibold cursor-pointer transition"
+                              className="px-4 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded text-sm font-semibold cursor-pointer transition"
                             >
                               Cancel
                             </button>
@@ -588,7 +588,7 @@ function AdminDashboard() {
                       </div>
                     ) : (
                       <>
-                        <h3 className="text-sm font-bold text-gray-800 leading-snug">
+                        <h3 className="text-base font-bold text-gray-800 leading-snug">
                           {idx + 1}. {q.question}
                         </h3>
 
@@ -604,7 +604,7 @@ function AdminDashboard() {
 
                         <div className="grid grid-cols-1 gap-2 my-4">
                           {q.choice.map((choiceText, cIdx) => (
-                            <div key={cIdx} className="p-2.5 px-4 bg-[#fafbfc] border border-gray-100 rounded-md text-xs text-gray-700">
+                            <div key={cIdx} className="p-2.5 px-4 bg-[#fafbfc] border border-gray-100 rounded-md text-sm text-gray-700">
                               <span className="font-semibold mr-2">{String.fromCharCode(65 + cIdx)}.</span>
                               {choiceText}
                             </div>
@@ -612,7 +612,7 @@ function AdminDashboard() {
                         </div>
 
                         <div className="flex justify-between items-center pt-2">
-                          <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded text-xs font-bold">
+                          <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded text-sm font-bold">
                             Answer : {q.answer === "option1" ? q.choice[0] : q.answer === "option2" ? q.choice[1] : q.answer === "option3" ? q.choice[2] : q.choice[3]}
                           </div>
 
@@ -620,14 +620,14 @@ function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => startEditing(q)}
-                              className="text-red-600 hover:underline text-xs font-semibold transition cursor-pointer"
+                              className="text-red-600 hover:underline text-sm font-semibold transition cursor-pointer"
                             >
                               Update
                             </button>
                             <button
                               type="button"
                               onClick={() => deleteQuestion(q.id)}
-                              className="text-red-600 hover:underline text-xs font-semibold transition cursor-pointer"
+                              className="text-red-600 hover:underline text-sm font-semibold transition cursor-pointer"
                             >
                               Delete
                             </button>

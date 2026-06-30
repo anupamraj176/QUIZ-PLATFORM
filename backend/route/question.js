@@ -37,10 +37,10 @@ router.post("/addquestion", jwtaccess, upload.single('img'), async (req, res) =>
   }
   if (req.file !== undefined) {
     data['img'] = {
-      data: fs.readFileSync(path.join(__dirname, 'uploads', req.file.filename)),
+      data: fs.readFileSync(path.join(__dirname, '../uploads', req.file.filename)),
       contentType: req.file.mimetype
     }
-    fs.unlinkSync(path.join(__dirname, 'uploads', req.file.filename));
+    fs.unlinkSync(path.join(__dirname, '../uploads', req.file.filename));
   }
 
   try {
@@ -66,10 +66,10 @@ router.post("/updatequestionImage", jwtaccess, upload.single('img'), async (req,
   var data = {}
   if (req.file !== undefined) {
     data['img'] = {
-      data: fs.readFileSync(path.join(__dirname, 'uploads', req.file.filename)),
+      data: fs.readFileSync(path.join(__dirname, '../uploads', req.file.filename)),
       contentType: req.file.mimetype
     }
-    fs.unlinkSync(path.join(__dirname, 'uploads', req.file.filename));
+    fs.unlinkSync(path.join(__dirname, '../uploads', req.file.filename));
   }
 
   try {

@@ -38,8 +38,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "npx nodemon server.js",
-    "tailwind:build": "npx tailwindcss -i ./public/css/input.css -o ./public/css/tailwind.output.css --minify",
-    "tailwind:watch": "npx tailwindcss -i ./public/css/input.css -o ./public/css/tailwind.output.css --watch",
+    "tailwind:build": "npx tailwindcss -i ./frontend/public/css/input.css -o ./frontend/public/css/tailwind.output.css --minify",
+    "tailwind:watch": "npx tailwindcss -i ./frontend/public/css/input.css -o ./frontend/public/css/tailwind.output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install"
   },

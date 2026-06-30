@@ -6,62 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instruction</title>
-    <link rel="stylesheet" href="../public/css/instruction.css">
+    <link rel="stylesheet" href="/public/css/tailwind.output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <div class="logo">
-        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="" srcset=""
-            width="100%" height="100% ">
-    </div>
-    <div class="about">
-        <h3>Indian Institute of Information Technology Bhagalpur</h3>
-        <!-- <h4>Entrance Exam</h4> -->
-    </div>
-    <div class="inst">
-        <div class="timer" style="text-align: center;">
-            Time Remaining
+<body class="font-sans bg-slate-950 text-slate-200 min-h-screen flex flex-col items-center justify-start p-6 md:p-12 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
+    <div class="w-full max-w-4xl flex flex-col md:flex-row items-center justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
+        <div class="flex items-center gap-4">
+            <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur" class="h-16 w-auto object-contain">
+            <div>
+                <h3 class="text-lg font-bold text-white leading-tight">Indian Institute of Information Technology Bhagalpur</h3>
+                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Examination Instruction Board</p>
+            </div>
+        </div>
+        <div class="timer bg-slate-900/60 border border-slate-800 rounded-xl px-5 py-3 text-center min-w-[160px] backdrop-blur-md">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Time Remaining</div>
             <%- include ('./timer2.ejs') %>
         </div>
-        <h1>Instruction</h1>
-        <ol id="teachingandNonteaching">
-            <!-- <li>
-                All the questions are of Objective Type and only one answer is correct.
-            </li>
-            <li>
-                Question No.1 to No.30 will be of general aptitude based.
-            </li>
-            <li>
-                Question No.31 to No.70 will be of Departmental Core Subject based.
-            </li>
-            <li>
-                Duration of the Admission Test is 90 minutes (From 11:00 AM to 12:30 PM).
-            </li>
-            <li>
-                If you have done login before 11:00 AM, then you will not be able to start the test.
-                At 11:00 AM you will be able to start the test by clicking the "next" button.
-            </li>
-            <li>
-                Except Scientific non programmable calculators, you are not allowed to carry electronic gadget at the
-                exam hall.
-            </li>
-            <li>
-                For calculation you will be provided blank pages. You have to bring your own pen/pencil.
-            </li>
-            <li>
-                You are required to comply with the directions given by the Invigilators.
-            </li>
-            <li>
-                If you are experiencing any technical problem, you must immediately contact the Invigilator.
-            </li>
-            <li>
-                You are not permitted to leave the exam hall before 12:00 noon.
-            </li> -->
-        </ol>
-        <!-- <ol id="teachingandNonteaching">
+    </div>
 
-        </ol> -->
-        <button type="button" id="nextbutton" style="padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: not-allowed; background-color: #ccc; color: #666; border: none; border-radius: 4px;" disabled>Next</button>
+    <div class="w-full max-w-4xl bg-slate-900/40 border border-slate-800 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
+        <h1 class="text-xl font-bold text-white border-b border-slate-800 pb-4 mb-6 uppercase tracking-wide">Instructions</h1>
+        <ol id="teachingandNonteaching" class="space-y-4 text-sm text-slate-300 list-decimal pl-5 leading-relaxed">
+            <!-- Dynamically populated from JS -->
+        </ol>
+        
+        <div class="flex justify-end border-t border-slate-800 mt-8 pt-6">
+            <button type="button" id="nextbutton" class="px-8 py-3.5 text-sm font-semibold rounded-lg bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed transition-all duration-150" disabled>Next</button>
+        </div>
     </div>
     <script src="../public/js/timer2.js"> </script>
     <script>

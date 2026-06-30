@@ -37,13 +37,13 @@ const getuser = () => {
                 userVisited = data.data.visited
 
                 document.getElementById('userDetail').innerHTML = `
-                    <h2>Candidate Information</h2>
-                    <div class="info-grid">
-                        <p><strong>Application No:</strong> ${data.data.applicationNo}</p>
-                        <p><strong>Name:</strong> ${data.data.name}</p>
-                        <p><strong>Category:</strong> ${data.data.program}</p>
-                        <p><strong>Stream:</strong> ${data.data.stream}</p>
-                        <p><strong>Marks Obtained:</strong> ${data.data.marks !== undefined ? data.data.marks : 0}</p>
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Candidate Information</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-300">
+                        <p><strong class="text-slate-400 font-medium">Application No:</strong> <span class="text-white font-semibold ml-1">${data.data.applicationNo}</span></p>
+                        <p><strong class="text-slate-400 font-medium">Name:</strong> <span class="text-white font-semibold ml-1">${data.data.name}</span></p>
+                        <p><strong class="text-slate-400 font-medium">Category:</strong> <span class="text-white font-semibold ml-1">${data.data.program}</span></p>
+                        <p><strong class="text-slate-400 font-medium">Stream:</strong> <span class="text-white font-semibold ml-1">${data.data.stream}</span></p>
+                        <p><strong class="text-slate-400 font-medium">Marks Obtained:</strong> <span class="text-white font-bold ml-1 bg-green-500/10 px-2 py-0.5 border border-green-500/20 rounded-md">${data.data.marks !== undefined ? data.data.marks : 0}</span></p>
                     </div>
                 `
                 // console.log(userAnswer)
@@ -100,31 +100,26 @@ const displayquestion = (data) => {
         var idxnew = (Number)(i) + 1;
         // htQuestion += `<div class="short" onclick="previous(${i},${data.length})">${i + 1}</div>`
         html += `
-        <div class="mcq" id="${i}">
-                <h1><span>${idxnew}. </span> ${data[i].question}</h1>
-                <ul>`
+        <div class="mcq bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl space-y-4" id="${i}">
+                <h1 class="text-base font-bold text-white leading-relaxed"><span class="text-slate-400 mr-1">${idxnew}.</span> ${data[i].question}</h1>
+                <ul class="mcq-options-list space-y-3 mt-4 mb-6">`
 
         if (data[i].image.contentType) {
-
             var img = arrayBufferToBase64(data[i]['image'].data.data);
             var imgSrc = `data:image/${data[i].image.contentType};base64,${img.toString('base64')}`;
-            html += `<img src='${imgSrc}' alt='server error' style='max-width: 320px; max-height: 240px; object-fit: contain; margin-top: 10px; display: block; border-radius: 4px;'/>`
+            html += `<img src='${imgSrc}' alt='server error' class="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"/>`
         }
 
         for (j in data[i].choice) {
-
             var idxoption = (Number)(j) + 1;
-            html += `<li id="${data[i].id}_option${j}" ><span> ${String.fromCharCode(idxoption + 64)}.  </span> ${data[i].choice[j]}</li>`
+            html += `<li id="${data[i].id}_option${j}" class="w-full px-5 py-3 bg-slate-950/40 border border-slate-900 rounded-xl text-slate-400 text-sm flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-500 mr-2 shrink-0"> ${String.fromCharCode(idxoption + 64)} </span> <span class="flex-grow">${data[i].choice[j]}</span></li>`
         }
         html += `</ul>
-                <div class = "answerDelete">
-                <div class="answer">Correct Answer : ${data[i].answer}</div>
-                <p id = "${data[i].id}_useranswer"></p>
-                <p id = "${data[i].id}_Visited" style="color:red; font-weight:900;">Not Aswered</p>
-                </div>
-                <div>
-                `
-        html += `</div>`
+                <div class="mt-4 p-4 bg-slate-950/60 border border-slate-900/80 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs md:text-sm font-semibold">
+                    <div class="text-green-400 flex items-center gap-1.5"><span class="text-slate-500 font-normal">Correct Option: </span> ${data[i].answer}</div>
+                    <p id="${data[i].id}_useranswer" class="text-slate-400 font-medium"></p>
+                    <p id="${data[i].id}_Visited" class="text-red-400 font-bold tracking-wider uppercase text-xs">Not Answered</p>
+                </div>`
 
         html += `</div>`
     }
@@ -150,19 +145,20 @@ const displayquestion = (data) => {
 
 
 function userAnswerShow() {
-    // ${data[i].id}_useranswer
-    // console.log(userVisited)
     userAnswer.forEach((e) => {
         document.getElementById(`${e.key}_useranswer`).innerHTML = `Your Answer: ${String.fromCharCode(Number(e.option) + 65)}. ${e.value}`
         const visitedEl = document.getElementById(`${e.key}_Visited`);
-        visitedEl.innerHTML = `Answered`
-        visitedEl.style.color = `#2e7d32`
+        if (visitedEl) {
+            visitedEl.innerHTML = "Answered";
+            visitedEl.className = "text-green-400 font-bold tracking-wider uppercase text-xs";
+        }
+        const selectedOpt = document.getElementById(`${e.key}_option${e.option}`);
+        if (selectedOpt) {
+            selectedOpt.className = "w-full px-5 py-3 bg-green-950/30 border border-green-900/50 rounded-xl text-green-400 text-sm flex items-center gap-3 font-semibold shadow-inner";
+            const badge = selectedOpt.querySelector('span');
+            if (badge) badge.className = "w-6 h-6 rounded-full bg-green-900/40 border border-green-900/60 flex items-center justify-center text-[10px] font-bold text-green-300 mr-2 shrink-0";
+        }
     })
-
-    // userVisited.forEach((e)=>{
-    //     // console.log(e)
-    // })
-
 }
 
 // Bind candidate response excel download

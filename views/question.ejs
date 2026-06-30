@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/css/question.css">
+    <link rel="stylesheet" href="/public/css/tailwind.output.css">
     <link rel="stylesheet" href="/katex/katex.min.css">
     <script src="/katex/katex.min.js"></script>
     <script src="/katex/contrib/auto-render.min.js"></script>
@@ -20,195 +20,201 @@
     <title>Admin Panel</title>
 </head>
 
-<body>
+<body class="font-sans bg-slate-950 text-slate-200 min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900 selection:bg-slate-800 selection:text-white">
     <!-- ===== Top Header ===== -->
-    <div class="header">
-        <div class="heading">
-            <h1>Admin Panel &mdash; Exam Portal</h1>
-        </div>
-        <div class="header-actions">
-            <a href="/participants" class="btn-nav">Participants</a>
-            <a href="#" class="btn-logout" onclick="localStorage.removeItem('admintoken'); window.location.reload()">Logout</a>
+    <div class="bg-slate-900/80 border-b border-slate-800/80 py-4 px-6 flex flex-col sm:flex-row items-center justify-between sticky top-0 z-50 backdrop-blur-md gap-4">
+        <h1 class="text-base font-bold text-white uppercase tracking-wider">Admin Panel &mdash; Exam Portal</h1>
+        <div class="flex items-center gap-3">
+            <a href="/participants" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white border border-slate-700/50 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition">Participants Database</a>
+            <a href="#" class="px-5 py-2.5 bg-red-650/10 border border-red-900/30 hover:bg-red-650/20 text-red-400 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition" onclick="localStorage.removeItem('admintoken'); window.location.reload()">Logout</a>
         </div>
     </div>
 
     <!-- ===== Main Scrollable Dashboard Layout ===== -->
-    <div class="dashboard-container">
+    <div class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 flex-grow">
         
         <!-- Left Sidebar: Controls -->
-        <div class="sidebar">
+        <div class="lg:col-span-5 space-y-6">
             
             <!-- Timing Form -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <h3>Exam Schedule</h3>
-                    <p>Set timing for Online Examination</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-md space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Exam Schedule</h3>
+                    <p class="text-[10px] text-slate-450 font-bold uppercase tracking-widest mt-1">Set timing for Online Examination</p>
                 </div>
-                <form id="timingConfigForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="startTimeInput">Start Time</label>
-                            <input type="datetime-local" id="startTimeInput" name="startTime" class="form-control" required>
+                <form id="timingConfigForm" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="startTimeInput" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Start Time</label>
+                            <input type="datetime-local" id="startTimeInput" name="startTime" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition duration-150" required>
                         </div>
-                        <div class="form-group">
-                            <label for="endTimeInput">End Time</label>
-                            <input type="datetime-local" id="endTimeInput" name="endTime" class="form-control" required>
+                        <div>
+                            <label for="endTimeInput" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">End Time</label>
+                            <input type="datetime-local" id="endTimeInput" name="endTime" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition duration-150" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Timing</button>
+                    <button type="submit" class="w-full py-2.5 bg-white hover:bg-slate-100 text-slate-950 rounded-lg text-xs font-bold tracking-wide transition active:scale-[0.98] cursor-pointer shadow-lg shadow-black/10">Save Timing</button>
                 </form>
-                <div id="timingSuccessMsg" class="success-msg">Timing saved successfully.</div>
+                <div id="timingSuccessMsg" class="hidden mt-2 p-2.5 bg-green-950/40 border border-green-900/60 rounded-lg text-green-400 text-xs font-medium text-center">Timing saved successfully.</div>
             </div>
 
             <!-- Excel Upload Form -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <h3>Bulk Import Questions</h3>
-                    <p>Upload questions from Excel or CSV sheet</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-md space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Bulk Import Questions</h3>
+                    <p class="text-[10px] text-slate-450 font-bold uppercase tracking-widest mt-1">Upload questions from Excel or CSV sheet</p>
                 </div>
-                <form id="excelUploadForm" action="/question/uploadexcel" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="excelStream">Stream</label>
-                        <select name="stream" id="excelStream" class="form-control" required>
-                            <option value="">-- select --</option>
-                            <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                            <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                            <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                            <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
-                        </select>
+                <form id="excelUploadForm" action="/question/uploadexcel" method="post" enctype="multipart/form-data" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="excelStream" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Stream</label>
+                            <select name="stream" id="excelStream" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                                <option value="" class="bg-slate-900">-- select --</option>
+                                <option value="<%- CSEvalue %>" class="bg-slate-900"><%- CSEvalue %></option>
+                                <option value="<%- ECEvalue %>" class="bg-slate-900"><%- ECEvalue %></option>
+                                <option value="<%- MEAvalue %>" class="bg-slate-900"><%- MEAvalue %></option>
+                                <option value="<%- Mathvalue %>" class="bg-slate-900"><%- Mathvalue %></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="excelProgram" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Program</label>
+                            <select name="program" id="excelProgram" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                                <option value="MTech" class="bg-slate-900">MTech</option>
+                                <option value="PhD" class="bg-slate-900">PhD</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="excelProgram">Program</label>
-                        <select name="program" id="excelProgram" class="form-control" required>
-                            <option value="MTech">MTech</option>
-                            <option value="PhD">PhD</option>
-                        </select>
+                    <div>
+                        <label for="excelFile" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">File (.xlsx, .xls, .csv)</label>
+                        <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
                     </div>
-                    <div class="form-group">
-                        <label for="excelFile">File (.xlsx, .xls, .csv)</label>
-                        <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls, .csv" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Upload Questions</button>
+                    <button type="submit" class="w-full py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-100 border border-slate-700/50 rounded-lg text-xs font-bold tracking-wide transition active:scale-[0.98] cursor-pointer">Upload Questions</button>
                 </form>
-                <div id="excelSuccessMsg" class="success-msg"></div>
+                <div id="excelSuccessMsg" class="hidden mt-2 p-2.5 bg-green-950/40 border border-green-900/60 rounded-lg text-green-400 text-xs font-medium text-center"></div>
             </div>
 
             <!-- Candidates Excel Upload Form -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <h3>Bulk Import Candidates</h3>
-                    <p>Upload candidate logins from Excel sheet</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-md space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Bulk Import Candidates</h3>
+                    <p class="text-[10px] text-slate-450 font-bold uppercase tracking-widest mt-1">Upload candidate logins from Excel sheet</p>
                 </div>
-                <form id="candidatesUploadForm" action="/user/uploadCandidates" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="candidatesFile">File (.xlsx, .xls, .csv)</label>
-                        <input type="file" id="candidatesFile" name="candidatesFile" accept=".xlsx, .xls, .csv" class="form-control" required>
+                <form id="candidatesUploadForm" action="/user/uploadCandidates" method="post" enctype="multipart/form-data" class="space-y-4">
+                    <div>
+                        <label for="candidatesFile" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">File (.xlsx, .xls, .csv)</label>
+                        <input type="file" id="candidatesFile" name="candidatesFile" accept=".xlsx, .xls, .csv" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Upload Candidates</button>
+                    <button type="submit" class="w-full py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-100 border border-slate-700/50 rounded-lg text-xs font-bold tracking-wide transition active:scale-[0.98] cursor-pointer">Upload Candidates</button>
                 </form>
-                <div id="candidatesSuccessMsg" class="success-msg"></div>
+                <div id="candidatesSuccessMsg" class="hidden mt-2 p-2.5 bg-green-950/40 border border-green-900/60 rounded-lg text-green-400 text-xs font-medium text-center"></div>
             </div>
 
             <!-- Manual Add Form -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-header">
-                    <h3>Add Question</h3>
-                    <p>Manually insert a single question</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-md space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Add Question</h3>
+                    <p class="text-[10px] text-slate-450 font-bold uppercase tracking-widest mt-1">Manually insert a single question</p>
                 </div>
-                <form action="/question/addquestion" id="question_txt" method="post" encType='multipart/form-data'>
-                    <div class="form-group">
-                        <label for="stream">Stream</label>
-                        <select name="stream" id="stream" class="form-control" required>
-                            <option value="">-- select --</option>
-                            <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                            <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                            <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                            <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+                <form action="/question/addquestion" id="question_txt" method="post" encType='multipart/form-data' class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="stream" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Stream</label>
+                            <select name="stream" id="stream" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                                <option value="" class="bg-slate-900">-- select --</option>
+                                <option value="<%- CSEvalue %>" class="bg-slate-900"><%- CSEvalue %></option>
+                                <option value="<%- ECEvalue %>" class="bg-slate-900"><%- ECEvalue %></option>
+                                <option value="<%- MEAvalue %>" class="bg-slate-900"><%- MEAvalue %></option>
+                                <option value="<%- Mathvalue %>" class="bg-slate-900"><%- Mathvalue %></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="manualProgram" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Program</label>
+                            <select name="program" id="manualProgram" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                                <option value="MTech" class="bg-slate-900">MTech</option>
+                                <option value="PhD" class="bg-slate-900">PhD</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="ques" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Question Text</label>
+                        <input type="text" name="ques" placeholder="Question statement" id="ques" class="w-full px-3.5 py-2.5 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition">
+                    </div>
+
+                    <div>
+                        <label for="image" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Image (optional)</label>
+                        <input type="file" name="img" id="image" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-250 file:bg-slate-900 file:border-0 file:text-slate-300 file:px-3 file:py-1 file:rounded-md file:text-xs">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="option1" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Option A</label>
+                            <input type="text" name="option1" placeholder="Option A" id="option1" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                        </div>
+                        <div>
+                            <label for="option2" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Option B</label>
+                            <input type="text" name="option2" placeholder="Option B" id="option2" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="option3" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Option C</label>
+                            <input type="text" name="option3" placeholder="Option C" id="option3" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                        </div>
+                        <div>
+                            <label for="option4" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Option D</label>
+                            <input type="text" name="option4" placeholder="Option D" id="option4" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="answer" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Answer Key</label>
+                        <select name="answer" id="answer" class="w-full px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                            <option value="" class="bg-slate-900">-- select --</option>
+                            <option value="option1" class="bg-slate-900">A</option>
+                            <option value="option2" class="bg-slate-900">B</option>
+                            <option value="option3" class="bg-slate-900">C</option>
+                            <option value="option4" class="bg-slate-900">D</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="manualProgram">Program</label>
-                        <select name="program" id="manualProgram" class="form-control" required>
-                            <option value="MTech">MTech</option>
-                            <option value="PhD">PhD</option>
-                        </select>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="ques">Question Text</label>
-                        <input type="text" name="ques" placeholder="Question statement" id="ques" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="image">Image (optional)</label>
-                        <input type="file" name="img" id="image" class="form-control">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="option1">Option A</label>
-                            <input type="text" name="option1" placeholder="Option A" id="option1" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="option2">Option B</label>
-                            <input type="text" name="option2" placeholder="Option B" id="option2" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="option3">Option C</label>
-                            <input type="text" name="option3" placeholder="Option C" id="option3" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="option4">Option D</label>
-                            <input type="text" name="option4" placeholder="Option D" id="option4" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="answer">Answer Key</label>
-                        <select name="answer" id="answer" class="form-control" required>
-                            <option value="">-- select --</option>
-                            <option value="option1">A</option>
-                            <option value="option2">B</option>
-                            <option value="option3">C</option>
-                            <option value="option4">D</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" id="add_question" class="btn btn-primary">Add Question</button>
+                    <button type="submit" id="add_question" class="w-full py-2.5 bg-white hover:bg-slate-100 text-slate-950 rounded-lg text-xs font-bold tracking-wide transition active:scale-[0.98] cursor-pointer shadow-lg shadow-black/10 mt-3">Add Question</button>
                 </form>
             </div>
 
         </div>
 
         <!-- Right Pane: Questions List -->
-        <div class="main-content">
-            <div class="stream-filter">
-                <label for="browseStream">Filter Questions</label>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <select id="browseStream" onchange="selectStream(this.value)" required>
-                        <option value="<%- CSEvalue %>"><%- CSEvalue %></option>
-                        <option value="<%- ECEvalue %>"><%- ECEvalue %></option>
-                        <option value="<%- MEAvalue %>"><%- MEAvalue %></option>
-                        <option value="<%- Mathvalue %>"><%- Mathvalue %></option>
+        <div class="lg:col-span-7 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/40 border border-slate-800 p-5 rounded-2xl backdrop-blur-md">
+                <label for="browseStream" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Filter Questions Bank</label>
+                <div class="flex items-center gap-3">
+                    <select id="browseStream" onchange="selectStream(this.value)" class="px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition" required>
+                        <option value="<%- CSEvalue %>" class="bg-slate-900"><%- CSEvalue %></option>
+                        <option value="<%- ECEvalue %>" class="bg-slate-900"><%- ECEvalue %></option>
+                        <option value="<%- MEAvalue %>" class="bg-slate-900"><%- MEAvalue %></option>
+                        <option value="<%- Mathvalue %>" class="bg-slate-900"><%- Mathvalue %></option>
                     </select>
-                    <select id="browseProgram" onchange="selectProgram(this.value)" required style="width: 120px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; font-family: 'Inter', sans-serif;">
-                        <option value="MTech">MTech</option>
-                        <option value="PhD">PhD</option>
+                    <select id="browseProgram" onchange="selectProgram(this.value)" class="px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-slate-650 transition w-28" required>
+                        <option value="MTech" class="bg-slate-900">MTech</option>
+                        <option value="PhD" class="bg-slate-900">PhD</option>
                     </select>
                 </div>
             </div>
             
             <div class="questionShow" id="questionshow" style="display:none;"></div>
             
-            <div class="quiz-list" id="quizdisplay">
+            <div class="space-y-6" id="quizdisplay">
                 <!-- Loaded quiz questions will be populated here -->
             </div>
         </div>
 
     </div>
+
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-900/50 mt-auto bg-slate-950/40">
+        © 2026 Indian Institute of Information Technology Bhagalpur. All rights reserved.
+    </footer>
 
     <script>
         let CSEvalue = `<%- CSEvalue %>`

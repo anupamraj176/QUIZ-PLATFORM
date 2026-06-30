@@ -101,49 +101,47 @@ const displayquestion = (data) => {
         var idxnew = (Number)(i) + 1;
         htQuestion += `<div class="short" onclick="previous(${i},${data.length},'${data[i].id}')" id="optionchoose_${data[i].id}">${i + 1}</div>`
         html += `
-        <div class="mcq" id="${i}">
-                <h1><span>${idxnew}.</span> ${data[i].question}</h1>
-                <ul>`
+        <div class="mcq space-y-4" id="${i}">
+                <h1 class="text-base md:text-lg font-bold text-white leading-relaxed"><span class="text-slate-400 mr-1">${idxnew}.</span> ${data[i].question}</h1>
+                <ul class="mcq-options-list space-y-3 mt-4 mb-6">`
 
         if (data[i].image.contentType) {
-            // console.log('image');
             var img = arrayBufferToBase64(data[i]['image'].data.data);
             var imgSrc = `data:image/${data[i].image.contentType};base64,${img.toString('base64')}`;
-            html += `<img src='${imgSrc}' alt='server error' style='max-width: 320px; max-height: 240px; object-fit: contain; margin-top: 10px; display: block; border-radius: 4px;'/>`
+            html += `<img src='${imgSrc}' alt='server error' class="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"/>`
         }
-        html += `<h3>Choose option below</h3>`;
+        html += `<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-5 mb-2">Select your answer:</h3>`;
         for (j in data[i].choice) {
-            // console.log(i);
             var idxoption = (Number)(j) + 1;
-            html += `<li id="${data[i].id}_option${j}" onclick="setAnswer('${data[i].id}','${j}','${data[i].choice[j]}')"><span> ${String.fromCharCode(64 + idxoption)}. </span> ${data[i].choice[j]}</li>`
+            html += `<li id="${data[i].id}_option${j}" onclick="setAnswer('${data[i].id}','${j}','${data[i].choice[j]}')"><span class="w-6 h-6 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-400 mr-2 shrink-0"> ${String.fromCharCode(64 + idxoption)} </span> <span class="flex-grow">${data[i].choice[j]}</span></li>`
         }
         html += `</ul>
         <div class="answer"></div>
-        <p type="submit" class="clearvalues" onclick="clearvalue(${idx},${data.length},'${data[i].id}')"> Clear all </p>
-                <div class="differentquestion">`
+        <div class="flex justify-between items-center border-t border-slate-800 mt-6 pt-5">
+            <p type="submit" class="text-xs text-slate-400 hover:text-slate-300 underline cursor-pointer transition-colors" onclick="clearvalue(${idx},${data.length},'${data[i].id}')"> Clear Choice </p>
+            <div class="flex items-center gap-3">`
 
         if (i > 0) {
             var idx = (Number)(i) - 1;
-            html += `<button type="submit" onclick="previous(${idx},${data.length},'${data[idx].id}')"> Previous </button>`
+            html += `<button type="submit" class="px-5 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 active:scale-95 text-slate-100 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150" onclick="previous(${idx},${data.length},'${data[idx].id}')"> Previous </button>`
         } else {
-            html += `<button type="submit" disabled> Previous </button>`
+            html += `<button type="submit" class="px-5 py-2.5 bg-slate-950 border border-slate-900/50 text-slate-600 rounded-lg text-xs font-semibold tracking-wide cursor-not-allowed" disabled> Previous </button>`
         }
         html += `<div id="markReview_${data[i].id}">
-            <button type="submit" onclick="markasReview('${data[i].id}')"> Mark as Review </button>
+            <button type="submit" class="px-5 py-2.5 bg-purple-600/10 border border-purple-900/30 hover:bg-purple-650/20 active:scale-95 text-purple-400 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150 shadow-inner" onclick="markasReview('${data[i].id}')"> Mark for Review </button>
             </div>`
 
         if (Number(i) < data.length - 1) {
             var idx = (Number)(i) + 1;
-            html += `<button type="submit" onclick="next(${idx},${data.length},'${data[idx].id}')" > Next </button>`
+            html += `<button type="submit" class="px-5 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 active:scale-95 text-slate-100 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition duration-150" onclick="next(${idx},${data.length},'${data[idx].id}')" > Next </button>`
         } else {
-            html += `<button type="submit" disabled> Next </button>`
+            html += `<button type="submit" class="px-5 py-2.5 bg-slate-950 border border-slate-900/50 text-slate-600 rounded-lg text-xs font-semibold tracking-wide cursor-not-allowed" disabled> Next </button>`
         }
 
-        html += `</div>`
+        html += `</div></div>`
         if (Number(i) === data.length - 1) {
-            // console.log(i);
-            html += `<div class="submitbutton" id="submitbuttonID">
-                    <button type="submit" style ="background:blue;color:white;" onclick="submitAnswercreate()"> Submit </button>
+            html += `<div class="flex justify-center border-t border-slate-800 mt-6 pt-6" id="submitbuttonID">
+                    <button type="submit" class="px-8 py-3 bg-green-600 hover:bg-green-500 active:scale-95 text-white rounded-lg text-sm font-bold tracking-wider cursor-pointer shadow-lg shadow-green-950/25 transition duration-150" onclick="submitAnswercreate()"> Submit Exam </button>
                 </div>`
         }
         html += `</div>`

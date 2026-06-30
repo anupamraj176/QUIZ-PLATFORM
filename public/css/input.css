@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* Navigation bubbles grid cells */
+  .short {
+    @apply w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center font-bold text-sm text-slate-400 cursor-pointer hover:bg-slate-800 hover:text-white transition duration-150 shadow-md !important;
+  }
+  
+  .short.state-visited {
+    @apply bg-red-950/40 border-red-900/60 text-red-400 shadow-lg shadow-red-950/10 !important;
+  }
+  
+  .short.state-answered {
+    @apply bg-green-950/40 border-green-900/60 text-green-400 shadow-lg shadow-green-950/10 !important;
+  }
+  
+  .short.state-review {
+    @apply bg-purple-950/40 border-purple-900/60 text-purple-400 shadow-lg shadow-purple-950/10 !important;
+  }
+
+  /* Candidate choices lists options */
+  .mcq-options-list li {
+    @apply w-full px-5 py-3.5 bg-slate-900/20 border border-slate-800/80 hover:bg-slate-800/30 hover:border-slate-800 rounded-xl text-slate-300 text-sm cursor-pointer transition duration-150 flex items-center gap-3 !important;
+  }
+
+  .mcq-options-list li.selectedOption {
+    @apply bg-green-600/10 border-green-600/30 text-green-400 font-semibold shadow-inner !important;
+  }
+  .mcq-options-list li.selectedOption span {
+    @apply bg-green-600/20 border-green-600/40 text-green-300 !important;
+  }
+}

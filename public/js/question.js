@@ -82,40 +82,36 @@ const displayquestion = (data) => {
     var idxnew = (Number)(i) + 1;
     // htQuestion += `<div class="short" onclick="previous(${i},${data.length})">${i + 1}</div>`
     html += `
-      <div class="mcq" id="${i}">
-              <h1><span>${idxnew}. </span> ${data[i].question} <br> <input  type="text" class="${data[i].id}_hideupdate" style="display:none;" id="${data[i].id}_quesChange" value = '${data[i].question}'></input></h1>
-              <ul>`
+      <div class="mcq bg-slate-900/40 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-xl space-y-4" id="${i}">
+              <h1 class="text-base font-bold text-white leading-relaxed"><span class="text-slate-400 mr-1">${idxnew}.</span> ${data[i].question} <br> <input type="text" class="${data[i].id}_hideupdate w-full mt-2 px-3 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none" style="display:none;" id="${data[i].id}_quesChange" value='${data[i].question}'></input></h1>
+              <ul class="mcq-options-list space-y-3 mt-4 mb-6">`
 
     if (data[i].image.contentType) {
-
       var img = arrayBufferToBase64(data[i]['image'].data.data);
       var imgSrc = `data:image/${data[i].image.contentType};base64,${img.toString('base64')}`;
-      html += `<img src='${imgSrc}' alt='server error' style='max-width: 320px; max-height: 240px; object-fit: contain; margin-top: 10px; display: block; border-radius: 4px;'/>
-      <div class="${data[i].id}_hideupdate" style="display:none;">
-        <form id = "${data[i].id}_changeImage" >
-        <label for="image">Upload Image</label>
-        <input type="file" name="img" id="image">
-        <input type="button" onclick="changeimageoption('${data[i].id}')" value="Add Image">
+      html += `<img src='${imgSrc}' alt='server error' class="max-w-xs max-h-60 object-contain mt-3 rounded-lg border border-slate-800 shadow-lg"/>
+      <div class="${data[i].id}_hideupdate flex items-center gap-3 bg-slate-950/40 border border-slate-800 p-4 rounded-xl mt-3" style="display:none;">
+        <form id="${data[i].id}_changeImage" class="flex items-center gap-3 w-full">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Image:</span>
+          <input type="file" name="img" id="image" class="text-xs text-slate-300 flex-grow">
+          <input type="button" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-md text-xs font-semibold tracking-wide cursor-pointer transition" onclick="changeimageoption('${data[i].id}')" value="Add Image">
         </form>
       </div>
       `
     }
 
     for (j in data[i].choice) {
-
       var idxoption = (Number)(j) + 1;
       html += `
-      <li id="${data[i].id}_option${j}" ><span> ${String.fromCharCode(idxoption + 64)}.  </span> ${data[i].choice[j]}</li>
-
-      <li class="${data[i].id}_hideupdate" style="display:none;" ><span> ${String.fromCharCode(idxoption + 64)}.  </span><input type="text" id="${data[i].id}_option${j}_changeoption" value = '${data[i].choice[j]}'></input></li>
-
+      <li id="${data[i].id}_option${j}"><span class="w-6 h-6 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-400 mr-2 shrink-0"> ${String.fromCharCode(idxoption + 64)} </span> <span class="flex-grow">${data[i].choice[j]}</span></li>
+      <li class="${data[i].id}_hideupdate" style="display:none;"><span class="w-6 h-6 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-500 mr-2 shrink-0"> ${String.fromCharCode(idxoption + 64)} </span><input type="text" class="flex-grow px-3 py-1.5 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none" id="${data[i].id}_option${j}_changeoption" value='${data[i].choice[j]}'></input></li>
       `
     }
     html += `</ul>
-              <div class = "answerDelete">
-              <div>
-              <div class="answer">Answer : ${data[i].answer}</div>
-              <select class="${data[i].id}_hideupdate" style="display:none;" name="answer" id="${data[i].id}_changeanswer" required>
+              <div class="mt-4 p-4 bg-slate-950/60 border border-slate-900/80 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs md:text-sm font-semibold">
+              <div class="flex items-center gap-2">
+              <div class="text-green-400"><span class="text-slate-500 font-normal">Answer Key: </span> ${data[i].answer}</div>
+              <select class="${data[i].id}_hideupdate px-2 py-1 bg-slate-900 border border-slate-800 rounded-md text-xs text-slate-350" style="display:none;" name="answer" id="${data[i].id}_changeanswer" required>
                     <option value="${data[i].answer}">${data[i].answer}</option>
                     <option value="option1">A</option>
                     <option value="option2">B</option>
@@ -123,10 +119,12 @@ const displayquestion = (data) => {
                     <option value="option4">D</option>
                 </select>
               </div>
-              <button class="delete" id="${data[i].id}_hideupdateoption" onclick= "updatethisquestion('${data[i].id}')" >Update</button>
-              <button class="delete ${data[i].id}_hideupdate" style="display:none;" onclick= "updateFinalthisquestion('${data[i].id}')" >Update</button>
-              <button class="delete ${data[i].id}_hideupdate" style="display:none;" onclick= "closethisquestion('${data[i].id}')" >Close</button>
-              <button class="delete" onclick= "deletethisquestion('${data[i].id}')">Delete</button>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-md text-xs font-semibold tracking-wide cursor-pointer transition" id="${data[i].id}_hideupdateoption" onclick="updatethisquestion('${data[i].id}')">Update</button>
+                <button class="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-md text-xs font-semibold tracking-wide cursor-pointer transition ${data[i].id}_hideupdate" style="display:none;" onclick="updateFinalthisquestion('${data[i].id}')">Save</button>
+                <button class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-450 rounded-md text-xs font-semibold tracking-wide cursor-pointer transition ${data[i].id}_hideupdate" style="display:none;" onclick="closethisquestion('${data[i].id}')">Cancel</button>
+                <button class="px-3 py-1.5 bg-red-650/10 hover:bg-red-650/20 text-red-400 border border-red-900/30 rounded-md text-xs font-semibold tracking-wide cursor-pointer transition" onclick="deletethisquestion('${data[i].id}')">Delete</button>
+              </div>
               </div>`
     html += `</div>`
 

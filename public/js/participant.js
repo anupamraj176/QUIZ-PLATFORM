@@ -53,30 +53,29 @@ function displayparticpants(data){
       });
 
 
-    let html = `<table>
-                <thead>
+    let html = `<table class="w-full border-collapse text-left text-sm text-slate-300">
+                <thead class="bg-slate-950/60 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
                     <tr>
-                        <th>S.No.</th>
-                        <th>Application No.</th>
-                        <th>Name</th>
-                        <th>Program</th>
-                        <th>Department</th>
-                        <th>Marks Obtained</th>
-                        <th>Submission</th>
+                        <th class="px-6 py-4">S.No.</th>
+                        <th class="px-6 py-4">Application No.</th>
+                        <th class="px-6 py-4">Name</th>
+                        <th class="px-6 py-4">Category</th>
+                        <th class="px-6 py-4">Stream</th>
+                        <th class="px-6 py-4">Marks</th>
+                        <th class="px-6 py-4 text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody>`;
+                <tbody class="divide-y divide-slate-800/80">`;
     for (let index = 0; index < data.length; index++) {
-
         html += `
-                <tr>
-                    <td>${index+1}</td>
-                    <td>${data[index].applicationNo}</td>
-                    <td>${data[index].name}</td>
-                    <td>${data[index].program}</td>
-                    <td>${data[index].stream}</td>
-                    <td>${data[index].marks}</td>
-                    <td><a href="/submitform?user=${data[index]._id}">View Response</a></td>
+                <tr class="hover:bg-slate-900/40 transition duration-150">
+                    <td class="px-6 py-4 text-slate-400 font-semibold">${index+1}</td>
+                    <td class="px-6 py-4 font-mono font-medium text-slate-200">${data[index].applicationNo}</td>
+                    <td class="px-6 py-4 font-medium text-white">${data[index].name}</td>
+                    <td class="px-6 py-4">${data[index].program}</td>
+                    <td class="px-6 py-4 text-slate-400 text-xs">${data[index].stream}</td>
+                    <td class="px-6 py-4"><span class="bg-green-500/10 px-2 py-0.5 border border-green-500/20 rounded-md text-green-400 font-bold">${data[index].marks !== undefined ? data[index].marks : 0}</span></td>
+                    <td class="px-6 py-4 text-right"><a href="/submitform?user=${data[index]._id}" class="inline-flex items-center text-blue-400 hover:text-blue-300 font-semibold hover:underline">View Response &rarr;</a></td>
                 </tr>
         `
     }

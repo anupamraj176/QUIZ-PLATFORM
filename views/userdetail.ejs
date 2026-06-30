@@ -6,163 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Details</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #ffffff;
-            color: #111111;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .details-container {
-            width: 100%;
-            max-width: 450px;
-            padding: 32px 24px;
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            background: #fafafa;
-        }
-
-        .logo {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .logo img {
-            height: 72px;
-            width: auto;
-        }
-
-        .about {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .about h3 {
-            font-size: 15px; /* Increased */
-            font-weight: 600;
-            color: #111111;
-            line-height: 1.5;
-        }
-
-        .form-title {
-            font-size: 17px; /* Increased */
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #111111;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px; /* Increased */
-            font-weight: 600;
-            color: #555555;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cccccc;
-            border-radius: 4px;
-            font-size: 15px; /* Increased */
-            font-family: 'Inter', sans-serif;
-            color: #111111;
-            background: #ffffff;
-            outline: none;
-            transition: border-color 0.15s;
-        }
-
-        .form-control:focus {
-            border-color: #111111;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 10px;
-            background: #111111;
-            color: #ffffff;
-            border: 1px solid #111111;
-            border-radius: 4px;
-            font-size: 15px; /* Increased */
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.15s;
-            margin-top: 8px;
-        }
-
-        .btn:hover {
-            background: #333333;
-        }
-
-        #warning {
-            margin-bottom: 14px;
-            padding: 8px 12px;
-            background: #ffebee;
-            border: 1px solid #ffcccc;
-            border-radius: 4px;
-            color: #c62828;
-            font-size: 14px; /* Increased */
-            font-weight: 500;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="/public/css/tailwind.output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <div class="details-container">
-        <div class="logo">
-            <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur">
+<body class="font-sans bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900">
+    <div class="w-full max-w-lg p-8 rounded-2xl bg-slate-900/50 border border-slate-800 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-slate-700/80">
+        <div class="flex justify-center mb-6">
+            <img class="h-16 w-auto object-contain filter drop-shadow-lg" src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur">
         </div>
-        <div class="about">
-            <h3>Indian Institute of Information Technology Bhagalpur</h3>
+        <div class="text-center mb-8 border-b border-slate-800/80 pb-6">
+            <h3 class="text-base font-bold leading-snug tracking-tight text-white">Indian Institute of Information Technology Bhagalpur</h3>
+            <p class="text-xs text-slate-400 mt-1 font-medium tracking-wide uppercase">Candidate Profile Form</p>
         </div>
 
-        <div class="form-title">Candidate Details Form</div>
-        <div id="warning" style="display: none;"></div>
+        <div class="text-center text-sm font-semibold tracking-wider uppercase text-white mb-6">Candidate Details Form</div>
+        <div id="warning" class="mb-5 p-3.5 bg-red-950/40 border border-red-900/60 rounded-lg text-red-400 text-sm font-medium text-center shadow-inner" style="display: none;"></div>
 
-        <form action="/user/adddata" id="loginsubmit" method="post">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input id="name" type="text" name="name" class="form-control" placeholder="Enter your full name" required>
+        <form action="/user/adddata" id="loginsubmit" method="post" class="space-y-5">
+            <div>
+                <label for="name" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Full Name</label>
+                <input id="name" type="text" name="name" class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150" placeholder="Enter your full name" required>
             </div>
-            <div class="form-group">
-                <label for="program">Category of Post</label>
-                <select name="program" id="program" class="form-control" required>
-                    <option value="">-- select category --</option>
-                    <option value="MTech">MTech</option>
-                    <option value="PhD">PhD</option>
+            <div>
+                <label for="program" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Category of Post</label>
+                <select name="program" id="program" class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150" required>
+                    <option value="" class="bg-slate-900 text-slate-400">-- select category --</option>
+                    <option value="MTech" class="bg-slate-900 text-slate-100">MTech</option>
+                    <option value="PhD" class="bg-slate-900 text-slate-100">PhD</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="stream">Post applied for</label>
-                <select name="stream" id="stream" class="form-control" required>
-                    <option value="">-- select program/stream --</option>
+            <div>
+                <label for="stream" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Post applied for</label>
+                <select name="stream" id="stream" class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-slate-600 focus:ring-1 focus:ring-slate-600 transition duration-150" required>
+                    <option value="" class="bg-slate-900 text-slate-400">-- select program/stream --</option>
                 </select>
             </div>
-            <input type="submit" value="Continue to Exam" class="btn">
+            <input type="submit" value="Continue to Exam" class="w-full py-3 bg-white text-slate-950 hover:bg-slate-100 active:scale-[0.98] rounded-lg text-sm font-semibold tracking-wide cursor-pointer transition-all duration-150 shadow-lg shadow-black/20 mt-6">
         </form>
     </div>
 

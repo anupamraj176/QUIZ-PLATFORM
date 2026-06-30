@@ -5,49 +5,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin &mdash; Candidate Database</title>
-    <link rel="stylesheet" href="../public/css/participant.css">
+    <link rel="stylesheet" href="/public/css/tailwind.output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="font-sans bg-slate-950 text-slate-200 min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900 selection:bg-slate-800 selection:text-white">
     <!-- ===== Top Navbar ===== -->
-    <div class="header-nav">
-        <h1>Candidate Database</h1>
-        <div class="header-nav-actions">
-            <button onclick="generateResult()" class="btn-nav-action btn-result-action">Download Excel Results</button>
-            <a href="/addquiz" class="btn-nav-action">Back to Questions</a>
+    <div class="bg-slate-900/80 border-b border-slate-800/80 py-4 px-6 flex flex-col sm:flex-row items-center justify-between sticky top-0 z-50 backdrop-blur-md gap-4">
+        <h1 class="text-base font-bold text-white uppercase tracking-wider">Candidate Database</h1>
+        <div class="flex items-center gap-3">
+            <button onclick="generateResult()" class="px-5 py-2.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition shadow-lg shadow-green-950/20">Download Excel Results</button>
+            <a href="/addquiz" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white border border-slate-700/50 rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition">Back to Questions</a>
         </div>
     </div>
 
     <!-- ===== Main Scrollable Area ===== -->
-    <div class="container">
+    <div class="w-full max-w-7xl mx-auto p-6 md:p-8 flex flex-col gap-6 flex-grow">
         <!-- Stream Filter Bar -->
-        <div class="filter-bar">
-            <span>Filter Stream:</span>
-            <button class="btn-filter" onclick="changestream('<%- CSEvalue %>')"><%- CSEvalue %></button>
-            <button class="btn-filter" onclick="changestream('<%- ECEvalue %>')"><%- ECEvalue %></button>
-            <button class="btn-filter" onclick="changestream('<%- MEAvalue %>')"><%- MEAvalue %></button>
-            <button class="btn-filter" onclick="changestream('<%- Mathvalue %>')"><%- Mathvalue %></button>
+        <div class="flex flex-wrap items-center gap-3 bg-slate-900/40 border border-slate-800 p-4 rounded-xl backdrop-blur-md">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-2">Filter Stream:</span>
+            <button class="px-4 py-2 bg-slate-950/60 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition active:scale-95" onclick="changestream('<%- CSEvalue %>')"><%- CSEvalue %></button>
+            <button class="px-4 py-2 bg-slate-950/60 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition active:scale-95" onclick="changestream('<%- ECEvalue %>')"><%- ECEvalue %></button>
+            <button class="px-4 py-2 bg-slate-950/60 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition active:scale-95" onclick="changestream('<%- MEAvalue %>')"><%- MEAvalue %></button>
+            <button class="px-4 py-2 bg-slate-950/60 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold tracking-wide cursor-pointer transition active:scale-95" onclick="changestream('<%- Mathvalue %>')"><%- Mathvalue %></button>
         </div>
 
         <!-- Participants Table Grid -->
-        <div id="participantsDatadesign">
-            <table>
-                <thead>
+        <div id="participantsDatadesign" class="w-full overflow-x-auto bg-slate-900/30 border border-slate-800 rounded-2xl shadow-xl backdrop-blur-xl">
+            <table class="w-full border-collapse text-left text-sm text-slate-300">
+                <thead class="bg-slate-950/60 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
                     <tr>
-                        <th>S.No.</th>
-                        <th>Application No.</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Stream</th>
-                        <th>Marks</th>
-                        <th>Action</th>
+                        <th class="px-6 py-4">S.No.</th>
+                        <th class="px-6 py-4">Application No.</th>
+                        <th class="px-6 py-4">Name</th>
+                        <th class="px-6 py-4">Category</th>
+                        <th class="px-6 py-4">Stream</th>
+                        <th class="px-6 py-4">Marks</th>
+                        <th class="px-6 py-4">Action</th>
                     </tr>
                 </thead>
-                <tbody id="participantsTableBody">
+                <tbody id="participantsTableBody" class="divide-y divide-slate-800/80">
                     <!-- Populated dynamically via JS -->
                 </tbody>
             </table>
         </div>
     </div>
+
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-900/50 mt-auto bg-slate-950/40">
+        © 2026 Indian Institute of Information Technology Bhagalpur. All rights reserved.
+    </footer>
 
     <script>
         let CSEvalue = `<%- CSEvalue %>`

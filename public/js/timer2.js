@@ -17,17 +17,13 @@ const getDate = () => {
 
         if (presentDate >= compareDate) {
             next.disabled = true;
-            next.style.cursor = 'not-allowed';
-            next.style.backgroundColor = '#ccc';
-            next.style.color = '#666';
+            next.className = "px-8 py-3.5 text-sm font-semibold rounded-lg bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed transition-all duration-150";
             next.onclick = null;
             document.getElementById("timer").innerHTML = "The exam has already ended.";
             clearInterval(timer);
         } else if (presentDate >= startDate) {
             next.disabled = false;
-            next.style.cursor = 'pointer';
-            next.style.backgroundColor = 'Green';
-            next.style.color = '#fff';
+            next.className = "px-8 py-3.5 text-sm font-semibold rounded-lg bg-green-600 hover:bg-green-500 active:scale-95 text-white cursor-pointer transition-all duration-150 shadow-lg shadow-green-900/20";
             next.onclick = () => { window.location.href = '/quiz'; };
             document.getElementById("timer").innerHTML = "The exam has started.";
             clearInterval(timer);
@@ -52,9 +48,7 @@ function timeBetweenDates(toDate, present) {
 
   if (difference <= 0) {
     next.disabled = false;
-    next.style.cursor = 'pointer';
-    next.style.backgroundColor = 'Green';
-    next.style.color = '#fff';
+    next.className = "px-8 py-3.5 text-sm font-semibold rounded-lg bg-green-600 hover:bg-green-500 active:scale-95 text-white cursor-pointer transition-all duration-150 shadow-lg shadow-green-900/20";
     next.onclick = () => { window.location.href = '/quiz'; };
     clearInterval(timer);
     
@@ -63,9 +57,7 @@ function timeBetweenDates(toDate, present) {
     $("#seconds").text(0);
   } else {
     next.disabled = true;
-    next.style.cursor = 'not-allowed';
-    next.style.backgroundColor = '#ccc';
-    next.style.color = '#666';
+    next.className = "px-8 py-3.5 text-sm font-semibold rounded-lg bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed transition-all duration-150";
     next.onclick = null;
 
     var seconds = Math.floor(difference / 1000);    

@@ -16,175 +16,31 @@
     </script>
     <script id="MathJax-script" async src="/mathjax/tex-mml-chtml.js"></script>
     <title>Submission Confirmed</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #ffffff;
-            color: #111111;
-            padding: 40px 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .logo img {
-            height: 80px;
-            width: auto;
-        }
-
-        .about {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .about h2 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #111111;
-            line-height: 1.5;
-        }
-
-        .success-banner {
-            background-color: #e8f5e9;
-            border: 1px solid #c8e6c9;
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-            color: #2e7d32;
-            margin-bottom: 28px;
-        }
-
-        .success-banner h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .success-banner p {
-            font-size: 13px;
-        }
-
-        .userDetailshow {
-            background-color: #fafafa;
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 28px;
-        }
-
-        .userDetailshow h2 {
-            font-size: 14px;
-            font-weight: 700;
-            color: #111111;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .userDetailshow .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .userDetailshow p {
-            font-size: 13px;
-            color: #444444;
-            line-height: 1.5;
-        }
-
-        .userDetailshow p strong {
-            color: #111111;
-        }
-
-        .mcq {
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 16px;
-            background: #ffffff;
-        }
-
-        .mcq h1 {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.6;
-            color: #111111;
-            margin-bottom: 12px;
-        }
-
-        .mcq h1 span {
-            font-weight: 700;
-            margin-right: 4px;
-        }
-
-        .mcq img {
-            max-width: 100%;
-            margin-top: 10px;
-            border: 1px solid #eaeaea;
-            border-radius: 4px;
-        }
-
-        .mcq ul {
-            list-style: none;
-            padding-left: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .mcq ul li {
-            font-size: 13px;
-            color: #555555;
-            padding: 8px 12px;
-            border-radius: 4px;
-            background: #fafafa;
-            border: 1px solid #eaeaea;
-        }
-
-        .answerDelete {
-            font-size: 12px;
-            font-weight: 600;
-            color: #1a3b5d;
-            background: #f0f4f8;
-            padding: 10px 16px;
-            border-radius: 4px;
-            margin-top: 12px;
-            display: inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="/public/css/tailwind.output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="logo">
-        <img src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur">
-    </div>
-    <div class="about">
-        <h2>Indian Institute of Information Technology Bhagalpur</h2>
-    </div>
-
-    <div class="success-banner">
-        <h3>Submission Confirmed</h3>
-        <p>Your responses have been successfully submitted and saved.</p>
+<body class="font-sans bg-slate-950 text-slate-200 p-6 md:p-12 max-w-4xl mx-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900 min-h-screen">
+    <div class="flex flex-col items-center justify-center mb-8 border-b border-slate-800 pb-6">
+        <img class="h-16 w-auto object-contain filter drop-shadow-lg mb-4" src="../public/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png" alt="IIIT Bhagalpur">
+        <h2 class="text-base font-bold text-white text-center">Indian Institute of Information Technology Bhagalpur</h2>
+        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Response Submission Confirmed</p>
     </div>
 
-    <div style="display: flex; justify-content: center; margin-bottom: 28px;">
-        <button id="downloadExcelBtn" style="padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid #111111; border-radius: 4px; background-color: #111111; color: #ffffff; transition: background 0.15s;">Download Excel Response</button>
+    <div class="mb-8 p-6 bg-green-950/40 border border-green-900/60 rounded-2xl text-center shadow-lg backdrop-blur-md">
+        <div class="w-12 h-12 rounded-full bg-green-600/10 border border-green-600/20 flex items-center justify-center mx-auto mb-3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-1">Submission Confirmed</h3>
+        <p class="text-sm text-slate-300">Your exam responses have been successfully submitted and locked in the server.</p>
     </div>
 
-    <div class="userDetailshow" id="userDetail">
+    <div class="flex justify-center mb-8">
+        <button id="downloadExcelBtn" class="px-6 py-3 bg-white text-slate-950 hover:bg-slate-100 active:scale-95 text-sm font-semibold rounded-lg tracking-wide shadow-lg shadow-black/20 cursor-pointer transition duration-150">Download Excel Response</button>
+    </div>
+
+    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 mb-8 backdrop-blur-xl shadow-xl" id="userDetail">
         <!-- Will be populated by JS -->
     </div>
 
@@ -192,7 +48,7 @@
         <!-- Loaded answers summary -->
     </div>
 
-    <div class="quiz" id="quizdisplay">
+    <div class="space-y-6" id="quizdisplay">
         <!-- Loaded questions and answers list -->
     </div>
     

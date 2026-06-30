@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function SubmitConfirmation() {
   const [searchParams] = useSearchParams();
@@ -117,7 +118,7 @@ function SubmitConfirmation() {
         setDownloading(false);
       })
       .catch((err) => {
-        alert('Error downloading file: ' + err.message);
+        toast.error('Error downloading file: ' + err.message);
         setDownloading(false);
       });
   };
@@ -135,21 +136,21 @@ function SubmitConfirmation() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col pb-10">
       {/* Top Header */}
-      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm shrink-0">
-        <h1 className="text-2xl font-bold text-gray-800">Candidate Response Sheet — {candidate.name}</h1>
-        <div className="flex gap-4">
+      <div className="bg-white border-b border-gray-200 py-4 px-4 md:px-8 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50 shadow-sm shrink-0 gap-4">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800 text-center sm:text-left">Candidate Response Sheet — {candidate.name}</h1>
+        <div className="flex flex-wrap justify-center gap-3">
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="border border-gray-300 px-5 py-2 rounded bg-black hover:bg-gray-900 text-white text-base font-semibold transition cursor-pointer disabled:opacity-50"
+            className="border border-gray-300 px-4 py-2 rounded bg-black hover:bg-gray-900 text-white text-sm md:text-base font-semibold transition cursor-pointer disabled:opacity-50"
           >
-            {downloading ? "Generating..." : "Download Excel Response"}
+            {downloading ? 'Downloading...' : 'Download Excel Sheet'}
           </button>
           <button
-            onClick={() => navigate("/participants")}
-            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
+            onClick={() => navigate('/participants')}
+            className="border border-gray-300 px-4 py-2 rounded bg-white text-sm md:text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
           >
-            Back to List
+            Back
           </button>
         </div>
       </div>

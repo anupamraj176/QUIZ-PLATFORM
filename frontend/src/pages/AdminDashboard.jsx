@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function AdminDashboard() {
   const [stream, setStream] = useState('Computer Science Engineering');
@@ -16,6 +17,61 @@ function AdminDashboard() {
   const [timeMessage, setTimeMessage] = useState('');
 
   const navigate = useNavigate();
+
+  const [sidebarWidth, setSidebarWidth] = useState(350);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [activeTab, setActiveTab] = useState('settings');
+  const isResizingRef = useRef(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const startResizing = (mouseDownEvent) => {
+    mouseDownEvent.preventDefault();
+    isResizingRef.current = true;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (mouseMoveEvent) => {
+    if (!isResizingRef.current) return;
+    const newWidth = mouseMoveEvent.clientX;
+    if (newWidth > 260 && newWidth < 600) {
+      setSidebarWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    isResizingRef.current = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const startResizingTouch = (touchStartEvent) => {
+    isResizingRef.current = true;
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
+  const handleTouchMove = (touchMoveEvent) => {
+    if (!isResizingRef.current) return;
+    const touch = touchMoveEvent.touches[0];
+    const newWidth = touch.clientX;
+    if (newWidth > 260 && newWidth < 600) {
+      setSidebarWidth(newWidth);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isResizingRef.current = false;
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
+  };
 
   useEffect(() => {
     const adminToken = localStorage.getItem('admintoken');
@@ -104,11 +160,11 @@ function AdminDashboard() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 0) {
-          alert('Question added successfully');
+          toast.success('Question added successfully');
           e.target.reset();
           loadQuestions();
         } else {
-          alert('Error adding question');
+          toast.error('Error adding question');
         }
       });
   };
@@ -130,11 +186,11 @@ function AdminDashboard() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 0) {
-          alert('Bulk questions added successfully');
+          toast.success('Bulk questions added successfully');
           e.target.reset();
           loadQuestions();
         } else {
-          alert('Error performing bulk upload');
+          toast.error('Error performing bulk upload');
         }
       });
   };
@@ -154,14 +210,14 @@ function AdminDashboard() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 0) {
-          alert(data.message || 'Candidates uploaded successfully');
+          toast.success(data.message || 'Candidates uploaded successfully');
           e.target.reset();
         } else {
-          alert(data.message || 'Error uploading candidates');
+          toast.error(data.message || 'Error uploading candidates');
         }
       })
       .catch((err) => {
-        alert('Upload failed: ' + err.message);
+        toast.error('Upload failed: ' + err.message);
       });
   };
 
@@ -179,10 +235,9 @@ function AdminDashboard() {
       .then((res) => res.json())
       .then((body) => {
         if (body.status === 0) {
-          setTimeMessage('Timers updated successfully!');
-          setTimeout(() => setTimeMessage(''), 3000);
+          toast.success('Timers updated successfully!');
         } else {
-          alert('Error setting timers');
+          toast.error('Error setting timers');
         }
       });
   };
@@ -218,8 +273,9 @@ function AdminDashboard() {
         if (data.status === 0) {
           setEditingQuestionId(null);
           loadQuestions();
+          toast.success('Question updated successfully');
         } else {
-          alert('Error updating question text');
+          toast.error('Error updating question text');
         }
       });
   };
@@ -243,11 +299,11 @@ function AdminDashboard() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 0) {
-          alert('Image updated successfully');
+          toast.success('Image updated successfully');
           setEditImageFile(null);
           loadQuestions();
         } else {
-          alert('Error updating question image');
+          toast.error('Error updating question image');
         }
       });
   };
@@ -269,8 +325,9 @@ function AdminDashboard() {
       .then((data) => {
         if (data.status === 0) {
           loadQuestions();
+          toast.success('Question deleted successfully');
         } else {
-          alert('Error deleting question');
+          toast.error('Error deleting question');
         }
       });
   };
@@ -310,10 +367,39 @@ function AdminDashboard() {
         </div>
       </div>
 
+      {isMobile && (
+        <div className="bg-white border-b border-gray-200 px-4 py-2.5 flex gap-2 shrink-0">
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`flex-1 py-2 text-center text-sm font-semibold rounded transition duration-150 cursor-pointer ${
+              activeTab === 'settings'
+                ? 'bg-black text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Settings & Add Question
+          </button>
+          <button
+            onClick={() => setActiveTab('questions')}
+            className={`flex-1 py-2 text-center text-sm font-semibold rounded transition duration-150 cursor-pointer ${
+              activeTab === 'questions'
+                ? 'bg-black text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Questions List ({questions.length})
+          </button>
+        </div>
+      )}
+
       {/* Workspace Containers */}
       <div className="flex flex-col lg:flex-row flex-grow w-full items-stretch overflow-hidden">
         {/* Left Control Panel Column */}
-        <div className="w-full lg:w-[350px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto h-full">
+        {(!isMobile || activeTab === 'settings') && (
+          <div
+            className="w-full lg:w-[350px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto h-full"
+            style={{ width: isMobile ? '100%' : `${sidebarWidth}px` }}
+          >
           {/* Exam Schedule */}
           <div>
             <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">Exam Schedule</h3>
@@ -461,9 +547,24 @@ function AdminDashboard() {
             </form>
           </div>
         </div>
+        )}
+
+        {/* Divider / Resizer bar */}
+        {!isMobile && (
+          <div
+            onMouseDown={startResizing}
+            onTouchStart={startResizingTouch}
+            className="hidden lg:flex w-2.5 hover:w-2.5 bg-gray-250 hover:bg-blue-600 cursor-col-resize self-stretch transition-colors duration-150 relative select-none items-center justify-center border-l border-r border-gray-300 z-10 group"
+            style={{ touchAction: 'none' }}
+            title="Drag to resize panels"
+          >
+            <div className="w-1 h-8 bg-gray-400 group-hover:bg-blue-300 rounded-full"></div>
+          </div>
+        )}
 
         {/* Right Questions List Column */}
-        <div className="flex-grow p-8 bg-white overflow-y-auto h-full">
+        {(!isMobile || activeTab === 'questions') && (
+          <div className="flex-grow p-8 bg-white overflow-y-auto h-full">
           {/* List Toolbar Filters */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-800">Filter Questions</h2>
@@ -640,7 +741,8 @@ function AdminDashboard() {
               })}
             </div>
           )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

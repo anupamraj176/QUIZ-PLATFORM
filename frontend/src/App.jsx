@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CandidateLogin from './pages/CandidateLogin';
 import CandidateProfile from './pages/CandidateProfile';
 import Instructions from './pages/Instructions';
@@ -22,6 +24,7 @@ function App() {
         <Route path="/addquiz" element={<AdminDashboard />} />
         <Route path="/participants" element={<ParticipantsList />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
     </Router>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function ParticipantsList() {
   const [candidates, setCandidates] = useState([]);
@@ -72,7 +73,7 @@ function ParticipantsList() {
         setDownloading(false);
       })
       .catch((err) => {
-        alert('Error: ' + err.message);
+        toast.error('Error: ' + err.message);
         setDownloading(false);
       });
   };
@@ -91,19 +92,19 @@ function ParticipantsList() {
   return (
     <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm shrink-0">
-        <h1 className="text-2xl font-bold text-gray-800">Candidate Database</h1>
-        <div className="flex gap-4">
+      <div className="bg-white border-b border-gray-200 py-4 px-4 md:px-8 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50 shadow-sm shrink-0 gap-4">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800 text-center sm:text-left">Candidate Database</h1>
+        <div className="flex flex-wrap justify-center gap-3">
           <button
             onClick={downloadAllResults}
             disabled={downloading}
-            className="border border-gray-300 px-5 py-2 rounded bg-black hover:bg-gray-900 text-white text-base font-semibold transition cursor-pointer disabled:opacity-50"
+            className="border border-gray-300 px-4 py-2 rounded bg-black hover:bg-gray-900 text-white text-sm md:text-base font-semibold transition cursor-pointer disabled:opacity-50"
           >
             {downloading ? 'Downloading...' : 'Download Excel Results'}
           </button>
           <button
             onClick={() => navigate('/addquiz')}
-            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
+            className="border border-gray-300 px-4 py-2 rounded bg-white text-sm md:text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
           >
             Back to Questions
           </button>

@@ -13,6 +13,61 @@ function QuizPortal() {
   const navigate = useNavigate();
   const mathRef = useRef(null);
 
+  const [paletteWidth, setPaletteWidth] = useState(320);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [showPaletteDrawer, setShowPaletteDrawer] = useState(false);
+  const isResizingRef = useRef(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const startResizing = (mouseDownEvent) => {
+    mouseDownEvent.preventDefault();
+    isResizingRef.current = true;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (mouseMoveEvent) => {
+    if (!isResizingRef.current) return;
+    const newWidth = window.innerWidth - mouseMoveEvent.clientX;
+    if (newWidth > 240 && newWidth < 500) {
+      setPaletteWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    isResizingRef.current = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const startResizingTouch = (touchStartEvent) => {
+    isResizingRef.current = true;
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
+  const handleTouchMove = (touchMoveEvent) => {
+    if (!isResizingRef.current) return;
+    const touch = touchMoveEvent.touches[0];
+    const newWidth = window.innerWidth - touch.clientX;
+    if (newWidth > 240 && newWidth < 500) {
+      setPaletteWidth(newWidth);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isResizingRef.current = false;
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -368,8 +423,25 @@ function QuizPortal() {
           </div>
         </div>
 
+        {/* Divider / Resizer bar */}
+        {!isMobile && (
+          <div
+            onMouseDown={startResizing}
+            onTouchStart={startResizingTouch}
+            className="hidden lg:flex w-2.5 hover:w-2.5 bg-gray-200 hover:bg-blue-500 cursor-col-resize self-stretch transition-colors duration-150 relative select-none items-center justify-center border-l border-r border-gray-300 z-10 group"
+            style={{ touchAction: 'none' }}
+            title="Drag to resize panels"
+          >
+            <div className="w-1 h-8 bg-gray-400 group-hover:bg-blue-300 rounded-full"></div>
+          </div>
+        )}
+
         {/* RIGHT: Question Palette */}
-        <div className="w-[280px] shrink-0 bg-white flex flex-col border-l border-gray-300">
+        {!isMobile && (
+          <div
+            className="w-[280px] shrink-0 bg-white flex flex-col border-l border-gray-300"
+            style={{ width: `${paletteWidth}px` }}
+          >
           {/* Palette Header */}
           <div className="bg-[#e8e8e8] border-b border-gray-400 px-4 py-2">
             <span className="text-[13px] font-bold uppercase">Navigate To Any Question</span>
@@ -439,7 +511,114 @@ function QuizPortal() {
             </button>
           </div>
         </div>
+        )}
       </div>
+
+      {/* Mobile Palette Floating Button */}
+      {isMobile && (
+        <button
+          onClick={() => setShowPaletteDrawer(true)}
+          className="fixed bottom-20 right-4 z-40 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-5 py-3 shadow-xl flex items-center justify-center border border-blue-400 focus:outline-none transition duration-150 active:scale-95 cursor-pointer"
+        >
+          <span className="text-[13px] font-bold flex items-center gap-1.5">
+            📋 View Palette ({answeredCount}/{questions.length})
+          </span>
+        </button>
+      )}
+
+      {/* Mobile Drawer Overlay */}
+      {isMobile && showPaletteDrawer && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 flex justify-end"
+          onClick={() => setShowPaletteDrawer(false)}
+        >
+          <div
+            className="h-full w-[80vw] max-w-[320px] bg-white shadow-2xl flex flex-col z-50 animate-slide-in-right"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Drawer Header with Close Button */}
+            <div className="bg-[#e8e8e8] border-b border-gray-400 px-4 py-3 flex justify-between items-center">
+               <span className="text-[13px] font-bold uppercase">Question Palette</span>
+               <button
+                 onClick={() => setShowPaletteDrawer(false)}
+                 className="text-black font-bold text-lg p-1 hover:text-red-600 focus:outline-none cursor-pointer"
+               >
+                 ✕
+               </button>
+            </div>
+
+            {/* Question Grid */}
+            <div className="flex-grow overflow-y-auto p-4">
+              <div className="flex flex-wrap gap-1">
+                {questions.map((q, idx) => {
+                  let bgColor = 'bg-gray-400'; // Not visited
+                  let textColor = 'text-white';
+                  if (markedReview.has(q.id)) {
+                    bgColor = 'bg-purple-600';
+                  } else if (answers.has(q.id)) {
+                    bgColor = 'bg-green-600';
+                  } else if (visited.has(q.id)) {
+                    bgColor = 'bg-red-500';
+                  }
+
+                  const isActive = activeIndex === idx;
+
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        selectQuestion(idx);
+                        setShowPaletteDrawer(false);
+                      }}
+                      className={`w-[36px] h-[36px] rounded text-[12px] font-bold flex items-center justify-center cursor-pointer ${bgColor} ${textColor} transition ${
+                        isActive ? 'ring-2 ring-black ring-offset-1 scale-105' : 'hover:opacity-80'
+                      }`}
+                    >
+                      {idx + 1}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="border-t border-gray-300 p-4 space-y-2">
+              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                <div className="flex items-center gap-2">
+                  <span className="w-[20px] h-[20px] rounded bg-green-600 inline-block"></span>
+                   <span>Answered ({answeredCount})</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-[20px] h-[20px] rounded bg-red-500 inline-block"></span>
+                  <span>Not Answered ({notAnsweredCount})</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-[20px] h-[20px] rounded bg-gray-400 inline-block"></span>
+                  <span>Not Visited ({notVisitedCount})</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-[20px] h-[20px] rounded bg-purple-600 inline-block"></span>
+                  <span>Review ({reviewCount})</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="border-t border-gray-300 p-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPaletteDrawer(false);
+                  submitExam();
+                }}
+                className="w-full py-3 bg-[#1565c0] hover:bg-[#0d47a1] text-white text-[13px] font-bold border-none cursor-pointer rounded-sm uppercase tracking-wider"
+              >
+                Submit Exam
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== SUCCESS MODAL ===== */}
       {successModal && (

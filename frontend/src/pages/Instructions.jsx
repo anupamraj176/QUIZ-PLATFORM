@@ -110,13 +110,13 @@ function Instructions() {
       <div className="w-fit mx-auto text-center mb-6">
         <h3 className="text-[20px] font-normal">Indian Institute of Information Technology Bhagalpur</h3>
       </div>
-      <div className="w-[70%] flex flex-col items-center">
-        <div className="text-center text-[18px] text-gray-500 mb-4" id="timer">
+      <div className="w-full max-w-[900px] px-4 md:px-8 flex flex-col items-center">
+        <div className="text-center text-[16px] md:text-[18px] text-gray-500 mb-4" id="timer">
           Time Remaining
-          <span className="text-[22px] text-black font-bold ml-3 font-mono">{timeLeft}</span>
+          <span className="text-[18px] md:text-[22px] text-black font-bold ml-3 font-mono">{timeLeft}</span>
         </div>
-        <h1 className="text-[28px] font-bold my-4">Instruction</h1>
-        <ol className="list-decimal text-[20px] space-y-2 mb-8 leading-relaxed text-justify">
+        <h1 className="text-[24px] md:text-[28px] font-bold my-4">Instructions</h1>
+        <ol className="list-decimal text-[15px] md:text-[17px] lg:text-[19px] space-y-3 mb-8 leading-relaxed text-justify px-2 md:px-0">
           {candidate.program === 'Teaching' ? (
             <>
               <li>Candidates should carry with them the Identity Card to the Examination Centre for establishing their identity, failing which they will not be allowed to enter the Examination Hall.</li>
@@ -158,13 +158,13 @@ function Instructions() {
             </>
           )}
         </ol>
-        <button
+         <button
           type="button"
           id="nextbutton"
           onClick={handleNext}
           disabled={!buttonActive}
-          className={`px-[20px] py-[8px] text-[20px] border border-black cursor-pointer font-medium mb-12 ${
-            buttonActive ? 'bg-gray-450 text-black hover:bg-gray-300' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          className={`px-[24px] py-[10px] text-[16px] md:text-[18px] border border-black cursor-pointer font-bold rounded mb-12 transition duration-150 active:scale-95 ${
+            buttonActive ? 'bg-black text-white hover:bg-gray-800 border-black' : 'bg-gray-150 text-gray-400 border-gray-300 cursor-not-allowed'
           }`}
         >
           {buttonText}

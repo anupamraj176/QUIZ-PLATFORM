@@ -78,7 +78,7 @@ function CandidateProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black py-6 font-sans">
+    <div className="min-h-screen bg-white text-black py-6 px-4 font-sans flex flex-col justify-center">
       <div className="w-[100px] h-[100px] mx-auto p-[10px] flex items-center justify-center">
         <img
           src="/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
@@ -97,7 +97,7 @@ function CandidateProfile() {
         )}
         <form
           onSubmit={handleSubmit}
-          className="border-2 border-black p-[20px] w-full max-w-[60%] min-w-[300px]"
+          className="border-2 border-black p-[20px] w-full max-w-[500px] rounded-md"
         >
           <h2 className="text-center text-[24px] font-bold mb-4">Fill your details</h2>
           

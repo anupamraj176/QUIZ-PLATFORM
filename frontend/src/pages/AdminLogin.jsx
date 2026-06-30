@@ -44,7 +44,7 @@ function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black py-20 font-sans flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-white text-black py-20 px-4 font-sans flex flex-col items-center justify-center">
       {warning && (
         <div className="text-red-600 font-bold mb-3 text-[18px]">
           {warning}

@@ -48,7 +48,7 @@ function CandidateLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black py-10 font-sans">
+    <div className="min-h-screen bg-white text-black py-10 px-4 font-sans flex flex-col justify-center">
       <div className="w-[200px] h-[200px] mx-auto p-[30px] flex items-center justify-center">
         <img
           src="/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"

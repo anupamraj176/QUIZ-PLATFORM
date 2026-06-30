@@ -11,5 +11,13 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    proxy: {
+      '/user': 'http://localhost:3000',
+      '/question': 'http://localhost:3000',
+      '/admin': 'http://localhost:3000',
+      '/time': 'http://localhost:3000',
+      '/api': 'http://localhost:3000',
+      '/uploads': 'http://localhost:3000',
+    }
   }
 });

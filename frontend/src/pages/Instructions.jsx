@@ -96,7 +96,7 @@ function Instructions() {
     }
   };
 
-  if (!candidate) return <div className="text-center p-12 text-slate-400">Loading...</div>;
+  if (!candidate) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-white text-black py-4 font-sans flex flex-col items-center">

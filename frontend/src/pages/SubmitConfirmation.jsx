@@ -130,7 +130,7 @@ function SubmitConfirmation() {
   };
 
   if (error) return <div className="text-center p-12 text-red-400">{error}</div>;
-  if (!candidate || questions.length === 0) return <div className="text-center p-12 text-slate-400">Loading response sheets...</div>;
+  if (!candidate || questions.length === 0) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading response sheets...</div>;
 
   return (
     <div className="min-h-screen bg-white text-black py-8 font-sans max-w-[60%] mx-auto">

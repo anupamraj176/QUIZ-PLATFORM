@@ -222,183 +222,226 @@ function QuizPortal() {
     return window.btoa(binary);
   };
 
-  if (!candidate || questions.length === 0) return <div className="text-center p-12 text-slate-400">Loading Exam Engine...</div>;
+  if (!candidate || questions.length === 0) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading Exam Engine...</div>;
 
   const currentQues = questions[activeIndex];
   const choiceMap = answers.get(currentQues.id);
 
+  // Stats for palette summary
+  const answeredCount = answers.size;
+  const notAnsweredCount = Array.from(visited).filter(v => !answers.has(v) && !markedReview.has(v)).length;
+  const reviewCount = markedReview.size;
+  const notVisitedCount = questions.length - visited.size;
+
   return (
-    <div className="min-h-screen bg-white text-black font-sans pb-10">
-      {/* Top Header */}
-      <div className="w-[95%] mx-auto mt-[15px] mb-[50px] pb-[3px] border-b-[3px] border-black flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div className="detail">
-          <h1 className="text-[27px] font-bold m-0 p-0">Name: {candidate.name}</h1>
-          <div className="flex flex-wrap text-[20px] font-normal mt-1 text-gray-800">
-            <h4 className="mr-[15px]">Application No: {candidate.applicationNo},</h4>
-            <h4 className="mr-[15px]">Program: {candidate.program},</h4>
-            <h4>Department: {candidate.stream}</h4>
-          </div>
+    <div className="min-h-screen bg-[#f0f0f0] text-black font-sans flex flex-col select-none">
+      {/* ===== TOP HEADER BAR ===== */}
+      <div className="bg-white border-b-2 border-gray-300 px-4 py-2 flex justify-between items-center">
+        <div>
+          <h1 className="text-[16px] font-bold m-0">{candidate.name}</h1>
+          <p className="text-[12px] text-gray-600 m-0">
+            Application No : {candidate.applicationNo}, &nbsp; Program : {candidate.program}, &nbsp; Department : {candidate.stream}
+          </p>
         </div>
-        <div className="timer text-right text-[18px] text-gray-500">
-          Time left to finish
-          <div id="timer" className="inline-block">
-            <span className="text-[22px] text-black font-bold ml-3 font-mono">{timeLeft}</span>
+        <div className="flex items-center gap-4">
+          <div className="border border-gray-400 px-4 py-2 bg-gray-50 text-right">
+            <span className="text-[11px] text-red-600 font-bold uppercase tracking-wider">Time Left To Finish</span>
+            <div className="text-[18px] font-bold text-black font-mono tracking-wide">{timeLeft}</div>
           </div>
         </div>
       </div>
 
-      {/* Main Layout */}
-      <div className="main flex flex-col lg:flex-row w-[95%] mx-auto gap-8">
-        {/* Left MCQ Panel */}
-        <div className="quiz w-full lg:w-[70%] mb-10" ref={mathRef}>
-          <div className="mcq w-[90%] md:w-[80%] mx-auto">
-            <h1 className="text-[24px] font-normal leading-snug mb-2">
-              <span className="font-bold text-[22px] mr-1">{activeIndex + 1}.</span>
-              {currentQues.question}
-            </h1>
+      {/* ===== SECTION TABS ===== */}
+      <div className="bg-[#e8e8e8] border-b border-gray-400 px-4 flex items-center">
+        <div
+          className="px-6 py-2 text-[13px] font-bold cursor-pointer bg-white border-t-2 border-l border-r border-blue-600 text-blue-800 -mb-px"
+        >
+          {candidate.stream || 'General'}
+        </div>
+      </div>
 
+      {/* ===== MAIN BODY ===== */}
+      <div className="flex flex-grow overflow-hidden">
+        {/* LEFT: Question Area */}
+        <div className="flex-grow flex flex-col bg-white border-r border-gray-300">
+          {/* Question Header */}
+          <div className="bg-[#e8e8e8] border-b border-gray-400 px-6 py-2 flex justify-between items-center">
+            <span className="text-[13px] font-bold">Question No. {activeIndex + 1}</span>
+            <div className="flex items-center gap-4 text-[12px] text-gray-600">
+              <span>Marks for correct answer: <b className="text-green-700">1</b></span>
+              <span>Negative marks: <b className="text-red-600">0</b></span>
+            </div>
+          </div>
+
+          {/* Question Body */}
+          <div className="flex-grow overflow-y-auto p-6" ref={mathRef}>
+            {/* Question Text */}
+            <div className="text-[15px] leading-relaxed mb-6">
+              <span className="font-bold mr-1">Q.{activeIndex + 1}</span>
+              {currentQues.question}
+            </div>
+
+            {/* Question Image */}
             {currentQues.image && currentQues.image.contentType && (
-              <div className="my-3">
+              <div className="mb-6">
                 <img
                   src={`data:image/${currentQues.image.contentType};base64,${arrayBufferToBase64(currentQues.image.data.data)}`}
                   alt="question attachment"
-                  className="max-w-full max-h-80 object-contain border border-gray-400"
+                  className="max-w-full max-h-64 object-contain border border-gray-300"
                 />
               </div>
             )}
 
-            <h3 className="border-t-2 border-black mt-[15px] pt-2 text-[18px] font-normal">Choose option below</h3>
-            
-            <ul className="list-none m-0 p-0 pt-[10px] pl-[5px] space-y-1">
+            {/* Options with Radio Buttons */}
+            <div className="space-y-3">
               {currentQues.choice.map((choiceText, cIdx) => {
                 const letter = String.fromCharCode(65 + cIdx);
                 const isSelected = choiceMap && choiceMap.option === cIdx;
                 return (
-                  <li
+                  <label
                     key={cIdx}
-                    id={`${currentQues.id}_option${cIdx}`}
                     onClick={() => setChoice(currentQues.id, cIdx, choiceText)}
-                    className={`text-[20px] p-[10px] pl-[15px] border-b border-gray-100 cursor-pointer select-none transition duration-150 ${
+                    className={`flex items-center gap-3 p-3 border rounded cursor-pointer transition duration-100 ${
                       isSelected
-                        ? "bg-[#4091d7] text-white hover:bg-[#4091d7]"
-                        : "bg-white text-black hover:bg-[#90bc85]"
+                        ? 'bg-blue-50 border-blue-400'
+                        : 'bg-white border-gray-300 hover:bg-gray-50'
                     }`}
                   >
-                    <span>{letter}. </span>
-                    {choiceText}
-                  </li>
+                    <input
+                      type="radio"
+                      name={`q_${currentQues.id}`}
+                      checked={isSelected}
+                      readOnly
+                      className="w-4 h-4 accent-blue-600 cursor-pointer"
+                    />
+                    <span className="text-[14px]">
+                      <span className="font-semibold mr-1">{letter}.</span>
+                      {choiceText}
+                    </span>
+                  </label>
                 );
               })}
-            </ul>
+            </div>
+          </div>
 
-            <span
-              className="clearvalues text-[16px] underline cursor-pointer text-blue-600 inline-block mt-4 select-none"
-              onClick={() => clearChoice(currentQues.id)}
-            >
-              Clear all
-            </span>
-
-            {/* Navigation Buttons */}
-            <div className="differentquestion mt-[30px] flex justify-between items-center">
+          {/* ===== BOTTOM ACTION BAR ===== */}
+          <div className="bg-[#e8e8e8] border-t border-gray-400 px-6 py-3 flex justify-between items-center flex-wrap gap-2">
+            <div className="flex gap-2">
               <button
                 type="button"
-                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium disabled:opacity-50 disabled:cursor-not-allowed select-none"
-                onClick={() => activeIndex > 0 && selectQuestion(activeIndex - 1)}
-                disabled={activeIndex === 0}
+                onClick={() => {
+                  toggleMarkReview(currentQues.id);
+                  if (activeIndex < questions.length - 1) selectQuestion(activeIndex + 1);
+                }}
+                className="px-4 py-2 bg-[#4a90d9] hover:bg-[#3a7fc8] text-white text-[12px] font-bold border border-[#3a7fc8] cursor-pointer rounded-sm"
               >
-                Previous
+                Mark for Review & Next
               </button>
-
               <button
                 type="button"
-                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium select-none"
-                onClick={() => toggleMarkReview(currentQues.id)}
+                onClick={() => clearChoice(currentQues.id)}
+                className="px-4 py-2 bg-white hover:bg-gray-100 text-gray-700 text-[12px] font-bold border border-gray-400 cursor-pointer rounded-sm"
               >
-                {markedReview.has(currentQues.id) ? "Mark as Unreview" : "Mark as Review"}
-              </button>
-
-              <button
-                type="button"
-                className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-medium disabled:opacity-50 disabled:cursor-not-allowed select-none"
-                onClick={() => activeIndex < questions.length - 1 && selectQuestion(activeIndex + 1)}
-                disabled={activeIndex === questions.length - 1}
-              >
-                Next
+                Clear Response
               </button>
             </div>
-
-            {/* Submit Button on the last question */}
-            {activeIndex === questions.length - 1 && (
-              <div className="submitbutton text-center mt-6">
-                <button
-                  type="button"
-                  className="px-[30px] py-[10px] bg-blue-600 hover:bg-blue-700 text-white border border-black cursor-pointer font-bold text-[16px] select-none"
-                  onClick={() => submitExam()}
-                >
-                  Submit
-                </button>
-              </div>
-            )}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => activeIndex > 0 && selectQuestion(activeIndex - 1)}
+                disabled={activeIndex === 0}
+                className="px-5 py-2 bg-white hover:bg-gray-100 text-gray-700 text-[12px] font-bold border border-gray-400 cursor-pointer rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                &lt;&lt; Previous
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (activeIndex < questions.length - 1) selectQuestion(activeIndex + 1);
+                }}
+                disabled={activeIndex === questions.length - 1}
+                className="px-5 py-2 bg-[#4caf50] hover:bg-[#43a047] text-white text-[12px] font-bold border border-[#43a047] cursor-pointer rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Save & Next &gt;&gt;
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Right Sidebar Nav */}
-        <div className="question w-full lg:w-[30%]">
-          <h1 className="text-[20px] font-normal ml-[10px] mb-3">Navigate to any question</h1>
-          
-          <div className="questionShow flex flex-wrap border-2 border-black p-[10px] rounded-[5px] min-h-[120px] bg-white">
-            {questions.map((q, idx) => {
-              let cellColor = "bg-gray-500"; // unvisited
-              if (markedReview.has(q.id)) {
-                cellColor = "bg-purple-600";
-              } else if (answers.has(q.id)) {
-                cellColor = "bg-green-600";
-              } else if (visited.has(q.id)) {
-                cellColor = "bg-red-600";
-              }
-
-              const isActive = activeIndex === idx;
-
-              return (
-                <div
-                  key={idx}
-                  onClick={() => selectQuestion(idx)}
-                  className={`w-[25px] h-[25px] rounded-full text-[16px] font-semibold m-[5px] text-white flex items-center justify-center cursor-pointer hover:bg-black hover:text-white select-none ${cellColor} ${
-                    isActive ? "ring-2 ring-black ring-offset-2 scale-110" : ""
-                  }`}
-                >
-                  {idx + 1}
-                </div>
-              );
-            })}
+        {/* RIGHT: Question Palette */}
+        <div className="w-[280px] shrink-0 bg-white flex flex-col border-l border-gray-300">
+          {/* Palette Header */}
+          <div className="bg-[#e8e8e8] border-b border-gray-400 px-4 py-2">
+            <span className="text-[13px] font-bold uppercase">Navigate To Any Question</span>
           </div>
 
-          {/* Status Legend */}
-          <div className="mt-8 pl-[10px]">
-            <div className="showinfo flex items-center justify-start text-[16px] my-1">
-              <div className="w-[30px] h-[30px] bg-purple-600 border border-black rounded-full m-[5px]"></div>
-              <p className="ml-2 select-none">Mark as review</p>
+          {/* Question Grid */}
+          <div className="flex-grow overflow-y-auto p-4">
+            <div className="flex flex-wrap gap-1">
+              {questions.map((q, idx) => {
+                let bgColor = 'bg-gray-400'; // Not visited
+                let textColor = 'text-white';
+                if (markedReview.has(q.id)) {
+                  bgColor = 'bg-purple-600';
+                } else if (answers.has(q.id)) {
+                  bgColor = 'bg-green-600';
+                } else if (visited.has(q.id)) {
+                  bgColor = 'bg-red-500';
+                }
+
+                const isActive = activeIndex === idx;
+
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => selectQuestion(idx)}
+                    className={`w-[36px] h-[36px] rounded text-[12px] font-bold flex items-center justify-center cursor-pointer ${bgColor} ${textColor} transition ${
+                      isActive ? 'ring-2 ring-black ring-offset-1 scale-105' : 'hover:opacity-80'
+                    }`}
+                  >
+                    {idx + 1}
+                  </div>
+                );
+              })}
             </div>
-            
-            <div className="showinfo flex items-center justify-start text-[16px] my-1">
-              <div className="w-[30px] h-[30px] bg-red-600 border border-black rounded-full m-[5px]"></div>
-              <p className="ml-2 select-none">Not answered</p>
+          </div>
+
+          {/* Legend */}
+          <div className="border-t border-gray-300 p-4 space-y-2">
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="flex items-center gap-2">
+                <span className="w-[20px] h-[20px] rounded bg-green-600 inline-block"></span>
+                <span>Answered ({answeredCount})</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-[20px] h-[20px] rounded bg-red-500 inline-block"></span>
+                <span>Not Answered ({notAnsweredCount})</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-[20px] h-[20px] rounded bg-gray-400 inline-block"></span>
+                <span>Not Visited ({notVisitedCount})</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-[20px] h-[20px] rounded bg-purple-600 inline-block"></span>
+                <span>Review ({reviewCount})</span>
+              </div>
             </div>
-            
-            <div className="showinfo flex items-center justify-start text-[16px] my-1">
-              <div className="w-[30px] h-[30px] bg-green-600 border border-black rounded-full m-[5px]"></div>
-              <p className="ml-2 select-none">Answered</p>
-            </div>
-            
-            <div className="showinfo flex items-center justify-start text-[16px] my-1">
-              <div className="w-[30px] h-[30px] bg-gray-500 border border-black rounded-full m-[5px]"></div>
-              <p className="ml-2 select-none">Not Visited</p>
-            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="border-t border-gray-300 p-4">
+            <button
+              type="button"
+              onClick={() => submitExam()}
+              className="w-full py-3 bg-[#1565c0] hover:bg-[#0d47a1] text-white text-[13px] font-bold border-none cursor-pointer rounded-sm uppercase tracking-wider"
+            >
+              Submit Exam
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Success Modal */}
+      {/* ===== SUCCESS MODAL ===== */}
       {successModal && (
         <div style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000, justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ background: '#ffffff', border: '2px solid black', width: '90%', maxWidth: '450px', padding: '40px 30px', textAlign: 'center', fontFamily: 'Verdana, sans-serif' }} className="text-black">

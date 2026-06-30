@@ -139,6 +139,32 @@ function AdminDashboard() {
       });
   };
 
+  const handleBulkCandidatesUpload = (e) => {
+    e.preventDefault();
+    const adminToken = localStorage.getItem('admintoken');
+    const formData = new FormData(e.target);
+
+    fetch('/user/uploadCandidates', {
+      method: 'POST',
+      headers: {
+        'auth_token': adminToken,
+      },
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 0) {
+          alert(data.message || 'Candidates uploaded successfully');
+          e.target.reset();
+        } else {
+          alert(data.message || 'Error uploading candidates');
+        }
+      })
+      .catch((err) => {
+        alert('Upload failed: ' + err.message);
+      });
+  };
+
   const handleSetTimers = (e) => {
     e.preventDefault();
     const adminToken = localStorage.getItem('admintoken');
@@ -261,76 +287,83 @@ function AdminDashboard() {
     return window.btoa(binary);
   };
 
-  if (!config) return <div className="text-center p-12 text-slate-400">Loading Console...</div>;
+  if (!config) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading Console...</div>;
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans pb-10">
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
       {/* Top Header */}
-      <div className="header flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
-        <div className="heading">
-          <h1 className="text-[28px] font-bold">Question Panel</h1>
-        </div>
+      <div className="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+        <h1 className="text-xl font-bold text-gray-800">Admin Panel — Exam Portal</h1>
         <div className="flex gap-4">
-          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
-            <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>logout</a>
-          </div>
-          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/participants'); }}>Participants</a>
-          </div>
+          <button
+            onClick={() => navigate('/participants')}
+            className="border border-gray-300 px-4 py-1.5 rounded bg-white text-sm hover:bg-gray-50 text-gray-700 font-medium transition cursor-pointer"
+          >
+            Participants
+          </button>
+          <button
+            onClick={handleLogout}
+            className="border border-gray-300 px-4 py-1.5 rounded bg-white text-sm hover:bg-gray-50 text-red-600 font-medium transition cursor-pointer"
+          >
+            Logout
+          </button>
         </div>
       </div>
 
-      {/* Configure Exam Timings Card */}
-      <div className="max-w-[800px] mx-auto my-[20px] p-[20px] bg-[#f9f9f9] border border-[#e0e0e0] rounded-[8px] shadow-sm">
-        <h3 className="mt-0 text-[16px] font-bold text-gray-800 mb-4">Configure Exam Timings (JEE Mode)</h3>
-        <form onSubmit={handleSetTimers} className="flex flex-wrap gap-4 items-end">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="startTimeInput" className="font-bold text-[14px]">Start Date & Time:</label>
-            <input
-              type="datetime-local"
-              id="startTimeInput"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-              className="p-[8px] border border-gray-400 rounded bg-white text-black text-[14px]"
-            />
+      {/* Workspace Containers */}
+      <div className="flex flex-col lg:flex-row flex-grow w-full items-stretch">
+        {/* Left Control Panel Column */}
+        <div className="w-full lg:w-[320px] bg-white shrink-0 border-r border-gray-200 p-6 flex flex-col gap-6 overflow-y-auto">
+          {/* Exam Schedule */}
+          <div>
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Exam Schedule</h3>
+            <p className="text-[11px] text-gray-400 mb-3">Set timing for Online Examination</p>
+            <form onSubmit={handleSetTimers} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-500 mb-1">Start Time</label>
+                  <input
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                    className="w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-500 bg-white text-black"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-500 mb-1">End Time</label>
+                  <input
+                    type="datetime-local"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required
+                    className="w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-500 bg-white text-black"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 bg-black hover:bg-gray-900 text-white rounded text-xs font-bold transition duration-150 cursor-pointer"
+              >
+                Save Timing
+              </button>
+            </form>
+            {timeMessage && (
+              <div className="mt-2 text-green-600 font-semibold text-xs text-center">{timeMessage}</div>
+            )}
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="endTimeInput" className="font-bold text-[14px]">End Date & Time:</label>
-            <input
-              type="datetime-local"
-              id="endTimeInput"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-              className="p-[8px] border border-gray-400 rounded bg-white text-black text-[14px]"
-            />
-          </div>
-          <button
-            type="submit"
-            className="p-[10px] px-[20px] bg-blue-600 hover:bg-blue-700 text-white font-bold border border-black cursor-pointer rounded"
-          >
-            Save Timing
-          </button>
-        </form>
-        {timeMessage && (
-          <div className="mt-3 text-green-600 font-bold text-[14px]">{timeMessage}</div>
-        )}
-      </div>
 
-      {/* Main Workspace Layout */}
-      <div className="QuestionForm flex flex-col lg:flex-row w-[97%] mx-auto gap-8 justify-around mt-6">
-        {/* Left Form Fill Panel */}
-        <div className="formfill w-full lg:w-[40%] flex flex-col gap-6">
-          <div className="border border-black p-[20px] bg-[#fafafa]">
-            <h2 className="text-[20px] font-bold border-b border-black pb-2 mb-4">Select Workspace Scope</h2>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <label className="font-bold">Stream</label>
+          {/* Bulk Import Questions */}
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Bulk Import Questions</h3>
+            <p className="text-[11px] text-gray-400 mb-3">Upload questions from Excel or CSV sheet</p>
+            <form onSubmit={handleBulkUpload} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Stream</label>
                 <select
                   value={stream}
                   onChange={(e) => setStream(e.target.value)}
-                  className="p-[5px] border border-gray-400 bg-white text-black text-[16px]"
+                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none"
                 >
                   <option value={config.CSEvalue}>{config.CSEvalue}</option>
                   <option value={config.ECEvalue}>{config.ECEvalue}</option>
@@ -338,256 +371,275 @@ function AdminDashboard() {
                   <option value={config.Mathvalue}>{config.Mathvalue}</option>
                 </select>
               </div>
-              <div className="flex flex-col gap-1">
-                <label className="font-bold">Program</label>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 mb-1">Program</label>
                 <select
                   value={program}
                   onChange={(e) => setProgram(e.target.value)}
-                  className="p-[5px] border border-gray-400 bg-white text-black text-[16px]"
+                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none"
                 >
                   <option value="MTech">MTech</option>
                   <option value="PhD">PhD</option>
                 </select>
               </div>
-            </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
+                <input
+                  type="file"
+                  name="file"
+                  accept=".xlsx, .xls, .csv"
+                  required
+                  className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+              >
+                Upload Questions
+              </button>
+            </form>
           </div>
 
-          <form
-            onSubmit={handleCreateQuestion}
-            id="question_txt"
-            className="flex flex-col gap-3 border border-black p-[20px] bg-[#fafafa]"
-            encType="multipart/form-data"
-          >
-            <h2 className="text-[20px] font-bold border-b border-black pb-2">Add New Question</h2>
-            
-            <div className="flex flex-col gap-1">
-              <label htmlFor="ques" className="font-semibold">Question</label>
-              <textarea
-                name="ques"
-                id="ques"
-                placeholder="Enter Question text (supports Latex $...$)"
-                className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px] min-h-[80px]"
-                required
-              />
-            </div>
+          {/* Bulk Import Candidates */}
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Bulk Import Candidates</h3>
+            <p className="text-[11px] text-gray-400 mb-3">Upload candidate logins from Excel sheet</p>
+            <form onSubmit={handleBulkCandidatesUpload} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
+                <input
+                  type="file"
+                  name="candidatesFile"
+                  accept=".xlsx, .xls, .csv"
+                  required
+                  className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+              >
+                Upload Candidates
+              </button>
+            </form>
+          </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="image" className="font-semibold">Upload Image</label>
-              <input type="file" name="img" id="image" className="text-[14px]" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="option1" className="font-semibold">A</label>
-              <input type="text" name="option1" id="option1" placeholder="Enter Option 1" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="option2" className="font-semibold">B</label>
-              <input type="text" name="option2" id="option2" placeholder="Enter Option 2" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="option3" className="font-semibold">C</label>
-              <input type="text" name="option3" id="option3" placeholder="Enter Option 3" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="option4" className="font-semibold">D</label>
-              <input type="text" name="option4" id="option4" placeholder="Enter Option 4" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="answer" className="font-semibold">Answer</label>
-              <select name="answer" id="answer" required className="w-[96%] p-[5px] border border-gray-400 bg-white text-black text-[16px]">
-                <option value="">--select--</option>
+          {/* Single Question Manual Insertion */}
+          <div className="border-t border-gray-200 pt-6 mb-6">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Add Single Question</h3>
+            <p className="text-[11px] text-gray-400 mb-3">Add a single MCQ manual entry</p>
+            <form onSubmit={handleCreateQuestion} className="space-y-3">
+              <div>
+                <textarea
+                  name="ques"
+                  placeholder="Enter Question text (supports Latex $...$)"
+                  required
+                  className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black min-h-[60px] focus:outline-none"
+                />
+              </div>
+              <div>
+                <input type="file" name="img" className="text-xs w-full cursor-pointer" />
+              </div>
+              <input type="text" name="option1" placeholder="Option A" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
+              <input type="text" name="option2" placeholder="Option B" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
+              <input type="text" name="option3" placeholder="Option C" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
+              <input type="text" name="option4" placeholder="Option D" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none" />
+              <select name="answer" required className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none">
+                <option value="">--select answer--</option>
                 <option value="option1">A</option>
                 <option value="option2">B</option>
                 <option value="option3">C</option>
                 <option value="option4">D</option>
               </select>
-            </div>
-
-            <div className="mt-4">
-              <input
+              <button
                 type="submit"
-                value="Add Question"
-                id="add_question"
-                className="px-[25px] py-[10px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px] font-bold"
-              />
-            </div>
-          </form>
-
-          {/* Bulk Import Box */}
-          <div className="border border-black p-[20px] bg-[#fafafa]">
-            <h2 className="text-[20px] font-bold border-b border-black pb-2 mb-4">Bulk Excel Import</h2>
-            <form onSubmit={handleBulkUpload} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="font-bold">Select Excel File:</label>
-                <input
-                  type="file"
-                  name="file"
-                  accept=".xlsx, .xls"
-                  required
-                  className="text-[14px]"
-                />
-              </div>
-              <div>
-                <input
-                  type="submit"
-                  value="Upload Sheet"
-                  className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[14px] font-bold"
-                />
-              </div>
+                className="w-full py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-xs font-bold transition duration-150 cursor-pointer"
+              >
+                Add Question
+              </button>
             </form>
           </div>
         </div>
 
-        {/* Right Questions List Panel Column */}
-        <div className="display w-full lg:w-[55%] border-l-2 border-black pl-6 min-h-[80vh] overflow-y-auto">
-          <div className="question">
-            <h2 className="text-[22px] font-bold border-b border-black pb-2 mb-4">
-              Questions Bank ({questions.length})
-            </h2>
-            
-            {questions.length === 0 ? (
-              <p className="text-gray-500 text-[16px]">No questions found for this stream/program.</p>
-            ) : (
-              <div className="space-y-6">
-                {questions.map((q, idx) => {
-                  const isEditing = editingQuestionId === q.id;
-                  return (
-                    <div key={q.id} className="mcq border-b-2 border-black pb-4 mb-4">
-                      {isEditing ? (
-                        <div className="flex flex-col gap-2">
-                          <label className="font-bold">Edit Question Text:</label>
+        {/* Right Questions List Column */}
+        <div className="flex-grow p-8 bg-white overflow-y-auto">
+          {/* List Toolbar Filters */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-base font-bold text-gray-800">Filter Questions</h2>
+            <div className="flex gap-3">
+              <select
+                value={stream}
+                onChange={(e) => setStream(e.target.value)}
+                className="p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none font-medium text-gray-700"
+              >
+                <option value={config.CSEvalue}>{config.CSEvalue}</option>
+                <option value={config.ECEvalue}>{config.ECEvalue}</option>
+                <option value={config.MEAvalue}>{config.MEAvalue}</option>
+                <option value={config.Mathvalue}>{config.Mathvalue}</option>
+              </select>
+              <select
+                value={program}
+                onChange={(e) => setProgram(e.target.value)}
+                className="p-2 border border-gray-300 rounded text-xs bg-white focus:outline-none font-medium text-gray-700"
+              >
+                <option value="MTech">MTech</option>
+                <option value="PhD">PhD</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Question Cards Stack */}
+          {questions.length === 0 ? (
+            <div className="text-center py-20 text-gray-400 text-sm">
+              No questions found for this stream/program.
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {questions.map((q, idx) => {
+                const isEditing = editingQuestionId === q.id;
+                return (
+                  <div key={q.id} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4 hover:shadow-md transition duration-150">
+                    {isEditing ? (
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1">Edit Question Text</label>
                           <textarea
                             value={editForm.question}
                             onChange={(e) => setEditForm(prev => ({ ...prev, question: e.target.value }))}
-                            className="p-[5px] border border-gray-400 bg-white text-black text-[16px] min-h-[60px] w-full"
+                            className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black min-h-[60px] focus:outline-none"
                           />
                         </div>
-                      ) : (
-                        <h1 className="text-[18px] font-normal leading-snug">
-                          <span className="font-bold mr-1">{idx + 1}.</span> {q.question}
-                        </h1>
-                      )}
 
-                      {q.image && q.image.contentType && (
-                        <div className="my-2 max-w-full">
-                          <img
-                            src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
-                            alt="attachment"
-                            className="max-w-xs max-h-48 object-contain border border-gray-450"
-                          />
-                        </div>
-                      )}
+                        {q.image && q.image.contentType && (
+                          <div className="my-2">
+                            <img
+                              src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
+                              alt="attachment"
+                              className="max-h-32 object-contain border border-gray-200"
+                            />
+                          </div>
+                        )}
 
-                      {isEditing && (
-                        <div className="flex items-center gap-3 border border-gray-350 p-2 my-2 bg-gray-50">
-                          <span className="font-bold text-[14px]">Change Image:</span>
+                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded bg-gray-50 text-xs">
+                          <span className="font-bold text-gray-500">Change Image:</span>
                           <input
                             type="file"
                             onChange={(e) => setEditImageFile(e.target.files[0])}
-                            className="text-[14px] flex-grow"
+                            className="text-xs flex-grow cursor-pointer"
                           />
                           <button
                             type="button"
                             onClick={() => handleUpdateImage(q.id)}
-                            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-350 text-xs rounded font-medium cursor-pointer"
                           >
                             Upload
                           </button>
                         </div>
-                      )}
 
-                      <ul className="list-none m-0 p-0 pt-[10px] pl-[5px] space-y-1">
-                        {q.choice.map((choiceText, cIdx) => {
-                          const letter = String.fromCharCode(65 + cIdx);
-                          return (
-                            <li key={cIdx} className="text-[16px] py-1 flex items-center gap-2">
-                              <span className="font-bold">{letter}. </span>
-                              {isEditing ? (
-                                <input
-                                  type="text"
-                                  value={editForm.choice[cIdx]}
-                                  onChange={(e) => {
-                                    const nextChoices = [...editForm.choice];
-                                    nextChoices[cIdx] = e.target.value;
-                                    setEditForm(prev => ({ ...prev, choice: nextChoices }));
-                                  }}
-                                  className="flex-grow p-1 border border-gray-400 bg-white text-black text-[16px]"
-                                />
-                              ) : (
-                                <span>{choiceText}</span>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
+                        <div className="space-y-2">
+                          <label className="block text-[11px] font-bold text-gray-400 uppercase">Edit Options</label>
+                          {editForm.choice.map((choiceText, cIdx) => (
+                            <input
+                              key={cIdx}
+                              type="text"
+                              value={choiceText}
+                              onChange={(e) => {
+                                const nextChoices = [...editForm.choice];
+                                nextChoices[cIdx] = e.target.value;
+                                setEditForm(prev => ({ ...prev, choice: nextChoices }));
+                              }}
+                              className="w-full p-2 border border-gray-300 rounded text-xs bg-white text-black focus:outline-none"
+                            />
+                          ))}
+                        </div>
 
-                      <div className="answerDelete mt-4 bg-gray-100 p-3 flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 text-[16px]">
-                          <span><b>Correct Answer:</b></span>
-                          {isEditing ? (
+                        <div className="flex justify-between items-center pt-2">
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="font-bold text-gray-500">Answer Key:</span>
                             <select
                               value={editForm.answer}
                               onChange={(e) => setEditForm(prev => ({ ...prev, answer: e.target.value }))}
-                              className="p-1 border border-gray-450 bg-white text-black"
+                              className="p-1 border border-gray-300 rounded text-xs bg-white text-black"
                             >
                               <option value="option1">A</option>
                               <option value="option2">B</option>
                               <option value="option3">C</option>
                               <option value="option4">D</option>
                             </select>
-                          ) : (
-                            <span className="font-bold text-green-700">
-                              {q.answer === "option1" ? "A" : q.answer === "option2" ? "B" : q.answer === "option3" ? "C" : "D"}
-                            </span>
-                          )}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => saveEdit(q.id)}
+                              className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold cursor-pointer transition"
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingQuestionId(null)}
+                              className="px-4 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded text-xs font-semibold cursor-pointer transition"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <h3 className="text-sm font-bold text-gray-800 leading-snug">
+                          {idx + 1}. {q.question}
+                        </h3>
+
+                        {q.image && q.image.contentType && (
+                          <div className="my-2">
+                            <img
+                              src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
+                              alt="attachment"
+                              className="max-h-40 object-contain border border-gray-200"
+                            />
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-1 gap-2 my-4">
+                          {q.choice.map((choiceText, cIdx) => (
+                            <div key={cIdx} className="p-2.5 px-4 bg-[#fafbfc] border border-gray-100 rounded-md text-xs text-gray-700">
+                              <span className="font-semibold mr-2">{String.fromCharCode(65 + cIdx)}.</span>
+                              {choiceText}
+                            </div>
+                          ))}
                         </div>
 
-                        <div className="flex gap-2">
-                          {isEditing ? (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => saveEdit(q.id)}
-                                className="px-3 py-1 bg-green-200 hover:bg-green-300 border border-black text-[14px] cursor-pointer"
-                              >
-                                Save
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setEditingQuestionId(null)}
-                                className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
-                              >
-                                Cancel
-                              </button>
-                            </>
-                          ) : (
+                        <div className="flex justify-between items-center pt-2">
+                          <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded text-xs font-bold">
+                            Answer : {q.answer === "option1" ? q.choice[0] : q.answer === "option2" ? q.choice[1] : q.answer === "option3" ? q.choice[2] : q.choice[3]}
+                          </div>
+
+                          <div className="flex gap-4">
                             <button
                               type="button"
                               onClick={() => startEditing(q)}
-                              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+                              className="text-red-600 hover:underline text-xs font-semibold transition cursor-pointer"
                             >
                               Update
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => deleteQuestion(q.id)}
-                            className="px-3 py-1 bg-red-200 hover:bg-red-300 border border-black text-[14px] cursor-pointer text-red-700"
-                          >
-                            Delete
-                          </button>
+                            <button
+                              type="button"
+                              onClick={() => deleteQuestion(q.id)}
+                              className="text-red-600 hover:underline text-xs font-semibold transition cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -86,110 +86,87 @@ function ParticipantsList() {
     );
   });
 
-  if (!config) return <div className="text-center p-12 text-slate-400">Loading candidate index...</div>;
+  if (!config) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading candidate index...</div>;
 
   return (
     <div className="min-h-screen bg-white text-black font-sans pb-10">
       {/* Top Header */}
-      <div className="header flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
-        <div className="heading">
-          <h1 className="text-[28px] font-bold">Participants List</h1>
-        </div>
-        <div className="flex gap-4">
-          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
-            <a href="#" onClick={(e) => { e.preventDefault(); localStorage.removeItem('admintoken'); navigate('/admin'); }}>logout</a>
-          </div>
-          <div className="bg-[#d6d4d2] px-[20px] py-[10px] cursor-pointer hover:bg-gray-300 border border-black">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/addquiz'); }}>Manage Questions</a>
-          </div>
-        </div>
-      </div>
-
-      {/* Toolbar Area */}
-      <div className="w-[90%] mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="flex flex-col gap-1">
-          <label className="font-bold text-[14px]">Stream:</label>
-          <select
-            value={stream}
-            onChange={(e) => setStream(e.target.value)}
-            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
-          >
-            <option value={config.CSEvalue}>{config.CSEvalue}</option>
-            <option value={config.ECEvalue}>{config.ECEvalue}</option>
-            <option value={config.MEAvalue}>{config.MEAvalue}</option>
-            <option value={config.Mathvalue}>{config.Mathvalue}</option>
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-bold text-[14px]">Program:</label>
-          <select
-            value={program}
-            onChange={(e) => setProgram(e.target.value)}
-            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
-          >
-            <option value="MTech">MTech</option>
-            <option value="PhD">PhD</option>
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-bold text-[14px]">Search Candidate:</label>
-          <input
-            type="text"
-            placeholder="Search by ID, name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="p-[8px] border border-gray-400 bg-white text-black text-[16px]"
-          />
-        </div>
-        <div className="flex items-end">
+      <div className="flex justify-between items-center w-[95%] mx-auto py-4 border-b-2 border-black mb-6">
+        <h1 className="text-[22px] font-bold">Candidate Database</h1>
+        <div className="flex gap-3">
           <button
             onClick={downloadAllResults}
             disabled={downloading}
-            className="w-full p-[10px] bg-gray-200 hover:bg-gray-300 border border-black text-[14px] font-bold cursor-pointer disabled:opacity-50"
+            className="px-[20px] py-[8px] bg-black text-white font-bold text-[14px] cursor-pointer disabled:opacity-50 hover:bg-gray-800"
           >
-            {downloading ? 'Downloading...' : 'Export Results Excel'}
+            {downloading ? 'Downloading...' : 'Download Excel Results'}
+          </button>
+          <button
+            onClick={() => navigate('/addquiz')}
+            className="px-[20px] py-[8px] bg-white text-black font-bold text-[14px] border border-black cursor-pointer hover:bg-gray-100"
+          >
+            Back to Questions
           </button>
         </div>
       </div>
 
+      {/* Filter Stream Tabs */}
+      <div className="w-[95%] mx-auto mb-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[14px] font-semibold text-gray-600 mr-2">Filter Stream:</span>
+          {config && [config.CSEvalue, config.ECEvalue, config.MEAvalue, config.Mathvalue].map((s) => (
+            <button
+              key={s}
+              onClick={() => setStream(s)}
+              className={`px-[14px] py-[6px] text-[13px] font-medium border cursor-pointer transition ${
+                stream === s
+                  ? 'border-black bg-white text-black'
+                  : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400'
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Candidates Data Table */}
-      <div id="participantsDatadesign" className="w-[90%] mx-auto overflow-x-auto my-6">
-        <table className="border-2 border-black border-collapse w-full">
+      <div className="w-[95%] mx-auto overflow-x-auto">
+        <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-150">
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Sl No</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Application No</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Name</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Category</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Stream</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-left text-[16px] font-bold">Score</th>
-              <th className="border-2 border-black p-[5px] px-[10px] text-center text-[16px] font-bold">Sheet Review</th>
+            <tr className="border-b-2 border-black">
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">S.No.</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Application No.</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Name</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Program</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Department</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Marks Obtained</th>
+              <th className="p-[10px] text-left text-[13px] font-bold uppercase tracking-wider text-gray-700">Submission</th>
             </tr>
           </thead>
           <tbody>
             {filteredCandidates.map((c, idx) => (
-              <tr key={c._id} className="hover:bg-gray-50">
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{idx + 1}</td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px] font-semibold">{c.applicationNo}</td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.name}</td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.program}</td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px]">{c.stream}</td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-[16px] font-bold text-green-700">
-                  {c.marks !== undefined ? c.marks : 0}
-                </td>
-                <td className="border-2 border-black p-[5px] px-[10px] text-center text-[16px]">
-                  <button
-                    onClick={() => navigate(`/submitform?user=${c._id}`)}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 border border-black text-[14px] cursor-pointer"
+              <tr key={c._id} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="p-[10px] text-[14px]">{idx + 1}</td>
+                <td className="p-[10px] text-[14px]">{c.applicationNo}</td>
+                <td className="p-[10px] text-[14px]">{c.name}</td>
+                <td className="p-[10px] text-[14px]">{c.program}</td>
+                <td className="p-[10px] text-[14px]">{c.stream}</td>
+                <td className="p-[10px] text-[14px] text-center">{c.marks !== undefined ? c.marks : 0}</td>
+                <td className="p-[10px] text-[14px]">
+                  <a
+                    href="#"
+                    onClick={(e) => { e.preventDefault(); navigate(`/submitform?user=${c._id}`); }}
+                    className="text-blue-600 hover:underline cursor-pointer"
                   >
-                    View Sheet
-                  </button>
+                    View Response
+                  </a>
                 </td>
               </tr>
             ))}
             {filteredCandidates.length === 0 && (
               <tr>
-                <td colSpan="7" className="border-2 border-black p-[20px] text-center text-gray-500 text-[16px]">
+                <td colSpan="7" className="p-[20px] text-center text-gray-500 text-[14px]">
                   No candidates found for the selected filter criteria.
                 </td>
               </tr>

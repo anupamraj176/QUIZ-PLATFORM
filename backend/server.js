@@ -24,6 +24,7 @@ app.use("/user", require("./route/user"));
 app.use("/admin", require("./route/admin"));
 app.use("/admin/result", require("./route/result"));
 app.use("/time", require("./route/timing"));
+app.use("/attempt", require("./route/attempt"));
 
 // Config variables API
 app.get("/api/config", (req, res) => {

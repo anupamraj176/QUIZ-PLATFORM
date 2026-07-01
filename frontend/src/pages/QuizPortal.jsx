@@ -13,6 +13,12 @@ function QuizPortal() {
   const navigate = useNavigate();
   const mathRef = useRef(null);
 
+  // Proctoring states
+  const [warningCount, setWarningCount] = useState(0);
+  const [isFullscreenActive, setIsFullscreenActive] = useState(false);
+  const [examStarted, setExamStarted] = useState(false);
+  const [isAutoSubmitted, setIsAutoSubmitted] = useState(false);
+
   const [paletteWidth, setPaletteWidth] = useState(320);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [showPaletteDrawer, setShowPaletteDrawer] = useState(false);
@@ -102,6 +108,28 @@ function QuizPortal() {
           if (body.data.markReview) {
             setMarkedReview(new Set(body.data.markReview));
           }
+
+          // Check current exam attempt status
+          fetch('/attempt/status', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'auth_token': token,
+            }
+          })
+            .then(res => res.json())
+            .then(attemptBody => {
+              if (attemptBody.status === 0 && attemptBody.attempt) {
+                setWarningCount(attemptBody.attempt.warningCount);
+                if (attemptBody.attempt.status === 'auto_submitted') {
+                  setIsAutoSubmitted(true);
+                  setTimeout(() => {
+                    logout();
+                  }, 5000);
+                }
+              }
+            })
+            .catch(console.error);
 
           // Fetch questions
           fetch('/question/sendquestion', {
@@ -277,7 +305,192 @@ function QuizPortal() {
     return window.btoa(binary);
   };
 
-  if (!candidate || questions.length === 0) return <div className="min-h-screen bg-white text-center p-12 text-gray-500">Loading Exam Engine...</div>;
+  // Proctoring fullscreen / tab switch event listeners
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setIsFullscreenActive(false);
+        if (examStarted && !isAutoSubmitted) {
+          handleViolation("exit_fullscreen");
+        }
+      } else {
+        setIsFullscreenActive(true);
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, [examStarted, isAutoSubmitted]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && examStarted && !isAutoSubmitted) {
+        handleViolation("tab_switch");
+      }
+    };
+    const handleBlur = () => {
+      if (examStarted && !isAutoSubmitted) {
+        handleViolation("window_blur");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, [examStarted, isAutoSubmitted]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (examStarted && !isAutoSubmitted) {
+        e.preventDefault();
+        e.returnValue = "Leaving this page will log you out and might submit your exam.";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [examStarted, isAutoSubmitted]);
+
+  const handleViolation = (type) => {
+    if (!examStarted || isAutoSubmitted) return;
+
+    const token = localStorage.getItem('token');
+    fetch('/attempt/violate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth_token': token
+      },
+      body: JSON.stringify({ type })
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.status === 0) {
+          setWarningCount(body.attempt.warningCount);
+          if (body.attempt.status === 'auto_submitted') {
+            setIsAutoSubmitted(true);
+            setTimeout(() => {
+              logout();
+            }, 6000);
+          }
+        }
+      })
+      .catch(console.error);
+  };
+
+  const handleStartExam = () => {
+    const token = localStorage.getItem('token');
+    fetch('/attempt/start', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth_token': token
+      }
+    })
+      .then(res => res.json())
+      .then(body => {
+        if (body.status === 0) {
+          setWarningCount(body.attempt.warningCount);
+          if (body.attempt.status === 'auto_submitted') {
+            setIsAutoSubmitted(true);
+            setTimeout(() => {
+              logout();
+            }, 5000);
+            return;
+          }
+          
+          const element = document.documentElement;
+          if (element.requestFullscreen) {
+            element.requestFullscreen()
+              .then(() => {
+                setIsFullscreenActive(true);
+                setExamStarted(true);
+              })
+              .catch(err => {
+                console.error("Fullscreen request failed:", err);
+                // Allow entry if browser fails to fullscreen (fallback)
+                setExamStarted(true);
+                setIsFullscreenActive(true);
+              });
+          } else {
+            setExamStarted(true);
+            setIsFullscreenActive(true);
+          }
+        }
+      })
+      .catch(console.error);
+  };
+
+  const handleResumeFullscreen = () => {
+    const element = document.documentElement;
+    if (element.requestFullscreen) {
+      element.requestFullscreen()
+        .then(() => {
+          setIsFullscreenActive(true);
+        })
+        .catch(err => {
+          console.error("Fullscreen request failed:", err);
+        });
+    }
+  };
+
+  if (!candidate) return <div className="min-h-screen bg-white text-center p-12 text-gray-500 font-sans">Loading Exam Engine...</div>;
+
+  if (isAutoSubmitted) {
+    return (
+      <div className="fixed inset-0 bg-[#0f172a] text-white z-55 flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="max-w-[450px] bg-[#1e293b] rounded-xl border border-red-500/30 p-8 shadow-2xl space-y-6">
+          <div className="h-16 w-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2 2 2m0-4l-2 2-2-2m5-3V9a9 9 0 11-18 0V7a9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-red-500">Exam Auto-Submitted</h2>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            Your exam has been automatically submitted due to repeated security violations (switching tabs, losing focus, or exiting full-screen mode).
+          </p>
+          <p className="text-xs text-gray-400">
+            Redirecting you to the landing page...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!examStarted) {
+    return (
+      <div className="fixed inset-0 bg-[#0f172a] text-white z-50 flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="max-w-[500px] bg-[#1e293b] rounded-xl border border-[#334155] p-8 shadow-2xl space-y-6">
+          <div className="h-16 w-16 bg-[#7a2230]/20 rounded-full flex items-center justify-center mx-auto text-[#ef4444]">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white">Security Checklist & Fullscreen Activation</h2>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            To start or resume the exam for <strong>{candidate.name}</strong>, you must enter secure full-screen mode. Switching tabs, minimizing the browser, or exiting full-screen mode will be flagged as a violation. 
+          </p>
+          <div className="bg-[#0f172a] border border-[#334155] p-4 rounded text-left text-xs text-gray-400 space-y-2">
+            <div className="flex gap-2">🟢 <span>Do not press escape or exit full-screen.</span></div>
+            <div className="flex gap-2">🟢 <span>Do not switch tabs or open other applications.</span></div>
+            <div className="flex gap-2">🔴 <span>Accumulating 3 warnings will auto-submit your exam.</span></div>
+          </div>
+          <button
+            onClick={handleStartExam}
+            className="w-full bg-[#7a2230] hover:bg-[#992c3d] text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer"
+          >
+            I Understand, Start/Resume Exam
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) return <div className="min-h-screen bg-white text-center p-12 text-gray-500 font-sans">Loading Exam Engine...</div>;
 
   const currentQues = questions[activeIndex];
   const choiceMap = answers.get(currentQues.id);
@@ -633,6 +846,32 @@ function QuizPortal() {
             <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '28px' }}>Your responses have been successfully recorded. Thank you for taking the examination.</p>
             <button onClick={logout} style={{ background: 'lightgray', color: 'black', border: '1.5px solid black', padding: '12px 30px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', width: '100%', outline: 'none' }}>
               Close and Exit
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Exited Fullscreen Warning Overlay */}
+      {!isFullscreenActive && (
+        <div className="fixed inset-0 bg-[#0f172a]/95 text-white z-40 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm font-sans">
+          <div className="max-w-[450px] bg-[#1e293b] rounded-xl border border-red-500/30 p-8 shadow-2xl space-y-6 animate-[bounce_1s_ease-in-out_1]">
+            <div className="h-16 w-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500 animate-pulse">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-red-500">Security Warning: Fullscreen Exited</h2>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Exiting fullscreen mode violates exam guidelines. This event has been recorded on the server.
+            </p>
+            <div className="bg-red-500/20 border border-red-500/30 p-4 rounded text-center text-sm font-bold text-red-400">
+              Warnings: {warningCount} / 3
+            </div>
+            <button
+              onClick={handleResumeFullscreen}
+              className="w-full bg-red-650 hover:bg-red-700 text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer"
+            >
+              Resume Exam in Fullscreen
             </button>
           </div>
         </div>

@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 
-const examAttemmptSchema = new mongoose.Schema({
+const examAttemptSchema = new mongoose.Schema({
     student : {
-        type : mongoose.Schema.Tyepes.ObjectId,
+        type : mongoose.Schema.Types.ObjectId,
         ref : 'user',
         required : true   
     },
     exam : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'exam',
+        type: String,
         required : true
     },
     warningCount : {
@@ -17,7 +16,7 @@ const examAttemmptSchema = new mongoose.Schema({
     },
     violations : [{
         type : {
-            type : string
+            type : String
         },
         timestamp: { 
             type: Date, 
@@ -34,6 +33,6 @@ const examAttemmptSchema = new mongoose.Schema({
         default: Date.now
     },
     submittedAt: Date
-})
+});
 
 module.exports = mongoose.model('ExamAttempt', examAttemptSchema);

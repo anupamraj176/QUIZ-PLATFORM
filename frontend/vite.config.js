@@ -14,7 +14,8 @@ export default defineConfig({
     proxy: {
       '/user': 'http://localhost:3000',
       '/question': 'http://localhost:3000',
-      '/admin': 'http://localhost:3000',
+      '/admin/adminlogin': 'http://localhost:3000',
+      '/admin/result': 'http://localhost:3000',
       '/time': 'http://localhost:3000',
       '/api': 'http://localhost:3000',
       '/uploads': 'http://localhost:3000',

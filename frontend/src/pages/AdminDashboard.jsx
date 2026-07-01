@@ -21,7 +21,7 @@ function CustomSelect({ value, onChange, options }) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full inline-flex justify-between items-center px-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition duration-150 cursor-pointer min-w-[180px]"
+        className="w-full inline-flex justify-between items-center px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition duration-150 cursor-pointer min-w-[180px]"
       >
         <span className="truncate pr-2">{value}</span>
         <svg className={`ml-auto h-4 w-4 transform transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,7 +30,7 @@ function CustomSelect({ value, onChange, options }) {
       </button>
 
       {isOpen && (
-        <div className="origin-top-right absolute left-0 mt-1.5 w-full sm:min-w-[220px] rounded-lg shadow-lg bg-white border border-gray-200 focus:outline-none z-[100] py-1 max-h-60 overflow-y-auto">
+        <div className="origin-top-right absolute left-0 mt-1.5 w-full sm:min-w-[220px] rounded-xl shadow-lg bg-white border border-gray-200 focus:outline-none z-[100] py-1 max-h-60 overflow-y-auto">
           {options.map((opt) => (
             <button
               key={opt}
@@ -455,13 +455,13 @@ function AdminDashboard() {
         <div className="flex gap-4">
           <button
             onClick={() => navigate('/participants')}
-            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-55 text-gray-700 font-semibold transition cursor-pointer"
+            className="border border-gray-300 px-5 py-2 rounded-full bg-white text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
           >
             Participants
           </button>
           <button
             onClick={handleLogout}
-            className="border border-gray-300 px-5 py-2 rounded bg-white text-base hover:bg-gray-55 text-red-600 font-semibold transition cursor-pointer"
+            className="border border-gray-300 px-5 py-2 rounded-full bg-white text-base hover:bg-gray-50 text-red-600 font-semibold transition cursor-pointer"
           >
             Logout
           </button>
@@ -472,7 +472,7 @@ function AdminDashboard() {
         <div className="bg-white border-b border-gray-200 px-4 py-2.5 flex gap-2 shrink-0">
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex-1 py-2 text-center text-sm font-semibold rounded transition duration-150 cursor-pointer ${
+            className={`flex-1 py-2 text-center text-sm font-semibold rounded-full transition duration-150 cursor-pointer ${
               activeTab === 'settings'
                 ? 'bg-black text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -482,7 +482,7 @@ function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('questions')}
-            className={`flex-1 py-2 text-center text-sm font-semibold rounded transition duration-150 cursor-pointer ${
+            className={`flex-1 py-2 text-center text-sm font-semibold rounded-full transition duration-150 cursor-pointer ${
               activeTab === 'questions'
                 ? 'bg-black text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -508,7 +508,7 @@ function AdminDashboard() {
             <form onSubmit={handleSetTimers} className="space-y-4">
               <div className="space-y-4">
                 {/* Start Time Section */}
-                <div className="border border-gray-200 rounded p-3 bg-gray-50 space-y-2">
+                <div className="border border-gray-200 rounded-xl p-3 bg-gray-50 space-y-2">
                   <span className="text-xs font-bold text-gray-700 block">Exam Start Time</span>
                   <div className="space-y-2">
                     <div>
@@ -562,7 +562,7 @@ function AdminDashboard() {
                 </div>
 
                 {/* End Time Section */}
-                <div className="border border-gray-200 rounded p-3 bg-gray-50 space-y-2">
+                <div className="border border-gray-200 rounded-xl p-3 bg-gray-50 space-y-2">
                   <span className="text-xs font-bold text-gray-700 block">Exam End Time</span>
                   <div className="space-y-2">
                     <div>
@@ -617,7 +617,7 @@ function AdminDashboard() {
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-black hover:bg-gray-900 text-white rounded text-sm font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-black hover:bg-gray-900 text-white rounded-full text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Save Timing
               </button>
@@ -660,7 +660,7 @@ function AdminDashboard() {
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded-full text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Upload Questions
               </button>
@@ -679,12 +679,12 @@ function AdminDashboard() {
                   name="candidatesFile"
                   accept=".xlsx, .xls, .csv"
                   required
-                  className="w-full text-sm text-gray-600 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
+                  className="w-full text-sm text-gray-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border file:border-gray-300 file:bg-gray-50 file:text-xs file:font-semibold cursor-pointer"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded-full text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Upload Candidates
               </button>
@@ -720,7 +720,7 @@ function AdminDashboard() {
               </select>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded text-sm font-bold transition duration-150 cursor-pointer"
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded-full text-sm font-bold transition duration-150 cursor-pointer"
               >
                 Add Question
               </button>
@@ -772,7 +772,7 @@ function AdminDashboard() {
               {questions.map((q, idx) => {
                 const isEditing = editingQuestionId === q.id;
                 return (
-                  <div key={q.id} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4 hover:shadow-md transition duration-150">
+                  <div key={q.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4 hover:shadow-md transition duration-150">
                     {isEditing ? (
                       <div className="space-y-3">
                         <div>
@@ -789,12 +789,12 @@ function AdminDashboard() {
                             <img
                               src={`data:image/${q.image.contentType};base64,${arrayBufferToBase64(q.image.data.data)}`}
                               alt="attachment"
-                              className="max-h-32 object-contain border border-gray-200"
+                              className="max-h-32 object-contain border border-gray-200 rounded-lg"
                             />
                           </div>
                         )}
 
-                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded-lg bg-gray-50 text-sm">
+                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded-xl bg-gray-50 text-sm">
                           <span className="font-bold text-gray-500">Change Image:</span>
                           <input
                             type="file"
@@ -804,7 +804,7 @@ function AdminDashboard() {
                           <button
                             type="button"
                             onClick={() => handleUpdateImage(q.id)}
-                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-xs rounded-lg font-medium cursor-pointer"
+                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-xs rounded-full font-medium cursor-pointer"
                           >
                             Upload
                           </button>
@@ -845,14 +845,14 @@ function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => saveEdit(q.id)}
-                              className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold cursor-pointer transition"
+                              className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full text-sm font-semibold cursor-pointer transition"
                             >
                               Save
                             </button>
                             <button
                               type="button"
                               onClick={() => setEditingQuestionId(null)}
-                              className="px-4 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded text-sm font-semibold cursor-pointer transition"
+                              className="px-4 py-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 rounded-full text-sm font-semibold cursor-pointer transition"
                             >
                               Cancel
                             </button>
@@ -877,7 +877,7 @@ function AdminDashboard() {
 
                         <div className="grid grid-cols-1 gap-2 my-4">
                           {q.choice.map((choiceText, cIdx) => (
-                            <div key={cIdx} className="p-2.5 px-4 bg-[#fafbfc] border border-gray-100 rounded-md text-sm text-gray-700">
+                            <div key={cIdx} className="p-2.5 px-4 bg-[#fafbfc] border border-gray-100 rounded-xl text-sm text-gray-700">
                               <span className="font-semibold mr-2">{String.fromCharCode(65 + cIdx)}.</span>
                               {choiceText}
                             </div>
@@ -885,7 +885,7 @@ function AdminDashboard() {
                         </div>
 
                         <div className="flex justify-between items-center pt-2">
-                          <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded text-sm font-bold">
+                          <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded-full text-sm font-bold">
                             Answer : {q.answer === "option1" ? q.choice[0] : q.answer === "option2" ? q.choice[1] : q.answer === "option3" ? q.choice[2] : q.choice[3]}
                           </div>
 

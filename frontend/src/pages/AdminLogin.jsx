@@ -69,7 +69,7 @@ function AdminLogin() {
         )}
         <form
           onSubmit={handleSubmit}
-          className="border border-gray-200 p-8 w-full max-w-[420px] bg-white rounded-2xl shadow-lg space-y-6"
+          className="border border-gray-200 p-8 w-full max-w-[420px] bg-white rounded-[24px] shadow-lg space-y-6"
         >
           <h2 className="text-center font-bold text-gray-800 text-lg border-b border-gray-100 pb-3">Administrator Sign In</h2>
           <div>
@@ -121,7 +121,7 @@ function AdminLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-lg cursor-pointer font-bold text-sm transition duration-150 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-full cursor-pointer font-bold text-sm transition duration-150 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {isLoading && (
                 <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">

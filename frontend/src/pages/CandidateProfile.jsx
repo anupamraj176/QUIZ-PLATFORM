@@ -98,7 +98,7 @@ function CandidateProfile() {
         )}
         <form
           onSubmit={handleSubmit}
-          className="border border-gray-200 p-8 w-full max-w-[460px] bg-white rounded-2xl shadow-lg space-y-5"
+          className="border border-gray-200 p-8 w-full max-w-[460px] bg-white rounded-[24px] shadow-lg space-y-5"
         >
           <h2 className="text-center text-lg font-bold text-gray-800 border-b border-gray-100 pb-3">Complete Profile Details</h2>
           
@@ -157,7 +157,7 @@ function CandidateProfile() {
           <div className="pt-3">
             <button
               type="submit"
-              className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-lg cursor-pointer font-bold text-sm transition duration-150 active:scale-[0.98]"
+              className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-full cursor-pointer font-bold text-sm transition duration-150 active:scale-[0.98]"
             >
               Next
             </button>

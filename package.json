@@ -43,8 +43,9 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "npx nodemon server.js",
+    "backend:dev": "npx nodemon server.js",
     "frontend:dev": "vite frontend",
+    "dev": "npx nodemon server.js",
     "build": "vite build --config frontend/vite.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

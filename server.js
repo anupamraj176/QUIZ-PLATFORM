@@ -39,12 +39,11 @@ const displayHost = host === "0.0.0.0" ? "localhost" : host;
 
 app.listen(port, host, () => {
   console.log(`\n=============================================================`);
-  console.log(`  EXAM PORTAL SERVER STARTUP`);
+  console.log(`  EXAM PORTAL - BACKEND API SERVER STARTED`);
   console.log(`=============================================================`);
-  console.log(`  [SERVER] Running on Port:   ${port}`);
-  console.log(`  [SERVER] Backend Base URL:  http://${displayHost}:${port}`);
-  console.log(`  [SERVER] Static Frontend:   http://${displayHost}:${port}`);
-  console.log(`  [POSTMAN] Test APIs at:    http://${displayHost}:${port}/`);
-  console.log(`             e.g., POST http://${displayHost}:${port}/user/login`);
+  console.log(`  [BACKEND] Running on Port:   ${port}`);
+  console.log(`  [BACKEND] API Base URL:      http://${displayHost}:${port}`);
+  console.log(`  [DEVELOPMENT] Run frontend in a separate terminal:`);
+  console.log(`                cd frontend && npm run dev (or npm run frontend:dev from root)`);
   console.log(`=============================================================\n`);
 });

@@ -2,6 +2,63 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+function CustomSelect({ value, onChange, options }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative inline-block text-left w-full sm:w-auto" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full inline-flex justify-between items-center px-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition duration-150 cursor-pointer min-w-[180px]"
+      >
+        <span className="truncate pr-2">{value}</span>
+        <svg className={`ml-auto h-4 w-4 transform transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="origin-top-right absolute left-0 mt-1.5 w-full sm:min-w-[220px] rounded-lg shadow-lg bg-white border border-gray-200 focus:outline-none z-[100] py-1 max-h-60 overflow-y-auto">
+          {options.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => {
+                onChange(opt);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left px-4 py-2 text-sm transition duration-150 cursor-pointer flex items-center justify-between ${
+                opt === value
+                  ? 'bg-blue-50 text-blue-700 font-semibold'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <span className="truncate pr-2">{opt}</span>
+              {opt === value && (
+                <svg className="h-4 w-4 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminDashboard() {
   const [stream, setStream] = useState('Computer Science Engineering');
   const [program, setProgram] = useState('MTech');
@@ -461,7 +518,7 @@ function AdminDashboard() {
                         value={startDay}
                         onChange={(e) => setStartDay(e.target.value)}
                         required
-                        className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none focus:border-gray-500"
+                        className="w-full p-2 custom-input"
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-1">
@@ -470,7 +527,7 @@ function AdminDashboard() {
                         <select
                           value={startHour}
                           onChange={(e) => setStartHour(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(h => (
                             <option key={h} value={h}>{h}</option>
@@ -482,7 +539,7 @@ function AdminDashboard() {
                         <select
                           value={startMinute}
                           onChange={(e) => setStartMinute(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(m => (
                             <option key={m} value={m}>{m}</option>
@@ -494,7 +551,7 @@ function AdminDashboard() {
                         <select
                           value={startPeriod}
                           onChange={(e) => setStartPeriod(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           <option value="AM">AM</option>
                           <option value="PM">PM</option>
@@ -515,7 +572,7 @@ function AdminDashboard() {
                         value={endDay}
                         onChange={(e) => setEndDay(e.target.value)}
                         required
-                        className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none focus:border-gray-500"
+                        className="w-full p-2 custom-input"
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-1">
@@ -524,7 +581,7 @@ function AdminDashboard() {
                         <select
                           value={endHour}
                           onChange={(e) => setEndHour(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(h => (
                             <option key={h} value={h}>{h}</option>
@@ -536,7 +593,7 @@ function AdminDashboard() {
                         <select
                           value={endMinute}
                           onChange={(e) => setEndMinute(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(m => (
                             <option key={m} value={m}>{m}</option>
@@ -548,7 +605,7 @@ function AdminDashboard() {
                         <select
                           value={endPeriod}
                           onChange={(e) => setEndPeriod(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                          className="w-full custom-select"
                         >
                           <option value="AM">AM</option>
                           <option value="PM">PM</option>
@@ -577,27 +634,19 @@ function AdminDashboard() {
             <form onSubmit={handleBulkUpload} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Stream</label>
-                <select
+                <CustomSelect
                   value={stream}
-                  onChange={(e) => setStream(e.target.value)}
-                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none text-black"
-                >
-                  <option value={config.CSEvalue}>{config.CSEvalue}</option>
-                  <option value={config.ECEvalue}>{config.ECEvalue}</option>
-                  <option value={config.MEAvalue}>{config.MEAvalue}</option>
-                  <option value={config.Mathvalue}>{config.Mathvalue}</option>
-                </select>
+                  onChange={setStream}
+                  options={[config.CSEvalue, config.ECEvalue, config.MEAvalue, config.Mathvalue]}
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Program</label>
-                <select
+                <CustomSelect
                   value={program}
-                  onChange={(e) => setProgram(e.target.value)}
-                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none text-black"
-                >
-                  <option value="MTech">MTech</option>
-                  <option value="PhD">PhD</option>
-                </select>
+                  onChange={setProgram}
+                  options={["MTech", "PhD"]}
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">File (.xlsx, .xls, .csv)</label>
@@ -652,17 +701,17 @@ function AdminDashboard() {
                   name="ques"
                   placeholder="Enter Question text (supports Latex $...$)"
                   required
-                  className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black min-h-[80px] focus:outline-none"
+                  className="w-full p-2.5 custom-input min-h-[80px]"
                 />
               </div>
               <div>
                 <input type="file" name="img" className="text-sm w-full cursor-pointer" />
               </div>
-              <input type="text" name="option1" placeholder="Option A" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
-              <input type="text" name="option2" placeholder="Option B" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
-              <input type="text" name="option3" placeholder="Option C" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
-              <input type="text" name="option4" placeholder="Option D" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none" />
-              <select name="answer" required className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none">
+              <input type="text" name="option1" placeholder="Option A" required className="w-full p-2.5 custom-input" />
+              <input type="text" name="option2" placeholder="Option B" required className="w-full p-2.5 custom-input" />
+              <input type="text" name="option3" placeholder="Option C" required className="w-full p-2.5 custom-input" />
+              <input type="text" name="option4" placeholder="Option D" required className="w-full p-2.5 custom-input" />
+              <select name="answer" required className="w-full custom-select">
                 <option value="">--select answer--</option>
                 <option value="option1">A</option>
                 <option value="option2">B</option>
@@ -700,24 +749,16 @@ function AdminDashboard() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-800">Filter Questions</h2>
             <div className="flex gap-3">
-              <select
+              <CustomSelect
                 value={stream}
-                onChange={(e) => setStream(e.target.value)}
-                className="p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none font-medium text-gray-700"
-              >
-                <option value={config.CSEvalue}>{config.CSEvalue}</option>
-                <option value={config.ECEvalue}>{config.ECEvalue}</option>
-                <option value={config.MEAvalue}>{config.MEAvalue}</option>
-                <option value={config.Mathvalue}>{config.Mathvalue}</option>
-              </select>
-              <select
+                onChange={setStream}
+                options={[config.CSEvalue, config.ECEvalue, config.MEAvalue, config.Mathvalue]}
+              />
+              <CustomSelect
                 value={program}
-                onChange={(e) => setProgram(e.target.value)}
-                className="p-2.5 border border-gray-300 rounded text-sm bg-white focus:outline-none font-medium text-gray-700"
-              >
-                <option value="MTech">MTech</option>
-                <option value="PhD">PhD</option>
-              </select>
+                onChange={setProgram}
+                options={["MTech", "PhD"]}
+              />
             </div>
           </div>
 
@@ -739,7 +780,7 @@ function AdminDashboard() {
                           <textarea
                             value={editForm.question}
                             onChange={(e) => setEditForm(prev => ({ ...prev, question: e.target.value }))}
-                            className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black min-h-[80px] focus:outline-none"
+                            className="w-full p-2.5 custom-input min-h-[80px]"
                           />
                         </div>
 
@@ -753,7 +794,7 @@ function AdminDashboard() {
                           </div>
                         )}
 
-                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded bg-gray-50 text-sm">
+                        <div className="flex items-center gap-3 border border-gray-200 p-2 rounded-lg bg-gray-50 text-sm">
                           <span className="font-bold text-gray-500">Change Image:</span>
                           <input
                             type="file"
@@ -763,7 +804,7 @@ function AdminDashboard() {
                           <button
                             type="button"
                             onClick={() => handleUpdateImage(q.id)}
-                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-300 text-xs rounded font-medium cursor-pointer"
+                            className="px-3 py-1 bg-white hover:bg-gray-50 border border-gray-200 text-xs rounded-lg font-medium cursor-pointer"
                           >
                             Upload
                           </button>
@@ -781,7 +822,7 @@ function AdminDashboard() {
                                 nextChoices[cIdx] = e.target.value;
                                 setEditForm(prev => ({ ...prev, choice: nextChoices }));
                               }}
-                              className="w-full p-2.5 border border-gray-300 rounded text-sm bg-white text-black focus:outline-none"
+                              className="w-full p-2.5 custom-input"
                             />
                           ))}
                         </div>
@@ -792,7 +833,7 @@ function AdminDashboard() {
                             <select
                               value={editForm.answer}
                               onChange={(e) => setEditForm(prev => ({ ...prev, answer: e.target.value }))}
-                              className="p-1 border border-gray-300 rounded text-sm bg-white text-black"
+                              className="custom-select py-1"
                             >
                               <option value="option1">A</option>
                               <option value="option2">B</option>

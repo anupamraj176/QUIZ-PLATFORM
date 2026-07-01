@@ -142,13 +142,13 @@ function SubmitConfirmation() {
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="border border-gray-300 px-4 py-2 rounded bg-black hover:bg-gray-900 text-white text-sm md:text-base font-semibold transition cursor-pointer disabled:opacity-50"
+            className="border border-gray-300 px-4 py-2 rounded-lg bg-black hover:bg-gray-900 text-white text-sm md:text-base font-semibold transition cursor-pointer disabled:opacity-50 animate-[pulse_3s_infinite]"
           >
             {downloading ? 'Downloading...' : 'Download Excel Sheet'}
           </button>
           <button
             onClick={() => navigate('/participants')}
-            className="border border-gray-300 px-4 py-2 rounded bg-white text-sm md:text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
+            className="border border-gray-300 px-4 py-2 rounded-lg bg-white text-sm md:text-base hover:bg-gray-50 text-gray-700 font-semibold transition cursor-pointer"
           >
             Back
           </button>
@@ -157,7 +157,7 @@ function SubmitConfirmation() {
 
       <div className="w-[95%] max-w-5xl mx-auto mt-8 space-y-6">
         {/* Candidate Details Card */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
           <h2 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-150 pb-2">Candidate Details</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
             <div>
@@ -189,7 +189,7 @@ function SubmitConfirmation() {
             const userAns = answers.get(q.id);
             const hasAnswered = !!userAns;
             return (
-              <div key={q.id} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
+              <div key={q.id} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md space-y-4 hover:shadow-lg transition duration-150">
                 <h3 className="text-base font-bold text-gray-800 leading-snug">
                   {idx + 1}. {q.question}
                 </h3>
@@ -211,7 +211,7 @@ function SubmitConfirmation() {
                     return (
                       <div
                         key={cIdx}
-                        className={`p-2.5 px-4 rounded-md text-sm border transition ${
+                        className={`p-2.5 px-4 rounded-lg text-sm border transition ${
                           isSelected
                             ? "bg-blue-50 border-blue-200 text-blue-800 font-medium"
                             : "bg-[#fafbfc] border-gray-100 text-gray-700"
@@ -226,15 +226,15 @@ function SubmitConfirmation() {
 
                 <div className="flex flex-wrap gap-4 pt-2 border-t border-gray-100 items-center justify-between">
                   <div className="flex gap-3">
-                    <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded text-sm font-bold">
+                    <div className="bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded-lg text-sm font-bold">
                       Correct Answer : {q.answer === "option1" ? q.choice[0] : q.answer === "option2" ? q.choice[1] : q.answer === "option3" ? q.choice[2] : q.choice[3]}
                     </div>
                     {hasAnswered ? (
-                      <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded text-sm font-bold">
+                      <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-sm font-bold">
                         Candidate Answer : {String.fromCharCode(userAns.option + 65)} ({userAns.value})
                       </div>
                     ) : (
-                      <div className="bg-red-50 text-red-700 px-3 py-1 rounded text-sm font-bold">
+                      <div className="bg-red-50 text-red-700 px-3 py-1 rounded-lg text-sm font-bold">
                         Candidate Answer : Not Answered
                       </div>
                     )}

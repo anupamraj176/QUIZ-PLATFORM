@@ -78,46 +78,47 @@ function CandidateProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black py-6 px-4 font-sans flex flex-col justify-center">
-      <div className="w-[100px] h-[100px] mx-auto p-[10px] flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 text-black py-10 px-4 font-sans flex flex-col justify-center">
+      <div className="w-[120px] h-[120px] mx-auto p-[10px] flex items-center justify-center mb-1">
         <img
           src="/assets/Indian_Institute_of_Information_Technology,_Bhagalpur_logo.png"
           alt="IIIT Bhagalpur Logo"
           className="max-w-full max-h-full"
         />
       </div>
-      <div className="w-fit mx-auto text-center mb-6">
-        <h3 className="text-[20px] font-normal">IIIT Bhagalpur</h3>
+      <div className="w-fit mx-auto text-center mb-8">
+        <h3 className="text-xl font-bold text-gray-800 tracking-wide">IIIT Bhagalpur</h3>
+        <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-semibold">Setup Examination Profile</p>
       </div>
       <div className="flex flex-col items-center justify-center">
         {warning && (
-          <div className="text-red-600 font-bold mb-3 text-[16px]">
-            {warning}
+          <div className="text-red-650 font-bold mb-4 text-base bg-red-50 border-l-4 border-red-500 py-2 px-4 w-full max-w-[460px] rounded-r-lg">
+            ⚠️ {warning}
           </div>
         )}
         <form
           onSubmit={handleSubmit}
-          className="border-2 border-black p-[20px] w-full max-w-[500px] rounded-md"
+          className="border border-gray-200 p-8 w-full max-w-[460px] bg-white rounded-2xl shadow-lg space-y-5"
         >
-          <h2 className="text-center text-[24px] font-bold mb-4">Fill your details</h2>
+          <h2 className="text-center text-lg font-bold text-gray-800 border-b border-gray-100 pb-3">Complete Profile Details</h2>
           
-          <div className="m-[10px] flex flex-col">
-            <label htmlFor="name" className="text-[16px] mb-1 font-semibold">Name: </label>
+          <div className="flex flex-col">
+            <label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-1">Full Name</label>
             <input
               id="name"
               type="text"
-              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black"
+              className="w-full p-2.5 custom-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
 
-          <div className="m-[10px] flex flex-col">
-            <label htmlFor="program" className="text-[16px] mb-1 font-semibold">Category of Post: </label>
+          <div className="flex flex-col">
+            <label htmlFor="program" className="text-sm font-semibold text-gray-700 mb-1">Category of Post</label>
             <select
               id="program"
-              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black bg-white"
+              className="w-full custom-select"
               value={program}
               onChange={(e) => {
                 setProgram(e.target.value);
@@ -131,11 +132,11 @@ function CandidateProfile() {
             </select>
           </div>
 
-          <div className="m-[10px] flex flex-col">
-            <label htmlFor="stream" className="text-[16px] mb-1 font-semibold">Post applied for: </label>
+          <div className="flex flex-col">
+            <label htmlFor="stream" className="text-sm font-semibold text-gray-700 mb-1">Post applied for</label>
             <select
               id="stream"
-              className="w-[96%] text-[16px] border border-gray-400 p-[5px] focus:outline-none focus:border-black bg-white"
+              className="w-full custom-select"
               value={stream}
               onChange={(e) => setStream(e.target.value)}
               required
@@ -153,12 +154,13 @@ function CandidateProfile() {
             </select>
           </div>
 
-          <div className="m-[10px] text-center mt-6">
-            <input
+          <div className="pt-3">
+            <button
               type="submit"
-              value="Next"
-              className="px-[20px] py-[8px] bg-gray-200 hover:bg-gray-300 border border-black cursor-pointer text-[16px]"
-            />
+              className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-lg cursor-pointer font-bold text-sm transition duration-150 active:scale-[0.98]"
+            >
+              Next
+            </button>
           </div>
         </form>
       </div>
